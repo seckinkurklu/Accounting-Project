@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @Entity
+@Table(name = "invoice_products")
 public class InvoiceProduct extends BaseEntity {
     private int quantity;
     private BigDecimal price;
