@@ -12,9 +12,9 @@ public class ProductDTO {
 
     private Integer lowLimitAlert;
 
-    ProductUnit productUnit;
+    private ProductUnit productUnit;
 
-    CategoryDto category;
+    private CategoryDto category;
 
     boolean hasProduct;
 
