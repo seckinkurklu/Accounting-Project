@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class ClientVendorDTOConverter implements Converter<String, ClientVendorDto> {
     ClientVendorService clientVendorService;
 
-    public ClientVendorDTOConverter(ClientVendorService clientVendorService) {
+    public ClientVendorDTOConverter(@Lazy ClientVendorService clientVendorService) {
         this.clientVendorService = clientVendorService;
     }
 
