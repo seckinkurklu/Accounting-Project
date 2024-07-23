@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Entity
 public class Company extends BaseEntity {
 
-    @Id
+    @Column(unique = true)
     private String title;
 
     private String phone;
