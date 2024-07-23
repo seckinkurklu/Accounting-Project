@@ -11,7 +11,6 @@ public enum ClientVendorType {
     public String getValue() {
         return value;
     }
-
 }
 
 
