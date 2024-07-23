@@ -27,4 +27,10 @@ public class ClientVendorServiceImpl implements ClientVendorService {
        return clientVendors.stream().map(clientVendor -> mapperUtil.convert(clientVendor,ClientVendorDto.class)).collect(Collectors.toList());
 
     }
+
+    @Override
+    public ClientVendorDto findById(Long id) {
+        ClientVendor clientVendor = clientVendorRepository.findById(id).get();
+        return mapperUtil.convert(clientVendor,ClientVendorDto.class);
+    }
 }
