@@ -16,7 +16,7 @@ public class ProductDTO {
 
     private CategoryDto category;
 
-    boolean hasProduct;
+    private boolean hasProduct;
 
 
 }
