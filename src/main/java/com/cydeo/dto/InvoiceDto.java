@@ -27,7 +27,7 @@ private InvoiceType invoiceType;
 @DateTimeFormat(pattern = "yyyy-MM-dd")
 private LocalDate date;
 
-private CompanyDto company;
+private CompanyDTO company;
 
 @NotNull
 private  ClientVendorDto clientVendorDto;
