@@ -22,7 +22,7 @@ public class ClientVendorDto {
     private ClientVendorType clientVendorType;
     private AddressDto address;
 
-    private CompanyDTO company;
+    private CompanyDto company;
     private boolean hasInvoice;
 
 }

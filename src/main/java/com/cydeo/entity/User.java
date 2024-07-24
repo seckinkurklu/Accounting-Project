@@ -4,6 +4,8 @@ import com.cydeo.entity.common.BaseEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
+
 
 import javax.persistence.*;
 
@@ -27,4 +29,5 @@ public class User extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "company_id")
     Company company; // will be seen under "company_id" column on the "users" table
+
 }
