@@ -34,6 +34,12 @@ public class UserPrincipal implements UserDetails {
         return this.user.getId();
     }
 
+    //    Add getFullNameForProfile method to show logged-in user firstname and lastname in UI dropdown menu
+    public String getFullNameForProfile() {
+        String fullName = this.user.getFirstname()+" "+ this.user.getLastname();
+        return fullName;
+    }
+
     @Override
     public String getPassword() {
         return this.user.getPassword();
