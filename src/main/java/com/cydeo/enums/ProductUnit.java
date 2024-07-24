@@ -6,7 +6,6 @@ public enum ProductUnit {
 
     private final String values;
 
-
     ProductUnit(String values) {
         this.values = values;
     }

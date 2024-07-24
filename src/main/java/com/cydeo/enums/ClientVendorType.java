@@ -1,16 +1,14 @@
 package com.cydeo.enums;
 
-public enum CompanyStatus {
-
-    ACTIVE("Active"),PASSIVE("Passive");
-
+public enum ClientVendorType {
+    VENDOR ("Vendor"), CLIENT  ("Client");
     private final String value;
 
     public String getValue() {
         return value;
     }
-
-    CompanyStatus(String value) {
+    ClientVendorType(String value) {
         this.value = value;
     }
+
 }
