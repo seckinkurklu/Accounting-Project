@@ -16,7 +16,21 @@ import java.util.Set;
 public class AuthSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-   
+        Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+        //whenever authenticate is done, it is capturing that user role
+        //landing pages after successful login based on the user role
+        if (roles.contains("Root User")) {
+            response.sendRedirect("/companies/list");
+        }
+        if (roles.contains("Admin")) {
+            response.sendRedirect("/users/list");
+        }
+        if (roles.contains("Manager")) {
+            response.sendRedirect("/dashboard");
+        }
+        if (roles.contains("Employee")) {
+            response.sendRedirect("/dashboard");
+        }
 
     }
 }
