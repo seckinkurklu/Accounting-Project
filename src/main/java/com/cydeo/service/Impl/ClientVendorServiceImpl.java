@@ -1,5 +1,4 @@
-package com.cydeo.service.Impl;
-
+package com.cydeo.service.impl;
 import com.cydeo.dto.ClientVendorDto;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.repository.ClientVendorRepository;
@@ -30,7 +29,10 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
     @Override
     public ClientVendorDto findById(Long id) {
-        ClientVendor clientVendor = clientVendorRepository.findById(id).get();
-        return mapperUtil.convert(clientVendor,ClientVendorDto.class);
+//        ClientVendor clientVendor = clientVendorRepository.findById(id).get();
+//        return mapperUtil.convert(clientVendor,ClientVendorDto.class);
+        return clientVendorRepository.findById(id)
+                .map(clientVendor -> mapperUtil.convert(clientVendor, ClientVendorDto.class))
+                .orElse(null);
     }
 }
