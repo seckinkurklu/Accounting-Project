@@ -29,7 +29,11 @@ public class UserPrincipal implements UserDetails {
         authorityList.add(authority);
         return authorityList;
     }
-    
+    //Add getId method to be able to use it in BaseEntityListener class
+    public Long getId(){
+        return this.user.getId();
+    }
+
     @Override
     public String getPassword() {
         return this.user.getPassword();
