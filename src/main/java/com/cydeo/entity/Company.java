@@ -7,24 +7,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+
+
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "companies")
 @Entity
+@Table(name = "companies")
 public class Company extends BaseEntity {
 
-    @Id
+    @Column(unique = true)
     private String title;
-
     private String phone;
     private String website;
-
     @Enumerated(EnumType.STRING)
-    private CompanyStatus companyStatus;
-
-
+    CompanyStatus companyStatus;
     @OneToOne
     @JoinColumn(name = "address_id")
-    private Address address;
+    Address address; // will be seen under "address_id" column on the "companies" table
 }

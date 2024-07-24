@@ -25,6 +25,7 @@ public class Product extends BaseEntity {
     ProductUnit productUnit;
 
     @ManyToOne
+    @Column(name = "category")
     Category category;
 
 }

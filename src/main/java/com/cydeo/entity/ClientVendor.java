@@ -8,15 +8,19 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "clients_vendors")
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity
+@Table(name = "clients_vendors")
+
 public class ClientVendor extends BaseEntity {
     private String clientVendorName;
     private String phone;
     private String website;
+
+   
+
 
     @Enumerated(EnumType.STRING)
     private ClientVendorType clientVendorType;
@@ -28,4 +32,5 @@ public class ClientVendor extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
+
 }
