@@ -39,7 +39,10 @@ public class UserPrincipal implements UserDetails {
         String fullName = this.user.getFirstname()+" "+ this.user.getLastname();
         return fullName;
     }
-
+    //    Add getCompanyTitleForProfile method to show logged-in user's company title on UI
+    public String getCompanyTitleForProfile() {
+        return this.user.getCompany().getTitle();
+    }
     @Override
     public String getPassword() {
         return this.user.getPassword();
