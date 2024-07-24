@@ -1,4 +1,4 @@
-package com.cydeo.service.impl;
+package com.cydeo.service.Impl;
 
 import com.cydeo.dto.RoleDto;
 import com.cydeo.repository.RoleRepository;
