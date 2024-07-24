@@ -26,4 +26,6 @@ public class UserServiceImpl implements UserService {
         User user=userRepository.findByUsername(username);
         return userMapper.convertToDto(user);
     }
+
+
 }
