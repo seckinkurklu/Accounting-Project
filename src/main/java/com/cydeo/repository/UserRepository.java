@@ -11,13 +11,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByUsername(String username);
 
-    @Query("select u from User u join u.role r where r.description = : roleDescription order by u.company.title asc , r.description asc ")
-    List<User> findAllUsersSorted(@Param("roleDescription")String roleDescription);
+    List<User> findAllByRole_Description(String role);
 
 
 
-    @Query("SELECT u FROM User u WHERE u.company = :company ORDER BY u.company.title ASC")
-    List<User> findAllCompanySorted(@Param("company") String company);
 
 
 
