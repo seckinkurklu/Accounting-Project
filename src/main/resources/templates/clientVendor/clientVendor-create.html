@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head th:replace="fragments/head :: header"></head>
@@ -11,7 +12,7 @@
             <div class="container-fluid dashboard-content">
                 <div class="ecommerce-widget">
                     <header class="panel-heading text-center">
-                        <h3 class="panel-title" >Create New Client/Vendor</h3>
+                        <h3 class="panel-title">Create New Client/Vendor</h3>
                     </header>
                     <div class="row">
                         <div class="col-12">
@@ -22,7 +23,7 @@
                                             <div class="tab-pane fade show active" id="account" role="tabpanel"
                                                  aria-labelledby="account-tab">
                                                 <form th:action="@{/clientVendors/create}"
-                                                      th:method="post" th:object="${clientVendors}">
+                                                      th:method="post" th:object="${newClientVendor}">
                                                     <div class="row justify-content-center">
                                                         <div class="col-12 col-md-4">
                                                             <div class="form-group">
@@ -51,8 +52,8 @@
                                                                                 th:value="''" th:text="'Select'"
                                                                                 selected></option>
                                                                         <option th:each="clientVendorType:${clientVendorTypes}"
-                                                                                th:value="${clientVendorTypeStat}"
-                                                                                th:text="${clientVendorTypeStat}"></option>
+                                                                                th:value="${clientVendorType}"
+                                                                                th:text="${clientVendorType.value}"></option>
                                                                     </select>
                                                                     <div th:if="${#fields.hasErrors('clientVendorType')}">
                                                                         <ul>
@@ -197,9 +198,9 @@
                                                             <div class="form-group">
                                                                 <div class="controls">
                                                                     <label>Country</label>
-<!--                                                                    <input type="text" th:field="*{address.country}"-->
-<!--                                                                           placeholder="Country"-->
-<!--                                                                           class="form-control">-->
+                                                                    <!--                                                                    <input type="text" th:field="*{address.country}"-->
+                                                                    <!--                                                                           placeholder="Country"-->
+                                                                    <!--                                                                           class="form-control">-->
                                                                     <select th:field="*{address.country}" id="country" name="country" class="custom-select">
                                                                         <option th:value="''" th:text="'Select'"></option>
                                                                         <option th:value="'United States'" th:text="'United States'"></option>
