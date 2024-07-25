@@ -3,6 +3,7 @@ package com.cydeo.converter;
 import com.cydeo.dto.CategoryDto;
 import com.cydeo.service.CategoryService;
 import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +19,7 @@ public class CategoryDTOConverter implements Converter<String, List<CategoryDto>
 
     CategoryService categoryService;
 
-    public CategoryDTOConverter(CategoryService categoryService) {
+    public CategoryDTOConverter(@Lazy CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 
