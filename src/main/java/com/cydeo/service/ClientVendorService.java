@@ -11,6 +11,7 @@ public interface ClientVendorService {
 
     ClientVendorDto findById(Long id);
     void save(ClientVendorDto clientVendorDto);
+    void update(ClientVendorDto clientVendorDto);
 
 
 }
