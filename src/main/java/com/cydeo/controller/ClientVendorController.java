@@ -5,10 +5,7 @@ import com.cydeo.enums.ClientVendorType;
 import com.cydeo.service.ClientVendorService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -52,6 +49,31 @@ public class ClientVendorController {
         clientVendorService.save(clientVendorDto);
         return "redirect:/clientVendors/list";
     }
+
+
+
+
+@GetMapping("/update/{id}")
+public String editClientVendor(@PathVariable("id") Long id, Model model) {
+    List<ClientVendorType> clientVendorTypes = Arrays.asList(ClientVendorType.values());
+    model.addAttribute("clientVendor", clientVendorService.findById(id));
+    model.addAttribute("clientVendorTypes", clientVendorTypes);
+
+    List<String> countries = Arrays.asList("United States");
+    model.addAttribute("countries", countries);
+
+    return "/clientVendor/clientVendor-update";
+}
+
+    @PostMapping("/update/{id}")
+    public String updateClientVendor(@ModelAttribute("clientVendor") ClientVendorDto clientVendorDto){
+
+
+        clientVendorService.update(clientVendorDto);
+
+        return "redirect:/clientVendors/list";
+    }
+
 
 
 
