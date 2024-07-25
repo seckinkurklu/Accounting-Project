@@ -6,6 +6,8 @@ import com.cydeo.service.ClientVendorService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Arrays;
@@ -36,16 +38,19 @@ public class ClientVendorController {
     @GetMapping("/create")
     public String createClientVendor(Model model){
 
-        model.addAttribute("clientVendors",new ClientVendorDto());
-        List<ClientVendorType> clientVendorTypes = Arrays.asList(ClientVendorType.values());
+        model.addAttribute("newClientVendor",new ClientVendorDto());
 
-        model.addAttribute("clientVendorTypes", clientVendorTypes);
-
-
-
-
+        List<ClientVendorType> clientVendorTypes = Arrays.asList(ClientVendorType.values()); // clientVendor types added as like on html file.
+        model.addAttribute("clientVendorTypes",clientVendorTypes); // types are taken to UI
         return "/clientVendor/clientVendor-create";
 
+    }
+
+    @PostMapping("/create")
+    public String insertClientVendor(@ModelAttribute("newClientVendor")ClientVendorDto clientVendorDto){
+
+        clientVendorService.save(clientVendorDto);
+        return "redirect:/clientVendors/list";
     }
 
 
