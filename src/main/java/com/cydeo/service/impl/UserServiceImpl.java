@@ -1,4 +1,4 @@
-package com.cydeo.service.Impl;
+package com.cydeo.service.impl;
 
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.User;
@@ -37,6 +37,15 @@ public class UserServiceImpl implements UserService {
 
         List<User> userList=userRepository.findAll();
 
-        return userList.stream().map(user -> mapperUtil.convert(user, UserDto.class)).collect(Collectors.toUnmodifiableList());
+        return userList.stream().map(user -> mapperUtil.convert(user, UserDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserDto> findAllByRole() {
+
+        List<User> userList = userRepository.findAllByRole_Description("Admin");
+
+
+        return userList.stream().map(user -> mapperUtil.convert(user,UserDto.class)).collect(Collectors.toList());
     }
 }
