@@ -1,0 +1,35 @@
+package com.cydeo.converter;
+
+import com.cydeo.dto.CategoryDto;
+import com.cydeo.service.CategoryService;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+/**
+ * author:AbduShukur
+ * date:7/24/2024
+ */
+@Component
+@ConfigurationPropertiesBinding
+public class CategoryDTOConverter implements Converter<String, List<CategoryDto>> {
+
+    CategoryService categoryService;
+
+    public CategoryDTOConverter(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+
+    @Override
+    public List<CategoryDto> convert(String source) {
+
+        if (source == null || source.equals("")) {
+            return null;
+        }
+
+        return categoryService.listAllCategory();
+
+    }
+}
