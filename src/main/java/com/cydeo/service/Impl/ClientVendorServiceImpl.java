@@ -6,6 +6,7 @@ import com.cydeo.service.ClientVendorService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,5 +35,16 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         return clientVendorRepository.findById(id)
                 .map(clientVendor -> mapperUtil.convert(clientVendor, ClientVendorDto.class))
                 .orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public void save(ClientVendorDto clientVendorDto) {
+        ClientVendor clientVendor = mapperUtil.convert(clientVendorDto,ClientVendor.class);
+        if (clientVendor.getAddress() != null && clientVendor.getAddress().getId() == null) {
+            clientVendorRepository.save(clientVendor);
+        }
+
+//        clientVendorRepository.save(clientVendor);
     }
 }
