@@ -12,6 +12,8 @@ public interface UserService {
 
 //    List<UserDto> findAllAdminsSorted();
 
+    List<UserDto> findAllByRole();
+
 
 
 }
