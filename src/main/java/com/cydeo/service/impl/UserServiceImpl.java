@@ -37,6 +37,15 @@ public class UserServiceImpl implements UserService {
 
         List<User> userList=userRepository.findAll();
 
-        return userList.stream().map(user -> mapperUtil.convert(user, new UserDto())).collect(Collectors.toList());
+        return userList.stream().map(user -> mapperUtil.convert(user, UserDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserDto> findAllByRole() {
+
+        List<User> userList = userRepository.findAllByRole_Description("Admin");
+
+
+        return userList.stream().map(user -> mapperUtil.convert(user,UserDto.class)).collect(Collectors.toList());
     }
 }
