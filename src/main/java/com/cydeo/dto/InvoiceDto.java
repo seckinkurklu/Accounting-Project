@@ -38,4 +38,5 @@ private BigDecimal tax;
 
 private BigDecimal total;
 
+
 }

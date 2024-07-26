@@ -8,24 +8,29 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "clients_vendors")
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity
+@Table(name = "clients_vendors")
+
 public class ClientVendor extends BaseEntity {
     private String clientVendorName;
     private String phone;
     private String website;
 
+   
+
+
     @Enumerated(EnumType.STRING)
     private ClientVendorType clientVendorType;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "address_id")
     private Address address ;//one-to-one / will be seen under "address_id" column on the "clients_vendors" table
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
+
 }
