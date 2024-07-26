@@ -10,8 +10,12 @@ public interface UserService {
 
     UserDto findByUsername(String username);
     List<UserDto> listAllUsers();
+    UserDto getLoggedUser();
+
+
 
 //    List<UserDto> findAllAdminsSorted();
+
 
     List<UserDto> findAllByRole();
     boolean findByUsernameCheck(String userName);
