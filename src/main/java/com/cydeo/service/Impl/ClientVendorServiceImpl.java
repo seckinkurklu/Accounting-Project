@@ -63,15 +63,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
     }
 
-    @Override
-    public void update(ClientVendorDto clientVendorDto) {
 
-    }
-
-    @Override
-    public void update(ClientVendorDto clientVendorDto) {
-
-    }
 
     @Override
     public void update(ClientVendorDto clientVendorDto) {
@@ -87,10 +79,11 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
         }
 
-        ClientVendor convertedClientVendor=mapperUtil.convert(clientVendorDto,ClientVendor.class);
+        ClientVendor convertedClientVendor=mapperUtil.convert(clientVendorDto,new ClientVendor());
         convertedClientVendor.setId(clientVendor.getId());
         convertedClientVendor.setAddress(clientVendor.getAddress());
         clientVendorRepository.save(convertedClientVendor);
 
     }
+
 }
