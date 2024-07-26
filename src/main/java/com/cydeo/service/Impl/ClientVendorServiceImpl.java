@@ -47,4 +47,9 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
 //        clientVendorRepository.save(clientVendor);
     }
+
+    @Override
+    public void update(ClientVendorDto clientVendorDto) {
+
+    }
 }
