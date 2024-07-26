@@ -1,6 +1,9 @@
+
 package com.cydeo.controller;
 
 import com.cydeo.dto.InvoiceDto;
+import com.cydeo.dto.InvoiceProductDto;
+import com.cydeo.repository.InvoiceProductRepository;
 import com.cydeo.service.ClientVendorService;
 import com.cydeo.service.InvoiceService;
 import org.springframework.stereotype.Controller;
@@ -18,16 +21,18 @@ public class InvoiceController {
 
     private final InvoiceService invoiceService;
     private final ClientVendorService clientVendorService;
+    private final InvoiceProductRepository invoiceProductRepository;
 
-    public InvoiceController(InvoiceService invoiceService, ClientVendorService clientVendorService) {
+    public InvoiceController(InvoiceService invoiceService, ClientVendorService clientVendorService, InvoiceProductRepository invoiceProductRepository) {
         this.invoiceService = invoiceService;
         this.clientVendorService = clientVendorService;
+        this.invoiceProductRepository = invoiceProductRepository;
     }
 
     @GetMapping("/purchaseInvoices/list")
     public String invoicePurchaseDtoList(Model model) {
         model.addAttribute("invoices", invoiceService.listAllPurchaseInvoice());
-       
+
         return "/invoice/purchase-invoice-list";
     }
 
@@ -40,7 +45,6 @@ public class InvoiceController {
     @GetMapping("/purchaseInvoices/create")
     public String createPurchaseInvoice(Model model){
         model.addAttribute("invoice", new InvoiceDto());
-//        model.addAttribute("vendors", clientVendorService.listAllClientVendors());
         model.addAttribute("vendors", clientVendorService.listAllByCompanyTitle());
         model.addAttribute("invoiceNo", invoiceService.newInvoiceNo());
         model.addAttribute("date", LocalDate.now());
@@ -66,7 +70,10 @@ public class InvoiceController {
 
         model.addAttribute("invoice", invoiceService.getInvoiceById(id));
         model.addAttribute("vendors", clientVendorService.listAllByCompanyTitle());
-       return "invoice/purchase-invoice-update";
+        model.addAttribute("newInvoiceProduct", new InvoiceProductDto());
+        model.addAttribute("invoiceProducts", invoiceProductRepository.findAllInvoiceProductsByInvoiceId(id));
+
+        return "invoice/purchase-invoice-update";
 
     }
 
