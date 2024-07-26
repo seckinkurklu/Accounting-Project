@@ -1,5 +1,6 @@
 package com.cydeo.controller;
 
+import com.cydeo.dto.CompanyDto;
 import com.cydeo.service.CompanyService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,5 +21,10 @@ public class CompanyController {
     public String listAllCompanies(Model model) {
         model.addAttribute("companies", companyService.listAllCompanies());
         return "company/company-list";
+    }
+    @GetMapping("/create")
+    public String createCompany(Model model) {
+        model.addAttribute("company", new CompanyDto());
+        return "company/company-create";
     }
 }
