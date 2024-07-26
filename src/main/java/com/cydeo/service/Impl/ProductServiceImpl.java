@@ -2,6 +2,7 @@ package com.cydeo.service.Impl;
 
 import com.cydeo.dto.ProductDto;
 import com.cydeo.entity.Product;
+import com.cydeo.mapper.ProductMapper;
 import com.cydeo.repository.ProductRepository;
 import com.cydeo.service.ProductService;
 import com.cydeo.util.MapperUtil;
@@ -15,10 +16,12 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
     private final MapperUtil mapperUtil;
 
-    public ProductServiceImpl(ProductRepository productRepository, MapperUtil mapperUtil) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper, MapperUtil mapperUtil) {
         this.productRepository = productRepository;
+        this.productMapper = productMapper;
         this.mapperUtil = mapperUtil;
     }
 
@@ -30,5 +33,13 @@ public class ProductServiceImpl implements ProductService {
 
         return products.stream()
                 .map(product -> mapperUtil.convert(product, ProductDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public ProductDto getProductById(Long id) {
+
+        Product product = productRepository.findById(id).orElseThrow();
+
+        return productMapper.convertToDto(product);
     }
 }
