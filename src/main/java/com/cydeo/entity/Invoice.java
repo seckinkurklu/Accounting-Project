@@ -18,16 +18,22 @@ import java.time.LocalDate;
 public class Invoice extends BaseEntity {
 
     private String invoiceNo;
+  
     @Enumerated(EnumType.STRING)
     private InvoiceStatus invoiceStatus;
+
     @Enumerated(EnumType.STRING)
     private InvoiceType invoiceType;
 
+    @Column(columnDefinition = "DATE")
     private LocalDate date;
+
     @ManyToOne
-    @JoinColumn (name = "client_vendor_id")
+    @JoinColumn(name = "client_vendor_id")
     private ClientVendor clientVendor;//will be seen under "client_vendor_id" column on the "invoices" table
+
     @ManyToOne
-    @JoinColumn (name = "company_id")
+    @JoinColumn(name = "company_id")
     private Company company; // will be seen under "company_id" column on the "invoices" table
+
 }
