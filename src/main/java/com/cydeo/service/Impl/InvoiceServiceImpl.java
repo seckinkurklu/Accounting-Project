@@ -3,6 +3,7 @@ package com.cydeo.service.impl;
 import com.cydeo.converter.ClientVendorDTOConverter;
 import com.cydeo.dto.ClientVendorDto;
 import com.cydeo.dto.InvoiceDto;
+import com.cydeo.dto.UserDto;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Invoice;
 import com.cydeo.entity.InvoiceProduct;
@@ -13,6 +14,7 @@ import com.cydeo.repository.InvoiceProductRepository;
 import com.cydeo.repository.InvoiceRepository;
 import com.cydeo.repository.UserRepository;
 import com.cydeo.service.InvoiceService;
+import com.cydeo.service.SecurityService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -31,14 +33,15 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final ClientVendorDTOConverter clientVendorDTOConverter;
     private final ClientVendorRepository clientVendorRepository;
     private final InvoiceProductRepository invoiceProductRepository;
-
-    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, MapperUtil mapperUtil, UserRepository userRepository, ClientVendorDTOConverter clientVendorDTOConverter, ClientVendorRepository clientVendorRepository, InvoiceProductRepository invoiceProductRepository) {
+    private final SecurityService securityService;
+    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, MapperUtil mapperUtil, UserRepository userRepository, ClientVendorDTOConverter clientVendorDTOConverter, ClientVendorRepository clientVendorRepository, InvoiceProductRepository invoiceProductRepository, SecurityService securityService) {
         this.invoiceRepository = invoiceRepository;
         this.mapperUtil = mapperUtil;
         this.userRepository = userRepository;
         this.clientVendorDTOConverter = clientVendorDTOConverter;
         this.clientVendorRepository = clientVendorRepository;
         this.invoiceProductRepository = invoiceProductRepository;
+        this.securityService = securityService;
     }
 
     @Override
@@ -70,12 +73,15 @@ public class InvoiceServiceImpl implements InvoiceService {
     //for US-49
     @Override
     public List<InvoiceDto> listAllPurchaseInvoice() {
-        String username= SecurityContextHolder.getContext().getAuthentication().getName();
-        User byUsername = userRepository.findByUsername(username);
-        List<Invoice> invoices = invoiceRepository.findAllByInvoiceTypeAndCompany(InvoiceType.PURCHASE, byUsername.getCompany() );
+        //Only purchase invoices of the current user's company should be listed in the list.
+        UserDto userDto = securityService.getLoggedInUser();
+        User byUsername = userRepository.findByUsername(userDto.getUsername());
+
+        List<Invoice> invoices = invoiceRepository.findAllByInvoiceTypeAndCompanyOrderByInvoiceNo(InvoiceType.PURCHASE, byUsername.getCompany() );
      List<InvoiceDto> invoiceDtoList = invoices.stream().map(p -> mapperUtil.convert(p, new InvoiceDto())).toList();
 
-//        List<InvoiceDto> invoiceDtoList = invoices.stream().map(invoice -> {
+// to display tax, price in Purchase List
+     //        List<InvoiceDto> invoiceDtoList = invoices.stream().map(invoice -> {
 //            InvoiceDto dto = new InvoiceDto();
 //            dto.setId(invoice.getId());
 //            dto.setInvoiceNo(invoice.getInvoiceNo());
@@ -105,6 +111,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 //            System.out.println("Total Price: " + dto.getTotal());
 //            System.out.println("Total Tax: " + dto.getTax());
 //        });
+
         return invoiceDtoList;
     }
     //for US-49
@@ -112,7 +119,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     public List<InvoiceDto> listAllSalesInvoice() {
         String username= SecurityContextHolder.getContext().getAuthentication().getName();
         User byUsername = userRepository.findByUsername(username);
-        List<Invoice> invoices = invoiceRepository.findAllByInvoiceTypeAndCompany(InvoiceType.SALES, byUsername.getCompany());
+        List<Invoice> invoices = invoiceRepository.findAllByInvoiceTypeAndCompanyOrderByInvoiceNo(InvoiceType.SALES, byUsername.getCompany());
         return invoices.stream().map(p->mapperUtil.convert(p, new InvoiceDto())).toList();
     }
 
