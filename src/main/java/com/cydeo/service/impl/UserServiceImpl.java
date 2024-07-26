@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
 
         List<User> userList=userRepository.findAll();
 
-        return userList.stream().map(user -> mapperUtil.convert(user, UserDto.class)).collect(Collectors.toList());
+        return userList.stream().map(user -> mapperUtil.convert(user, new UserDto())).collect(Collectors.toList());
     }
 
     @Override
@@ -47,6 +47,10 @@ public class UserServiceImpl implements UserService {
         String username = authentication.getName();
         return mapperUtil.convert(userRepository.findByUsername(username),UserDto.class);
     }
+
+        return userList.stream().map(user -> mapperUtil.convert(user,new UserDto())).collect(Collectors.toList());
+    }
+
 
 
 }

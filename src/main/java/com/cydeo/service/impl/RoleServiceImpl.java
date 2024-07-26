@@ -22,12 +22,12 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public RoleDto findById(Long id) {
-        return mapperUtil.convert(roleRepository.findById(id), RoleDto.class);
+        return mapperUtil.convert(roleRepository.findById(id), new RoleDto());
     }
 
     @Override
     public List<RoleDto> listAllRoles() {
         return roleRepository.findAll().stream()
-                .map(role -> mapperUtil.convert(role, RoleDto.class)).toList();
+                .map(role -> mapperUtil.convert(role, new RoleDto())).toList();
     }
 }
