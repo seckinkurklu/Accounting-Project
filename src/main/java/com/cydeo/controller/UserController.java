@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping ("/user")
+@RequestMapping ("/users")
 public class UserController {
 
     private final UserService userService;
@@ -21,7 +21,7 @@ public class UserController {
     @GetMapping("/list")
     public String listAllUsers(Model model) {
 
-        model.addAttribute("users", userService.listAllUsers());
+        model.addAttribute("users", userService.getLoggedUser());
         return "/user/user-list";
     }
 
