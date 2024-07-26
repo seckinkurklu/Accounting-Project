@@ -1,4 +1,4 @@
-package com.cydeo.service.Impl;
+package com.cydeo.service.impl;
 
 import com.cydeo.dto.ProductDto;
 import com.cydeo.entity.Product;
@@ -6,7 +6,6 @@ import com.cydeo.mapper.ProductMapper;
 import com.cydeo.repository.ProductRepository;
 import com.cydeo.service.ProductService;
 import com.cydeo.util.MapperUtil;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products = productRepository.findAll();
 
         return products.stream()
-                .map(product -> mapperUtil.convert(product, ProductDto.class)).collect(Collectors.toList());
+                .map(product -> mapperUtil.convert(product, new ProductDto())).collect(Collectors.toList());
     }
 
     @Override
