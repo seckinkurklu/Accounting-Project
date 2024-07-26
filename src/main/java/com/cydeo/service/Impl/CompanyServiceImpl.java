@@ -23,11 +23,11 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public List<CompanyDto> listAllCompanies() {
          List<Company> companyList= companyRepository.findAll();
-        return companyList.stream().map(p->mapperUtil.convert(p, CompanyDto.class)).toList();
+        return companyList.stream().map(p->mapperUtil.convert(p, new CompanyDto())).toList();
     }
 
     @Override
     public CompanyDto findById(Long id) {
-        return mapperUtil.convert(companyRepository.findById(id), CompanyDto.class);
+        return mapperUtil.convert(companyRepository.findById(id), new CompanyDto());
     }
 }
