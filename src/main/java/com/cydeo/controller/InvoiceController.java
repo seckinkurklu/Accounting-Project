@@ -62,6 +62,8 @@ public class InvoiceController {
     @GetMapping("/purchaseInvoices/update/{id}")
     public String updatePurchaseInvoice(Model model, @PathVariable Long id){
 
+        model.addAttribute("invoice", invoiceService.getInvoiceById(id));
+        model.addAttribute("vendors", clientVendorService.listAllByCompanyTitle());
        return "invoice/purchase-invoice-update";
 
     }
