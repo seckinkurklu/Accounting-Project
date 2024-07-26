@@ -2,6 +2,7 @@ package com.cydeo.service.Impl;
 
 import com.cydeo.dto.CompanyDto;
 import com.cydeo.entity.Company;
+import com.cydeo.enums.CompanyStatus;
 import com.cydeo.repository.CompanyRepository;
 import com.cydeo.service.CompanyService;
 import com.cydeo.util.MapperUtil;
@@ -29,5 +30,11 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyDto findById(Long id) {
         return mapperUtil.convert(companyRepository.findById(id), new CompanyDto());
+    }
+
+    @Override
+    public void save(CompanyDto company) {
+        company.setCompanyStatus(CompanyStatus.PASSIVE);
+        companyRepository.save(mapperUtil.convert(company, new Company()));
     }
 }
