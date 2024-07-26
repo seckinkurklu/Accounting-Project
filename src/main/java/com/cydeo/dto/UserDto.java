@@ -46,6 +46,7 @@ public class UserDto {
 
     @NotNull(message = "please select a Customer")
     private CompanyDto company;
+    private boolean enabled;
 
 
     private boolean isOnlyAdmin; //should be true if this user is only admin of any company.)
