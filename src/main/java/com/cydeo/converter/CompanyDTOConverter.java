@@ -18,7 +18,6 @@ public class CompanyDTOConverter implements Converter<String, CompanyDto> {
         if (source == null || source.equals("")) {
             return null;
         }
-
         return companyService.findById(Long.parseLong(source));
     }
 }
