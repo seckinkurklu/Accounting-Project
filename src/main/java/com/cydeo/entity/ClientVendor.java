@@ -25,7 +25,7 @@ public class ClientVendor extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ClientVendorType clientVendorType;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "address_id")
     private Address address ;//one-to-one / will be seen under "address_id" column on the "clients_vendors" table
 
