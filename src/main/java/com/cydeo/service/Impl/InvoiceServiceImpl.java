@@ -2,12 +2,14 @@ package com.cydeo.service.impl;
 
 import com.cydeo.converter.ClientVendorDTOConverter;
 import com.cydeo.dto.ClientVendorDto;
+import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Invoice;
 import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.entity.User;
+import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.repository.ClientVendorRepository;
 import com.cydeo.repository.InvoiceProductRepository;
@@ -74,50 +76,20 @@ public class InvoiceServiceImpl implements InvoiceService {
     //for US-49
     @Override
     public List<InvoiceDto> listAllPurchaseInvoice() {
-        String username= SecurityContextHolder.getContext().getAuthentication().getName();
-        User byUsername = userRepository.findByUsername(username);
-        List<Invoice> invoices = invoiceRepository.findAllByInvoiceTypeAndCompanyOrderByInvoiceNo(InvoiceType.PURCHASE, byUsername.getCompany() );
+        UserDto loggedInUser = securityService.getLoggedInUser();
 
-        List<InvoiceDto> invoiceDtoList = invoices.stream().map(p -> mapperUtil.convert(p, new InvoiceDto())).toList();
+        String companyTitle = loggedInUser.getCompany().getTitle();
+        //Purchase Invoices should be sorted by their invoice no in descending order (latest invoices should be at the top).
+        List<Invoice> invoices = invoiceRepository.findAllByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(InvoiceType.PURCHASE, companyTitle );
 
-//        List<InvoiceDto> invoiceDtoList = invoices.stream().map(invoice -> {
-//            InvoiceDto dto = new InvoiceDto();
-//            dto.setId(invoice.getId());
-//            dto.setInvoiceNo(invoice.getInvoiceNo());
-//            dto.setClientVendor(mapperUtil.convert(invoice.getClientVendor(), new ClientVendorDto()));
-//            dto.setDate(invoice.getDate());
-//
-//            List<InvoiceProduct> listProductsRelatedInvoice = invoiceProductRepository.findAllByInvoice(invoice);
-//            InvoiceProduct byInvoice = invoiceProductRepository.findByInvoice(invoice);
-//            BigDecimal totalPrice = listProductsRelatedInvoice.stream()
-//                    .map(InvoiceProduct::getPrice)
-//                    .filter(price -> price != null)
-//                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-//
-//            BigDecimal totalTax = listProductsRelatedInvoice.stream()
-//                    .map(InvoiceProduct::getTax)
-//                    .filter(tax -> tax != null)
-//                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-//            dto.setPrice(byInvoice.getPrice());
-//            dto.setTax(totalTax);
-//            dto.setTotal(totalPrice);
-//            return dto;
-//        }).toList();
-//
-//        // print dto to test
-//        invoiceDtoList.forEach(dto -> {
-//            System.out.println("InvoiceNo: " + dto.getInvoiceNo());
-//            System.out.println("Total Price: " + dto.getTotal());
-//            System.out.println("Total Tax: " + dto.getTax());
-//        });
-        return invoiceDtoList;
+        return invoices.stream().map(p -> mapperUtil.convert(p, new InvoiceDto())).toList();
     }
     //for US-49
     @Override
     public List<InvoiceDto> listAllSalesInvoice() {
-        String username= SecurityContextHolder.getContext().getAuthentication().getName();
-        User byUsername = userRepository.findByUsername(username);
-        List<Invoice> invoices = invoiceRepository.findAllByInvoiceTypeAndCompanyOrderByInvoiceNo(InvoiceType.SALES, byUsername.getCompany());
+        UserDto loggedInUser = securityService.getLoggedInUser();
+        String companyTitle = loggedInUser.getCompany().getTitle();
+        List<Invoice> invoices = invoiceRepository.findAllByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(InvoiceType.SALES, companyTitle);
         return invoices.stream().map(p->mapperUtil.convert(p, new InvoiceDto())).toList();
     }
 
@@ -131,10 +103,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         String invoiceNo = listAllInvoice().get(listAllInvoice().size()-1);
         int i = Integer.parseInt(invoiceNo);
 
-        invoice.setInvoiceNo("P-" + (i+1));// set inVoiceNo
+        invoice.setInvoiceNo(newInvoiceNo());// set inVoiceNo
         invoice.setDate(LocalDate.now()); // Set date
         invoice.setClientVendor(clientVendor); // set Vendor
         invoice.setInvoiceType(InvoiceType.PURCHASE);
+        invoice.setInvoiceStatus(InvoiceStatus.AWAITING_APPROVAL);
         String username= SecurityContextHolder.getContext().getAuthentication().getName();
         User byUsername = userRepository.findByUsername(username);
 //        System.out.println("================User's company "); // just to verify
