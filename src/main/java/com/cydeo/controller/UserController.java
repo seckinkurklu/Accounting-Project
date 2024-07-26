@@ -21,7 +21,7 @@ public class UserController {
     @GetMapping("/list")
     public String listAllUsers(Model model) {
 
-        model.addAttribute("users", userService.findAllByRole());
+        model.addAttribute("users", userService.getLoggedUser());
         return "/user/user-list";
     }
 

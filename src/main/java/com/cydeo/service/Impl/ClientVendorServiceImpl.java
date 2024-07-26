@@ -62,4 +62,9 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     public void update(ClientVendorDto clientVendorDto) {
 
     }
+
+    @Override
+    public void update(ClientVendorDto clientVendorDto) {
+
+    }
 }
