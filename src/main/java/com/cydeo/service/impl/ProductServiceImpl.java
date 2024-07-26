@@ -1,4 +1,4 @@
-package com.cydeo.service.Impl;
+package com.cydeo.service.impl;
 
 import com.cydeo.dto.ProductDto;
 import com.cydeo.entity.Product;
@@ -6,7 +6,6 @@ import com.cydeo.mapper.ProductMapper;
 import com.cydeo.repository.ProductRepository;
 import com.cydeo.service.ProductService;
 import com.cydeo.util.MapperUtil;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
