@@ -13,6 +13,7 @@ public interface InvoiceProductRepository extends JpaRepository<InvoiceProduct, 
 
 
    List<InvoiceProduct> findAllByInvoice(Invoice invoice);
+   List<InvoiceProduct> findAllInvoiceProductsByInvoiceId(Long invoiceId);
 
    InvoiceProduct findByInvoice(Invoice invoice);
 
