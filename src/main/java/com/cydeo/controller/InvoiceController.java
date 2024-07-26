@@ -62,8 +62,8 @@ public class InvoiceController {
     @GetMapping("/purchaseInvoices/update/{id}")
     public String updatePurchaseInvoice(Model model, @PathVariable Long id){
 
-       // return "invoice/purchase-invoice-update";
-        return "Edit";
+       return "invoice/purchase-invoice-update";
+
     }
 
 

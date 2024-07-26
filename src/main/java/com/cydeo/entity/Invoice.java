@@ -16,6 +16,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "invoices")
 public class Invoice extends BaseEntity {
+
     private String invoiceNo;
     @Enumerated(EnumType.STRING)
     private InvoiceStatus invoiceStatus;

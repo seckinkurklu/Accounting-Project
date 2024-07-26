@@ -16,7 +16,10 @@ public interface InvoiceRepository extends JpaRepository<Invoice,Long> {
     void deleteById(Invoice invoice);
 
     //for US-49
-    List<Invoice> findAllByInvoiceType_AndCompanyOrderByInvoiceNoDesc(InvoiceType invoiceType, Company company);
+    //List<Invoice> findAllByInvoiceType_AndCompanyOrderByInvoiceNoDesc(InvoiceType invoiceType, Company company);
+    List<Invoice> findAllByInvoiceTypeAndCompany(InvoiceType invoiceType, Company company);
+    List<Invoice> findAllByInvoiceType(InvoiceType invoiceType);
+    Invoice findInvoiceByInvoiceNo(String invoiceNumber);
 
 
 }
