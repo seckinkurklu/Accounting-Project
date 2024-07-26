@@ -1,5 +1,6 @@
 package com.cydeo.service;
 
+import com.cydeo.dto.RoleDto;
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.User;
 
@@ -16,7 +17,9 @@ public interface UserService {
 //    List<UserDto> findAllAdminsSorted();
 
 
-
-
-
+    List<UserDto> findAllByRole();
+    boolean findByUsernameCheck(String userName);
+    UserDto findById(Long id);
+void save(UserDto user);
+UserDto updateUser(UserDto dto);
 }
