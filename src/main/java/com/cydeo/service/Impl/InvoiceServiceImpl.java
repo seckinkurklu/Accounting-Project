@@ -77,12 +77,30 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public List<InvoiceDto> listAllPurchaseInvoice() {
         UserDto loggedInUser = securityService.getLoggedInUser();
-
         String companyTitle = loggedInUser.getCompany().getTitle();
         //Purchase Invoices should be sorted by their invoice no in descending order (latest invoices should be at the top).
         List<Invoice> invoices = invoiceRepository.findAllByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(InvoiceType.PURCHASE, companyTitle );
 
-        return invoices.stream().map(p -> mapperUtil.convert(p, new InvoiceDto())).toList();
+        List<InvoiceDto> invoiceDtoList = invoices.stream().map(p -> mapperUtil.convert(p, new InvoiceDto())).toList();
+
+        invoiceDtoList = invoiceDtoList.stream().map(p -> {
+            Long id = mapperUtil.convert(p, new Invoice()).getId();
+            InvoiceProduct invoiceProduct = invoiceProductRepository.findByInvoice_Id(id);
+
+            int quantity = invoiceProduct.getQuantity();
+
+            BigDecimal priceTotal = invoiceProduct.getPrice().multiply(BigDecimal.valueOf(quantity));
+            p.setPrice(priceTotal);
+
+            BigDecimal tax = BigDecimal.valueOf(invoiceProduct.getTax());
+            BigDecimal totalTax = tax.multiply(priceTotal).divide(BigDecimal.valueOf(100));
+            p.setTax(totalTax);
+            //p.setTotal(totalPriceWithTax);
+            p.setTotal(priceTotal.add(totalTax));
+            return p;
+        }).toList();
+
+return invoiceDtoList;
     }
     //for US-49
     @Override
@@ -92,7 +110,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         List<Invoice> invoices = invoiceRepository.findAllByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(InvoiceType.SALES, companyTitle);
         return invoices.stream().map(p->mapperUtil.convert(p, new InvoiceDto())).toList();
     }
-
     @Override
     public InvoiceDto save(InvoiceDto invoiceDto) {
         Long id = invoiceDto.getClientVendor().getId();// vendor id (th:value="${vendor.id}")--th:field="*{clientVendor}
