@@ -48,7 +48,7 @@ public class InvoiceController {
     }
 
     @PostMapping("/purchaseInvoices/create")
-    public String savePurchaseInvoice(@ModelAttribute ("invoice") InvoiceDto invoiceDto, RedirectAttributes redirectAttributes){
+    public String savePurchaseInvoice(@ModelAttribute ("invoiceDto")InvoiceDto invoiceDto, RedirectAttributes redirectAttributes){
 
         InvoiceDto saved = invoiceService.save(invoiceDto);
 
