@@ -100,7 +100,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             return p;
         }).toList();
 
-return invoiceDtoList;
+        return invoiceDtoList;
     }
     //for US-49
     @Override

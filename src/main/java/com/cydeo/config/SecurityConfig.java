@@ -3,6 +3,7 @@ package com.cydeo.config;
 import com.cydeo.service.SecurityService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
@@ -14,7 +15,7 @@ public class SecurityConfig {
     private final SecurityService securityService;
     private final AuthSuccessHandler authSuccessHandler;
 
-    public SecurityConfig(SecurityService securityService, AuthSuccessHandler authSuccessHandler) {
+    public SecurityConfig(@Lazy SecurityService securityService, AuthSuccessHandler authSuccessHandler) {
         this.securityService = securityService;
         this.authSuccessHandler = authSuccessHandler;
     }
