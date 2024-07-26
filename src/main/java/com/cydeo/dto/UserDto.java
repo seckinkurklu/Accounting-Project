@@ -50,6 +50,10 @@ public class UserDto {
 
     private boolean isOnlyAdmin; //should be true if this user is only admin of any company.)
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public void setPassword(String password) {
         this.password = password;
         checkConfirmPassword();
