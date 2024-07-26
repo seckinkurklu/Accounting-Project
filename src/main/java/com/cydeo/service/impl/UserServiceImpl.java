@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,5 +48,26 @@ public class UserServiceImpl implements UserService {
 
 
         return userList.stream().map(user -> mapperUtil.convert(user,UserDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean findByUsernameCheck(String userName) {
+        return false;
+    }
+
+    @Override
+    public UserDto findById(Long id) {
+        return null;
+    }
+
+    @Override
+    public void save(UserDto user) {
+
+    }
+    @Override
+    public UserDto updateUser(UserDto userDtoToBeUpdate) {
+       Optional<User> existingUser=userRepository.findById(userDtoToBeUpdate.getId());
+        existingUser.setUsername (userDtoToBeUpdate.getUsername());
+        return null;
     }
 }
