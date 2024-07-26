@@ -48,4 +48,13 @@ public class UserServiceImpl implements UserService {
         String username = authentication.getName();
         return mapperUtil.convert(userRepository.findByUsername(username),UserDto.class);
     }
+
+    @Override
+    public List<UserDto> findAllByRole() {
+        List<User> userList = userRepository.findAllByRole_Description("Admin");
+
+
+        return userList.stream().map(user -> mapperUtil.convert(user,UserDto.class)).collect(Collectors.toList());
+
+    }
 }
