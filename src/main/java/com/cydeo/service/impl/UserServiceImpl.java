@@ -2,7 +2,7 @@ package com.cydeo.service.impl;
 
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.User;
-import com.cydeo.exception.UserNotFoundException;
+//import com.cydeo.exception.UserNotFoundException;
 import com.cydeo.mapper.UserMapper;
 import com.cydeo.repository.UserRepository;
 import com.cydeo.service.UserService;
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getLoggedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        return mapperUtil.convert(userRepository.findByUsername(username),UserDto.class);
+        return mapperUtil.convert(userRepository.findByUsername(username),new UserDto());
     }
 
     @Override
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void save(UserDto userDto) {
         userDto.setEnabled(true);
-        User user = mapperUtil.convert(userDto, User.class);
+        User user = mapperUtil.convert(userDto, new User());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
@@ -76,11 +76,11 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(UserDto userDtoToBeUpdate) {
 
         User existingUser = userRepository.findById(userDtoToBeUpdate.getId())
-                .orElseThrow(() -> new UserNotFoundException("User can't found with id " + userDtoToBeUpdate.getId()));
+                .orElseThrow(() -> new RuntimeException("User can't found with id " + userDtoToBeUpdate.getId()));
         existingUser.setUsername(userDtoToBeUpdate.getUsername());
         existingUser.setPassword(passwordEncoder.encode(userDtoToBeUpdate.getPassword()));
         userRepository.save(existingUser);
-        return mapperUtil.convert(existingUser, UserDto.class);
+        return mapperUtil.convert(existingUser, new UserDto());
     }
 
 }

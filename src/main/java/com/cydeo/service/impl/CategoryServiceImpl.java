@@ -42,10 +42,10 @@ public class CategoryServiceImpl implements CategoryService {
         UserDto loggedUser = userService.getLoggedUser();
         CompanyDto companyDto = loggedUser.getCompany();
 
-        List<Category> categoryList = categoryRepository.findAllByCompanyOrderByDescriptionAsc(mapperUtil.convert(companyDto, Company.class));
+        List<Category> categoryList = categoryRepository.findAllByCompanyOrderByDescriptionAsc(mapperUtil.convert(companyDto, new Company()));
 
 
-        return categoryList.stream().map(category -> mapperUtil.convert(category,CategoryDto.class)).collect(Collectors.toList());
+        return categoryList.stream().map(category -> mapperUtil.convert(category,new CategoryDto())).collect(Collectors.toList());
     }
 
 }
