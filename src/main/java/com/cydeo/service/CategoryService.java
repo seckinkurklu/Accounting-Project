@@ -10,4 +10,6 @@ import java.util.List;
 public interface CategoryService {
     List<CategoryDto> listAllCategory();
 
+    List<CategoryDto> listAllByCompany();
+
 }

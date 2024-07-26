@@ -9,6 +9,9 @@ public interface UserService {
 
     UserDto findByUsername(String username);
     List<UserDto> listAllUsers();
+    UserDto getLoggedUser();
+
+
 
 //    List<UserDto> findAllAdminsSorted();
 

@@ -7,6 +7,8 @@ import com.cydeo.repository.UserRepository;
 import com.cydeo.service.UserService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,12 +42,4 @@ public class UserServiceImpl implements UserService {
         return userList.stream().map(user -> mapperUtil.convert(user, UserDto.class)).collect(Collectors.toList());
     }
 
-    @Override
-    public List<UserDto> findAllByRole() {
-
-        List<User> userList = userRepository.findAllByRole_Description("Admin");
-
-
-        return userList.stream().map(user -> mapperUtil.convert(user,UserDto.class)).collect(Collectors.toList());
-    }
-}
+ 
