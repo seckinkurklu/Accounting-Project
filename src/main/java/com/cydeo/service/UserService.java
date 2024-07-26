@@ -15,8 +15,7 @@ public interface UserService {
 
     List<UserDto> findAllByRole();
     boolean findByUsernameCheck(String userName);
-
-UserDto findById(Long id);
+    UserDto findById(Long id);
 void save(UserDto user);
 UserDto updateUser(UserDto dto);
 }
