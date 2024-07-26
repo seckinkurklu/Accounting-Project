@@ -23,13 +23,13 @@
                                                  aria-labelledby="account-tab">
                                                 <form class="needs-validation" novalidate
                                                       th:action="@{/purchaseInvoices/create}"
-                                                      th:method="post" th:object="${newPurchaseInvoice}">
+                                                      th:method="post" th:object="${invoice}">
                                                     <div class="row">
                                                         <div class="col-12 col-md-4">
                                                             <div class="form-group">
                                                                 <div class="controls">
                                                                     <label>Invoice No</label>
-                                                                    <input type="text" th:field="*{invoiceNo}" placeholder="Invoice No" readonly
+                                                                    <input type="text" th:field="*{invoiceNo}" th:placeholder="${invoiceNo}" readonly
                                                                            class="form-control" required="required" aria-invalid="false">
                                                                 </div>
                                                             </div>
@@ -39,7 +39,7 @@
                                                                 <div class="controls">
                                                                     <label>Date</label>
                                                                     <input type="text" th:field="*{date}"
-                                                                           placeholder="Date" readonly
+                                                                           th:placeholder="${date}" readonly
                                                                            class="form-control" required="required" aria-invalid="false">
                                                                 </div>
                                                             </div>
