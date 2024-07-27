@@ -1,5 +1,6 @@
 package com.cydeo.dto;
 
+import com.cydeo.entity.ClientVendor;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 import lombok.AllArgsConstructor;
@@ -27,10 +28,10 @@ private InvoiceType invoiceType;
 @DateTimeFormat(pattern = "yyyy-MM-dd")
 private LocalDate date;
 
-private CompanyDTO company;
+private CompanyDto company;
 
 @NotNull
-private  ClientVendorDto clientVendorDto;
+private ClientVendor clientVendor;
 
 private BigDecimal price;
 
