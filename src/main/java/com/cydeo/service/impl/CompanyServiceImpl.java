@@ -8,6 +8,7 @@ import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class CompanyServiceImpl implements CompanyService {
@@ -23,7 +24,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public List<CompanyDto> listAllCompanies() {
          List<Company> companyList= companyRepository.findAll();
-        return companyList.stream().map(p->mapperUtil.convert(p, new CompanyDto())).toList();
+        return companyList.stream().map(p->mapperUtil.convert(p, new CompanyDto())).collect(Collectors.toList());
     }
 
     @Override
