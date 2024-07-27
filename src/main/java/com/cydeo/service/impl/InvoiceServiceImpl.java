@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
@@ -62,7 +63,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Invoice upodateInvoice(Long id,Invoice invoice) {
+    public Invoice updateInvoice(Long id,Invoice invoice) {
         Invoice existingInvoice = invoiceRepository.findById(id).get();
         return null;
     }
@@ -108,7 +109,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         UserDto loggedInUser = securityService.getLoggedInUser();
         String companyTitle = loggedInUser.getCompany().getTitle();
         List<Invoice> invoices = invoiceRepository.findAllByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(InvoiceType.SALES, companyTitle);
-        return invoices.stream().map(p->mapperUtil.convert(p, new InvoiceDto())).toList();
+        return invoices.stream().map(p->mapperUtil.convert(p, new InvoiceDto())).collect(Collectors.toList());
     }
     @Override
     public InvoiceDto save(InvoiceDto invoiceDto) {
