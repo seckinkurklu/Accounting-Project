@@ -23,4 +23,5 @@ public interface InvoiceService {
 
     Long getId(String invoiceNo);
 void approve(Long invoiceId);
+
 }

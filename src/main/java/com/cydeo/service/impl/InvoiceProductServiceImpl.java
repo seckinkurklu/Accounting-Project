@@ -1,5 +1,6 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.repository.InvoiceProductRepository;
 import com.cydeo.service.InvoiceProductService;
@@ -10,6 +11,7 @@ import java.util.List;
 public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     private final InvoiceProductRepository invoiceProductRepository;
+    private final
 
     public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository) {
         this.invoiceProductRepository = invoiceProductRepository;
@@ -40,5 +42,10 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     public void deleteInvoiceProduct(Long id) {
         deleteInvoiceProduct(id);
 
+    }
+
+    @Override
+    public void save(InvoiceProductDto invoiceProductDTO) {
+        invoiceProductRepository.save(ma);
     }
 }
