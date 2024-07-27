@@ -1,5 +1,6 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.converter.ProductDTOConverter;
 import com.cydeo.dto.ProductDto;
 import com.cydeo.entity.Product;
 import com.cydeo.mapper.ProductMapper;
@@ -40,5 +41,25 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(id).orElseThrow();
 
         return productMapper.convertToDto(product);
+    }
+
+    @Override
+    public void save(ProductDto productDto) {
+
+        Product product = mapperUtil.convert(productDto,new Product());
+
+        productRepository.save(product);
+    }
+
+    @Override
+    public void delete(Long id) {
+
+        Product product = productRepository.findByIdAndIsDeleted(id,false);
+
+        product.setIsDeleted(true);
+
+
+        productRepository.save(product);
+
     }
 }
