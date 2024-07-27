@@ -32,7 +32,6 @@ public class CompanyController {
     }
     @PostMapping("/create")
     public String createCompany(@ModelAttribute ("company") CompanyDto company, Model model) {
-        model.addAttribute("company", new CompanyDto());
         companyService.save(company);
         return "redirect:/companies/list";
     }
