@@ -5,10 +5,7 @@ import com.cydeo.entity.Company;
 import com.cydeo.service.CompanyService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/companies")
@@ -33,6 +30,21 @@ public class CompanyController {
     @PostMapping("/create")
     public String createCompany(@ModelAttribute ("company") CompanyDto company, Model model) {
         companyService.save(company);
+        return "redirect:/companies/list";
+    }
+
+    @GetMapping("/update/{id}")
+    public String updateCompany(@PathVariable ("id") Long id, Model model) {
+
+        CompanyDto companyDto = companyService.findById(id);
+        model.addAttribute("company", companyDto);
+        return "company/company-update";
+    }
+
+    @PostMapping("/update/{id}")
+    public String updateCompany(@PathVariable("id") Long id, @ModelAttribute("company") CompanyDto companyDto) {
+        companyDto.setId(id);
+        companyService.save(companyDto);
         return "redirect:/companies/list";
     }
 }
