@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Component
 @ConfigurationPropertiesBinding
-public class CategoryDTOConverter implements Converter<String, List<CategoryDto>> {
+public class CategoryDTOConverter implements Converter<String, CategoryDto> {
 
     CategoryService categoryService;
 
@@ -24,13 +24,13 @@ public class CategoryDTOConverter implements Converter<String, List<CategoryDto>
     }
 
     @Override
-    public List<CategoryDto> convert(String source) {
+    public CategoryDto convert(String source) {
 
         if (source == null || source.equals("")) {
             return null;
         }
 
-        return categoryService.listAllCategory();
+        return categoryService.findCategoryById(Long.parseLong(source));
 
     }
 }
