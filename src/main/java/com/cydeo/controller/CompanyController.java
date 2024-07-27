@@ -27,7 +27,7 @@ public class CompanyController {
     }
     @GetMapping("/create")
     public String createCompany(Model model) {
-        model.addAttribute("company", new CompanyDto());
+        model.addAttribute("newCompany", new CompanyDto());
         return "company/company-create";
     }
     @PostMapping("/create")
