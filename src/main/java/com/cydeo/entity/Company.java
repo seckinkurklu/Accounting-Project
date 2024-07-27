@@ -22,7 +22,7 @@ public class Company extends BaseEntity {
     private String website;
     @Enumerated(EnumType.STRING)
     CompanyStatus companyStatus;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     Address address; // will be seen under "address_id" column on the "companies" table
 }
