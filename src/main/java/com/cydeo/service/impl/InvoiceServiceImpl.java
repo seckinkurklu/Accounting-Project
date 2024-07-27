@@ -3,6 +3,7 @@ package com.cydeo.service.impl;
 import com.cydeo.converter.ClientVendorDTOConverter;
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.InvoiceProductDto;
+import com.cydeo.dto.ProductDto;
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Invoice;
@@ -18,6 +19,7 @@ import com.cydeo.repository.InvoiceRepository;
 import com.cydeo.repository.UserRepository;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
+import com.cydeo.service.ProductService;
 import com.cydeo.service.SecurityService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,8 +40,9 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceProductRepository invoiceProductRepository;
     private final SecurityService securityService;
     private final InvoiceProductService invoiceProductService;
+    private final ProductService productService;
 
-    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, MapperUtil mapperUtil, UserRepository userRepository, ClientVendorDTOConverter clientVendorDTOConverter, ClientVendorRepository clientVendorRepository, InvoiceProductRepository invoiceProductRepository, SecurityService securityService, InvoiceProductService invoiceProductService) {
+    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, MapperUtil mapperUtil, UserRepository userRepository, ClientVendorDTOConverter clientVendorDTOConverter, ClientVendorRepository clientVendorRepository, InvoiceProductRepository invoiceProductRepository, SecurityService securityService, InvoiceProductService invoiceProductService, ProductService productService) {
         this.invoiceRepository = invoiceRepository;
         this.mapperUtil = mapperUtil;
         this.userRepository = userRepository;
@@ -48,6 +51,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         this.invoiceProductRepository = invoiceProductRepository;
         this.securityService = securityService;
         this.invoiceProductService = invoiceProductService;
+        this.productService = productService;
     }
 
     @Override
@@ -173,18 +177,27 @@ public class InvoiceServiceImpl implements InvoiceService {
             increaseProductRemainingQuantity(invoiceProductList);
         }
 
+        invoiceToApprove.setInvoiceStatus(InvoiceStatus.APPROVED);
+        invoiceToApprove.setDate(LocalDate.now());
 
     }
-   public void savePurchaseInvoiceToProductProfitLoss(List<InvoiceProductDto> invoiceProductList){
-invoiceProductList.forEach(invoiceProduct->{
-    invoiceProduct.setProfitLoss(BigDecimal.ZERO);
-    invoiceProduct.setRemainingQuantity(invoiceProduct.getQuantity());
-    invoiceProductService.
-});
-   }
 
-    public void  increaseProductRemainingQuantity(List<InvoiceProductDto> invoiceProductList){
+    public void savePurchaseInvoiceToProductProfitLoss(List<InvoiceProductDto> invoiceProductList) {
+        invoiceProductList.forEach(invoiceProduct -> {
+            invoiceProduct.setProfitLoss(BigDecimal.ZERO);
+            invoiceProduct.setRemainingQuantity(invoiceProduct.getQuantity());
 
+
+            invoiceProductService.save(invoiceProduct);
+        });
+    }
+
+    public void increaseProductRemainingQuantity(List<InvoiceProductDto> invoiceProductList) {
+        invoiceProductList.forEach(invoiceProductDto -> {
+            ProductDto product = invoiceProductDto.getProduct();
+            Integer quantity = invoiceProductDto.getQuantity();
+            productService.increaseProductQuantityInStock(product.getId(), quantity);
+        });
     }
 
 
