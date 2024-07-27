@@ -2,13 +2,14 @@ package com.cydeo.service.impl;
 
 import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.entity.InvoiceProduct;
-import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.InvoiceProductRepository;
 import com.cydeo.service.InvoiceProductService;
+import com.cydeo.util.MapperUtil;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
+@Service
 public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     private final InvoiceProductRepository invoiceProductRepository;
