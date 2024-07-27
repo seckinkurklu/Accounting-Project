@@ -1,14 +1,8 @@
 package com.cydeo.service.impl;
 
 import com.cydeo.converter.ClientVendorDTOConverter;
-import com.cydeo.dto.ClientVendorDto;
-import com.cydeo.dto.CompanyDto;
-import com.cydeo.dto.InvoiceDto;
-import com.cydeo.dto.UserDto;
-import com.cydeo.entity.ClientVendor;
-import com.cydeo.entity.Invoice;
-import com.cydeo.entity.InvoiceProduct;
-import com.cydeo.entity.User;
+import com.cydeo.dto.*;
+import com.cydeo.entity.*;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.repository.ClientVendorRepository;
@@ -47,30 +41,29 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public List<Invoice> getAllInvoices() {
-        return invoiceRepository.findAll();
+    public List<InvoiceDto> getAllInvoices() {
+        List<Invoice> all = invoiceRepository.findAll();
+        return all.stream().map(p->mapperUtil.convert(p, new InvoiceDto())).toList();
     }
 
     @Override
-    public Invoice getInvoiceById(Long id) {
-        return invoiceRepository.findById(id).get();
+    public InvoiceDto getInvoiceById(Long id) {
+        return mapperUtil.convert(invoiceRepository.findById(id).get(), new InvoiceDto());
     }
 
     @Override
-    public Invoice createInvoice(Invoice invoice) {
-        return invoiceRepository.save(invoice);
+    public InvoiceDto createInvoice(Invoice invoice) {
+        return mapperUtil.convert(invoiceRepository.save(invoice), new InvoiceDto());
     }
 
     @Override
-    public Invoice upodateInvoice(Long id,Invoice invoice) {
-        Invoice existingInvoice = invoiceRepository.findById(id).get();
-        return null;
+    public InvoiceDto updateInvoice(Long id,Invoice invoice) {
+        return mapperUtil.convert(invoiceRepository.findById(id).get(), new InvoiceDto());
     }
 
     @Override
     public void deleteInvoice(Long id) {
-        invoiceRepository.deleteById(getInvoiceById(id));
-
+        invoiceRepository.deleteById(id);
     }
 
     //for US-49
@@ -95,7 +88,6 @@ public class InvoiceServiceImpl implements InvoiceService {
             BigDecimal tax = BigDecimal.valueOf(invoiceProduct.getTax());
             BigDecimal totalTax = tax.multiply(priceTotal).divide(BigDecimal.valueOf(100));
             p.setTax(totalTax);
-            //p.setTotal(totalPriceWithTax);
             p.setTotal(priceTotal.add(totalTax));
             return p;
         }).toList();
@@ -113,7 +105,11 @@ return invoiceDtoList;
     @Override
     public InvoiceDto save(InvoiceDto invoiceDto) {
         Long id = invoiceDto.getClientVendor().getId();// vendor id (th:value="${vendor.id}")--th:field="*{clientVendor}
+        int quantity = invoiceProductRepository.findByInvoice_Id(id).getQuantity();
+        BigDecimal price = invoiceProductRepository.findByInvoice_Id(id).getPrice();
+        int tax = invoiceProductRepository.findByInvoice_Id(id).getTax();
 
+        invoiceDto.setTax(BigDecimal.valueOf(tax));
         ClientVendor clientVendor = clientVendorRepository.getReferenceById(id);
         Invoice invoice = mapperUtil.convert(invoiceDto, new Invoice());
 
@@ -125,11 +121,10 @@ return invoiceDtoList;
         invoice.setClientVendor(clientVendor); // set Vendor
         invoice.setInvoiceType(InvoiceType.PURCHASE);
         invoice.setInvoiceStatus(InvoiceStatus.AWAITING_APPROVAL);
-        String username= SecurityContextHolder.getContext().getAuthentication().getName();
-        User byUsername = userRepository.findByUsername(username);
-//        System.out.println("================User's company "); // just to verify
-//        System.out.println(byUsername.getCompany().toString());// just to verify
-        invoice.setCompany(byUsername.getCompany());
+        UserDto loggedInUser = securityService.getLoggedInUser();
+        CompanyDto company = loggedInUser.getCompany();
+
+        invoice.setCompany(mapperUtil.convert(company, new Company()));
 
         Invoice saved = invoiceRepository.save(invoice);
         return mapperUtil.convert(saved, new InvoiceDto());
