@@ -13,6 +13,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice,Long> {
     List<Invoice> findAll();
     //Invoice findById(Long id);
     Invoice save(Invoice invoice);
+
     void deleteById(Invoice invoice);
 
     //for US-49

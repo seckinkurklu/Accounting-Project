@@ -9,7 +9,6 @@ import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -31,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products = productRepository.findAll();
 
         return products.stream()
-                .map(product -> mapperUtil.convert(product, new ProductDto())).collect(Collectors.toList());
+                .map(product -> mapperUtil.convert(product, new ProductDto())).toList();
     }
 
     @Override

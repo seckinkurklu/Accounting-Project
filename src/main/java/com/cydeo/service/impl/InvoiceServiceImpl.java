@@ -52,8 +52,9 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Invoice getInvoiceById(Long id) {
-        return invoiceRepository.findById(id).get();
+    public InvoiceDto getInvoiceById(Long id) {
+        Invoice invoice = invoiceRepository.findById(id).get();
+        return mapperUtil.convert(invoice,new InvoiceDto());
     }
 
     @Override
@@ -69,40 +70,51 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public void deleteInvoice(Long id) {
-        invoiceRepository.deleteById(getInvoiceById(id));
-
+        invoiceRepository.deleteById(id);
     }
 
-    //for US-49
+
+
     @Override
     public List<InvoiceDto> listAllPurchaseInvoice() {
         UserDto loggedInUser = securityService.getLoggedInUser();
         String companyTitle = loggedInUser.getCompany().getTitle();
-        //Purchase Invoices should be sorted by their invoice no in descending order (latest invoices should be at the top).
-        List<Invoice> invoices = invoiceRepository.findAllByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(InvoiceType.PURCHASE, companyTitle );
+        // Purchase Invoices should be sorted by their invoice no in descending order (latest invoices should be at the top).
+        List<Invoice> invoices = invoiceRepository.findAllByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(InvoiceType.PURCHASE, companyTitle);
 
         List<InvoiceDto> invoiceDtoList = invoices.stream().map(p -> mapperUtil.convert(p, new InvoiceDto())).toList();
 
         invoiceDtoList = invoiceDtoList.stream().map(p -> {
             Long id = mapperUtil.convert(p, new Invoice()).getId();
-            InvoiceProduct invoiceProduct = invoiceProductRepository.findByInvoice_Id(id);
+            InvoiceProduct invoiceProduct = invoiceProductRepository.findById(id).get();
 
-            int quantity = invoiceProduct.getQuantity();
+            if (invoiceProduct != null) {
+                int quantity = invoiceProduct.getQuantity();
+                BigDecimal priceTotal = invoiceProduct.getPrice().multiply(BigDecimal.valueOf(quantity));
+                p.setPrice(priceTotal);
 
-            BigDecimal priceTotal = invoiceProduct.getPrice().multiply(BigDecimal.valueOf(quantity));
-            p.setPrice(priceTotal);
+                BigDecimal tax = BigDecimal.valueOf(invoiceProduct.getTax());
+                BigDecimal totalTax = tax.multiply(priceTotal).divide(BigDecimal.valueOf(100));
+                p.setTax(totalTax);
+                p.setTotal(priceTotal.add(totalTax));
+            } else {
+                // Null invoiceProduct durumda
+                p.setPrice(BigDecimal.ZERO);
+                p.setTax(BigDecimal.ZERO);
+                p.setTotal(BigDecimal.ZERO);
+            }
 
-            BigDecimal tax = BigDecimal.valueOf(invoiceProduct.getTax());
-            BigDecimal totalTax = tax.multiply(priceTotal).divide(BigDecimal.valueOf(100));
-            p.setTax(totalTax);
-            //p.setTotal(totalPriceWithTax);
-            p.setTotal(priceTotal.add(totalTax));
             return p;
         }).toList();
 
         return invoiceDtoList;
     }
+
+
+
     //for US-49
+
+
     @Override
     public List<InvoiceDto> listAllSalesInvoice() {
         UserDto loggedInUser = securityService.getLoggedInUser();
