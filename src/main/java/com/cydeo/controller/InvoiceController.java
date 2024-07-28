@@ -91,21 +91,7 @@ public class InvoiceController {
     }
 
 
-//    @PostMapping("purchaseInvoices/addInvoiceProduct/{id}")
-//    public String addProduct(@PathVariable("id")Long id,@ModelAttribute("newInvoiceProduct") InvoiceProductDto invoiceProductDto,RedirectAttributes redirectAttributes,Model model){
-//
-//        InvoiceDto invoice = invoiceService.getInvoiceById(id);
-//
-//
-//        invoiceProductService.createInvoiceProduct(invoiceProductDto);
-//
-//        model.addAttribute("invoiceProducts",invoiceProductService.getAllInvoiceProducts());
-//
-//        redirectAttributes.addAttribute("id", id);
-//
-//
-//        return "redirect:/purchaseInvoices/update/{id}";
-//    }
+
 
 
 
