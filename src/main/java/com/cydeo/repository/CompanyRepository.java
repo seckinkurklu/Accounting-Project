@@ -2,10 +2,15 @@ package com.cydeo.repository;
 
 import com.cydeo.entity.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
+
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
+
+@Repository
 public interface CompanyRepository extends JpaRepository<Company, Long> {
 
     //    Companies should be sorted by their status, "Active" companies should be on top then by title of company

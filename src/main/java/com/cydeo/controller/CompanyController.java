@@ -1,3 +1,4 @@
+
 package com.cydeo.controller;
 
 import com.cydeo.service.CompanyService;
@@ -21,4 +22,5 @@ public class CompanyController {
         model.addAttribute("companies", companyService.listAllCompanies());
         return "company/company-list";
     }
+
 }
