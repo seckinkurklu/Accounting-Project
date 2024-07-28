@@ -1,5 +1,6 @@
 package com.cydeo.service;
 
+import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.entity.InvoiceProduct;
 import org.springframework.stereotype.Service;
 
@@ -12,5 +13,6 @@ public interface InvoiceProductService {
     InvoiceProduct createInvoiceProduct(InvoiceProduct invoiceProduct);
     InvoiceProduct updateInvoiceProduct(Long id, InvoiceProduct invoiceProduct);
     void deleteInvoiceProduct(Long id);
+    void save(InvoiceProductDto invoiceProductDTO);
 
 }
