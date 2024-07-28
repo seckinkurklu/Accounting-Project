@@ -52,4 +52,9 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         deleteInvoiceProduct(id);
 
     }
+
+    @Override
+    public void save(InvoiceProductDto invoiceProductDTO) {
+
+    }
 }
