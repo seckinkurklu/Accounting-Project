@@ -82,4 +82,9 @@ public class UserServiceImpl implements UserService {
         return mapperUtil.convert(existingUser, new UserDto());
     }
 
+    @Override
+    public void deleteUser(Long id) {
+
+    }
+
 }

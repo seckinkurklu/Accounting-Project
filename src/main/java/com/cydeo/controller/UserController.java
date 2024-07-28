@@ -80,6 +80,17 @@ public class UserController {
         return"redirect:/users/create";
     }
 
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable("id") Long id, Model model) {
+        UserDto userDto = userService.findById(id);
+        if (userDto.isOnlyAdmin()) {
+            model.addAttribute("error", "Only admin of the company cannot be deleted");
+            return "redirect:/users/list";
+        }
+        userService.deleteUser(id);
+        return "redirect:/users/list";
+    }
+
 }
 
 
