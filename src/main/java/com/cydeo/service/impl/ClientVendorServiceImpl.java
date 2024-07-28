@@ -17,6 +17,7 @@ import javax.transaction.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ClientVendorServiceImpl implements ClientVendorService {
@@ -34,7 +35,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     @Override
     public List<ClientVendorDto> listAllClientVendor() {
         List<ClientVendor> clientVendorRepositoryAll = clientVendorRepository.findAll();
-        return clientVendorRepositoryAll.stream().map(p->mapperUtil.convert(p, new ClientVendorDto())).toList();
+        return clientVendorRepositoryAll.stream().map(p->mapperUtil.convert(p, new ClientVendorDto())).collect(Collectors.toList());
     }
 
     @Override
@@ -42,7 +43,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         String username= SecurityContextHolder.getContext().getAuthentication().getName();
         User byUsername = userRepository.findByUsername(username);
         List<ClientVendor> allByCompanyTitle = clientVendorRepository.findAllByCompanyTitleOrderByClientVendorName(byUsername.getCompany().getTitle());
-        return allByCompanyTitle.stream().map(p->mapperUtil.convert(p, new ClientVendorDto())).toList();
+        return allByCompanyTitle.stream().map(p->mapperUtil.convert(p, new ClientVendorDto())).collect(Collectors.toList());
     }
 
     @Override

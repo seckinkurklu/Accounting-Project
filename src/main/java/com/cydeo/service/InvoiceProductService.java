@@ -13,5 +13,6 @@ public interface InvoiceProductService {
     void createInvoiceProduct(InvoiceProductDto invoiceProductDto);
     InvoiceProduct updateInvoiceProduct(Long id, InvoiceProduct invoiceProduct);
     void deleteInvoiceProduct(Long id);
+    void save(InvoiceProductDto invoiceProductDTO);
 
 }

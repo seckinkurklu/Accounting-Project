@@ -89,7 +89,7 @@
                                                                     <label>Product Unit</label>
                                                                     <select class="custom-select"
                                                                             th:field="*{productUnit}">
-                                                                        <option th:if="${productUnits.size() > 1}"
+                                                                        <option th:if="${#arrays.length(productUnits) > 1}"
                                                                                 th:value="''"
                                                                                 th:text="'Select'"></option>
                                                                         <option th:each="productUnit:${productUnits}"

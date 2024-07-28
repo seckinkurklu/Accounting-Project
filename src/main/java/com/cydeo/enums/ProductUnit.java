@@ -10,4 +10,7 @@ public enum ProductUnit {
         this.value = value;
     }
 
+    public String getValue() {
+        return value;
+    }
 }

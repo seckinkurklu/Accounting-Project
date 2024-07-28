@@ -48,4 +48,10 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryList.stream().map(category -> mapperUtil.convert(category, new CategoryDto())).collect(Collectors.toList());
     }
 
+    @Override
+    public CategoryDto findCategoryById(Long id) {
+
+        return mapperUtil.convert(categoryRepository.findById(id).get(),new CategoryDto());
+    }
+
 }

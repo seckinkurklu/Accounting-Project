@@ -11,5 +11,6 @@ public interface CategoryService {
     List<CategoryDto> listAllCategory();
 
     List<CategoryDto> listAllByCompany();
+    CategoryDto findCategoryById(Long id);
 
 }

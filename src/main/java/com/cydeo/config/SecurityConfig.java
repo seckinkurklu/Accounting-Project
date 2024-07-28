@@ -53,5 +53,7 @@ public class SecurityConfig {
                     .tokenValiditySeconds(864000) //Token will be valid for 864000 seconds (240 hours)
                     .userDetailsService(securityService)
                 .and().build(); // at the end finish everything we put .build()
+
+    //security part added
     }
 }
