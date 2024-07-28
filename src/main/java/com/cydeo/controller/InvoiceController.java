@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 
@@ -77,27 +78,8 @@ public class InvoiceController {
         return "redirect:/purchaseInvoices/list";
 
     }
-
-    @GetMapping("/purchaseInvoices/update/{id}") // to Add Product
-    public String updatePurchaseInvoice(@PathVariable Long id, Model model){
-
-        model.addAttribute("invoice", invoiceService.getInvoiceById(id));
-        model.addAttribute("vendors", clientVendorService.listAllByCompanyTitle());
-        model.addAttribute("newInvoiceProduct",new InvoiceProduct());
-        model.addAttribute("products",productService.listAllProducts());
-        model.addAttribute("invoiceProducts",invoiceProductService.getAllInvoiceProducts()); // guncellenecek
-       return "invoice/purchase-invoice-update";
-
-        return "invoice/purchase-invoice-update";
-    }
-
-
-
-
-
-
     @PostMapping("/purchaseInvoices/addInvoiceProduct/{id}")
-    public String addProduct(@PathVariable("id") Long id, @ModelAttribute("newInvoiceProduct") InvoiceProductDto invoiceProductDto,RedirectAttributes redirectAttributes) {
+    public String addProduct(@PathVariable("id") Long id, @ModelAttribute("newInvoiceProduct") InvoiceProductDto invoiceProductDto, RedirectAttributes redirectAttributes) {
         // İlgili invoice'ı al
         Invoice invoice = invoiceRepository.findById(id).get();
 
@@ -123,6 +105,26 @@ public class InvoiceController {
 
         return "redirect:/purchaseInvoices/update/{id}";
     }
+
+    @GetMapping("/purchaseInvoices/update/{id}") // to Add Product
+    public String updatePurchaseInvoice(@PathVariable Long id, Model model){
+
+        model.addAttribute("invoice", invoiceService.getInvoiceById(id));
+        model.addAttribute("vendors", clientVendorService.listAllByCompanyTitle());
+        model.addAttribute("newInvoiceProduct",new InvoiceProduct());
+        model.addAttribute("products",productService.listAllProducts());
+        model.addAttribute("invoiceProducts",invoiceProductService.getAllInvoiceProducts()); // guncellenecek
+       return "invoice/purchase-invoice-update";
+
+
+    }
+
+
+
+
+
+
+
 
 
 
