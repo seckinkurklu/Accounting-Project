@@ -106,7 +106,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             BigDecimal priceTotal = invoiceProduct.getPrice().multiply(BigDecimal.valueOf(quantity));
             p.setPrice(priceTotal);
 
-            BigDecimal tax = BigDecimal.valueOf(invoiceProduct.getTax());
+            BigDecimal tax = invoiceProduct.getTax();
             BigDecimal totalTax = tax.multiply(priceTotal).divide(BigDecimal.valueOf(100));
             p.setTax(totalTax);
             //p.setTotal(totalPriceWithTax);
