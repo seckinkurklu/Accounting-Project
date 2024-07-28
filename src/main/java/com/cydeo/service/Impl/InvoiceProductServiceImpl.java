@@ -56,6 +56,6 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     @Override
     public void save(InvoiceProductDto invoiceProductDTO) {
-        invoiceProductRepository.save(mapperUtil.convert(invoiceProductDTO, new InvoiceProduct()));2
+        invoiceProductRepository.save(mapperUtil.convert(invoiceProductDTO, new InvoiceProduct()));
     }
 }
