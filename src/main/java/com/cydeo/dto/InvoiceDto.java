@@ -1,6 +1,5 @@
 package com.cydeo.dto;
 
-import com.cydeo.entity.ClientVendor;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 import lombok.*;
@@ -12,7 +11,6 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class InvoiceDto {
@@ -32,8 +30,6 @@ private CompanyDto company;
 
 @NotNull
 private  ClientVendorDto clientVendor;
-
-
 
 private BigDecimal price;
 

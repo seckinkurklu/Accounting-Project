@@ -3,10 +3,14 @@ package com.cydeo.controller;
 
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.InvoiceProductDto;
-import com.cydeo.repository.InvoiceProductRepository;
+import com.cydeo.entity.Invoice;
+import com.cydeo.entity.InvoiceProduct;
+import com.cydeo.repository.InvoiceRepository;
 import com.cydeo.service.ClientVendorService;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
+import com.cydeo.service.ProductService;
+
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,21 +26,26 @@ public class InvoiceController {
 
     private final InvoiceService invoiceService;
     private final ClientVendorService clientVendorService;
-    private final InvoiceProductRepository invoiceProductRepository;
-    private final InvoiceProductService invoiceProductService;
+    private final ProductService productService;
     private final MapperUtil mapperUtil;
+    private final InvoiceProductService invoiceProductService;
+    private final InvoiceRepository invoiceRepository;
 
-    public InvoiceController(InvoiceService invoiceService, ClientVendorService clientVendorService, InvoiceProductRepository invoiceProductRepository, InvoiceProductService invoiceProductService, MapperUtil mapperUtil) {
+
+    public InvoiceController(InvoiceService invoiceService, ClientVendorService clientVendorService, ProductService productService, MapperUtil mapperUtil, InvoiceProductService invoiceProductService, InvoiceRepository invoiceRepository) {
         this.invoiceService = invoiceService;
         this.clientVendorService = clientVendorService;
-        this.invoiceProductRepository = invoiceProductRepository;
-        this.invoiceProductService = invoiceProductService;
+        this.productService = productService;
         this.mapperUtil = mapperUtil;
+        this.invoiceProductService = invoiceProductService;
+        this.invoiceRepository = invoiceRepository;
+
     }
 
     @GetMapping("/purchaseInvoices/list")
     public String invoicePurchaseDtoList(Model model) {
         model.addAttribute("invoices", invoiceService.listAllPurchaseInvoice());
+
 
         return "/invoice/purchase-invoice-list";
     }
@@ -62,9 +71,11 @@ public class InvoiceController {
         InvoiceDto saved = invoiceService.save(invoiceDto);
 
         //"Save" button should save the last created purchase invoice to the database,
-        //and land user to the "Edit Purchase Invoice" page will
-        Long id = saved.getId();
-        return "redirect:/purchaseInvoices/update/"+id;
+        //and land user to the "Edit Purchase Invoice" page
+//        Long id = saved.getId();
+//        redirectAttributes.addAttribute("id", id);
+        return "redirect:/purchaseInvoices/list";
+
     }
 
     @GetMapping("/purchaseInvoices/update/{id}") // to Add Product
@@ -72,12 +83,54 @@ public class InvoiceController {
 
         model.addAttribute("invoice", invoiceService.getInvoiceById(id));
         model.addAttribute("vendors", clientVendorService.listAllByCompanyTitle());
-        model.addAttribute("newInvoiceProduct", new InvoiceProductDto()); // added to new InvoiceProduct form
-        model.addAttribute("products", invoiceProductService.getAllInvoiceProductsById(id)); //for new InvoiceProduct form
-        model.addAttribute("invoiceProducts", invoiceProductService.getAllInvoiceProducts());// for Product List
+        model.addAttribute("newInvoiceProduct",new InvoiceProduct());
+        model.addAttribute("products",productService.listAllProducts());
+        model.addAttribute("invoiceProducts",invoiceProductService.getAllInvoiceProducts()); // guncellenecek
+       return "invoice/purchase-invoice-update";
 
         return "invoice/purchase-invoice-update";
     }
+
+
+
+
+
+
+    @PostMapping("/purchaseInvoices/addInvoiceProduct/{id}")
+    public String addProduct(@PathVariable("id") Long id, @ModelAttribute("newInvoiceProduct") InvoiceProductDto invoiceProductDto,RedirectAttributes redirectAttributes) {
+        // İlgili invoice'ı al
+        Invoice invoice = invoiceRepository.findById(id).get();
+
+        // InvoiceProductDto'yu InvoiceProduct'a dönüştür
+        InvoiceProduct newInvoiceProduct = mapperUtil.convert(invoiceProductDto, new InvoiceProduct());
+
+        if (newInvoiceProduct==null || invoiceProductDto==null){
+
+            return "redirect:/purchaseInvoices/update";
+        }
+
+
+        // InvoiceProduct'ı ilgili invoice ile ilişkilendir
+        newInvoiceProduct.setInvoice(invoice);
+
+        InvoiceProductDto convertedInvoiceProductDto = mapperUtil.convert(newInvoiceProduct,new InvoiceProductDto());
+        // InvoiceProduct'ı kaydet
+        invoiceProductService.createInvoiceProduct(convertedInvoiceProductDto);
+        // Redirect attributes ekle
+
+        redirectAttributes.addAttribute("id",id);
+
+
+        return "redirect:/purchaseInvoices/update/{id}";
+    }
+
+
+
+
+
+
+
+
 
 }
 /**/

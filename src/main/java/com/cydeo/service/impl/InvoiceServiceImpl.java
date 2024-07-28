@@ -64,8 +64,10 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Invoice getInvoiceById(Long id) {
-        return invoiceRepository.findById(id).get();
+    public InvoiceDto getInvoiceById(Long id) {
+        Invoice invoice = invoiceRepository.findById(id).get();
+
+        return mapperUtil.convert(invoice,new InvoiceDto());
     }
 
     @Override
@@ -81,7 +83,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public void deleteInvoice(Long id) {
-        invoiceRepository.deleteById(getInvoiceById(id));
+        invoiceRepository.deleteById(id);
 
     }
 
@@ -97,14 +99,14 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         invoiceDtoList = invoiceDtoList.stream().map(p -> {
             Long id = mapperUtil.convert(p, new Invoice()).getId();
-            InvoiceProduct invoiceProduct = invoiceProductRepository.findByInvoice_Id(id);
+            InvoiceProduct invoiceProduct = invoiceProductRepository.findById(id).get();
 
             int quantity = invoiceProduct.getQuantity();
 
             BigDecimal priceTotal = invoiceProduct.getPrice().multiply(BigDecimal.valueOf(quantity));
             p.setPrice(priceTotal);
 
-            BigDecimal tax = BigDecimal.valueOf(invoiceProduct.getTax());
+            BigDecimal tax = invoiceProduct.getTax();
             BigDecimal totalTax = tax.multiply(priceTotal).divide(BigDecimal.valueOf(100));
             p.setTax(totalTax);
             //p.setTotal(totalPriceWithTax);

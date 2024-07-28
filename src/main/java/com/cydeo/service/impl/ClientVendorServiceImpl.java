@@ -58,6 +58,9 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     @Override
     public void save(ClientVendorDto clientVendorDto) {
 
+        ClientVendor clientVendor = mapperUtil.convert(clientVendorDto,new ClientVendor());
+        clientVendorRepository.save(clientVendor);
+
     }
 
 

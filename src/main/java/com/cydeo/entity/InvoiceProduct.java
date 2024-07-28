@@ -19,8 +19,9 @@ import java.math.BigDecimal;
 public class InvoiceProduct extends BaseEntity {
     private int quantity;
     private BigDecimal price;
-    private int tax;
+    private BigDecimal tax;
     private BigDecimal profitLoss;
+    private BigDecimal total;
     private int remainingQuantity;
 
     @ManyToOne
