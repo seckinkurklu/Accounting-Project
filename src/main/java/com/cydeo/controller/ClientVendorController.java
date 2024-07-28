@@ -24,10 +24,9 @@ public class ClientVendorController {
     @GetMapping("/list")
     public String getClientVendors(Model model){
 
-        model.addAttribute("clientVendors",clientVendorService.listAllClientVendor());
+        model.addAttribute("clientVendors",clientVendorService.listAllByCompanyTitle());
 
         return "/clientVendor/clientVendor-list";
-
 
     }
 
@@ -67,7 +66,6 @@ public String editClientVendor(@PathVariable("id") Long id, Model model) {
 
     @PostMapping("/update/{id}")
     public String updateClientVendor(@ModelAttribute("clientVendor") ClientVendorDto clientVendorDto){
-
 
         clientVendorService.update(clientVendorDto);
 
