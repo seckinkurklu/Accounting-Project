@@ -64,8 +64,10 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Invoice getInvoiceById(Long id) {
-        return invoiceRepository.findById(id).get();
+    public InvoiceDto getInvoiceById(Long id) {
+        Invoice invoice = invoiceRepository.findById(id).get();
+
+        return mapperUtil.convert(invoice,new InvoiceDto());
     }
 
     @Override
@@ -81,7 +83,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public void deleteInvoice(Long id) {
-        invoiceRepository.deleteById(getInvoiceById(id));
+        invoiceRepository.deleteById(id);
 
     }
 
@@ -97,7 +99,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         invoiceDtoList = invoiceDtoList.stream().map(p -> {
             Long id = mapperUtil.convert(p, new Invoice()).getId();
-            InvoiceProduct invoiceProduct = invoiceProductRepository.findByInvoice_Id(id);
+            InvoiceProduct invoiceProduct = invoiceProductRepository.findById(id).get();
 
             int quantity = invoiceProduct.getQuantity();
 
@@ -126,7 +128,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoiceDto save(InvoiceDto invoiceDto) {
-        Long id = invoiceDto.getClientVendorDto().getId();// vendor id (th:value="${vendor.id}")--th:field="*{clientVendor}
+        Long id = invoiceDto.getClientVendor().getId();// vendor id (th:value="${vendor.id}")--th:field="*{clientVendor}
 
         ClientVendor clientVendor = clientVendorRepository.getReferenceById(id);
         Invoice invoice = mapperUtil.convert(invoiceDto, new Invoice());
