@@ -62,7 +62,7 @@ public class InvoiceController {
         InvoiceDto saved = invoiceService.save(invoiceDto);
 
         //"Save" button should save the last created purchase invoice to the database,
-        //and land user to the "Edit Purchase Invoice" page
+        //and land user to the "Edit Purchase Invoice" page will
         Long id = saved.getId();
         return "redirect:/purchaseInvoices/update/"+id;
     }
