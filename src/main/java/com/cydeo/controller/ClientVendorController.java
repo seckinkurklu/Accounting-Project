@@ -49,9 +49,6 @@ public class ClientVendorController {
         return "redirect:/clientVendors/list";
     }
 
-
-
-
 @GetMapping("/update/{id}")
 public String editClientVendor(@PathVariable("id") Long id, Model model) {
     List<ClientVendorType> clientVendorTypes = Arrays.asList(ClientVendorType.values());
@@ -71,9 +68,5 @@ public String editClientVendor(@PathVariable("id") Long id, Model model) {
 
         return "redirect:/clientVendors/list";
     }
-
-
-
-
 
 }

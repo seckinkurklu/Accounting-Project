@@ -59,7 +59,9 @@ public class ProductServiceImpl implements ProductService {
 
         product.setIsDeleted(true);
 
+
         productRepository.save(product);
+
 
     }
 
