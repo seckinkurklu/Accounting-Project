@@ -44,7 +44,8 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
     // US-33 Only client and vendors of the current user's company should be listed in the list.
     //List should be sorted based on type (clients at the top) then Client / Vendor Name.
-        @Override
+
+    @Override
     public List<ClientVendorDto> listAllByCompanyTitle() {
         UserDto loggedInUser = securityService.getLoggedInUser();
         List<ClientVendor> allByCompanyTitle = clientVendorRepository.findAllByCompanyTitleOrderByClientVendorName(loggedInUser.getCompany().getTitle());
