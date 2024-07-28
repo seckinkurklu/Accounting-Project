@@ -3,6 +3,7 @@ package com.cydeo.service.impl;
 import com.cydeo.dto.CompanyDto;
 import com.cydeo.entity.Company;
 import com.cydeo.enums.CompanyStatus;
+import com.cydeo.exception.CompanyNotFounException;
 import com.cydeo.repository.CompanyRepository;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.SecurityService;
