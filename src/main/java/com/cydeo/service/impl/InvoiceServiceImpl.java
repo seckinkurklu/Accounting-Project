@@ -74,11 +74,10 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-
-    public Invoice upodateInvoice(Long id, Invoice invoice) {
-        Invoice existingInvoice = invoiceRepository.findById(id).get();
+    public Invoice updateInvoice(Long id, Invoice invoice) {
         return null;
     }
+
 
     @Override
     public void deleteInvoice(Long id) {
