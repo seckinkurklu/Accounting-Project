@@ -26,13 +26,13 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         this.mapperUtil = mapperUtil;
         this.securityService = securityService;
     }
-  
+
     public List<InvoiceProductDto> getAllInvoiceProducts() {
         // Mevcut kullanıcıyı al
 //         UserDto loggedUser = securityService.getLoggedInUser();
 //         User user = mapperUtil.convert(loggedUser,new User());
 //         Company companyTitle = user.getCompany();
-      //Update edilecek - Omer
+        //Update edilecek - Omer
 
         // Kullanıcıya ait InvoiceProduct nesnelerini al
 //        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllByInvoiceCompany(companyTitle);
@@ -79,60 +79,55 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     }
 
-@Override
-public void createInvoiceProduct(InvoiceProductDto invoiceProductDto) {. // hep birlikteyken ismi degisrilebilir. 
-    // InvoiceProductDto'yu InvoiceProduct'a dönüştür
-    InvoiceProduct newInvoiceProduct = mapperUtil.convert(invoiceProductDto, new InvoiceProduct());
 
-    // Mevcut InvoiceProduct'ları al
-    List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAll();
 
-    // Aynı üründen olup olmadığını kontrol et
-    for (InvoiceProduct existingProduct : invoiceProducts) {
-        if (existingProduct.getProduct().getId().equals(newInvoiceProduct.getProduct().getId()) &&
-                existingProduct.getInvoice().getId().equals(newInvoiceProduct.getInvoice().getId())) {
-            // Mevcut ürün bulundu, miktarını ve fiyatını güncelle
+    @Override
+    public void createInvoiceProduct(InvoiceProductDto invoiceProductDto) { // hep birlikteyken ismi degisrilebilir.
+        // InvoiceProductDto'yu InvoiceProduct'a dönüştür
+        InvoiceProduct newInvoiceProduct = mapperUtil.convert(invoiceProductDto, new InvoiceProduct());
 
-            // Null kontrolleri
-            Integer existingQuantity = existingProduct.getQuantity() != 0 ? existingProduct.getQuantity() : 0;
-            Integer newQuantity = newInvoiceProduct.getQuantity() != 0 ? newInvoiceProduct.getQuantity() :0;
-            BigDecimal existingPrice = existingProduct.getPrice() != null ? existingProduct.getPrice() : BigDecimal.ZERO;
-            BigDecimal newPrice = newInvoiceProduct.getPrice() != null ? newInvoiceProduct.getPrice() : BigDecimal.ZERO;
-            BigDecimal existingTax = existingProduct.getTax() != BigDecimal.ZERO ? existingProduct.getTax() : BigDecimal.ZERO;
-            BigDecimal newTax = newInvoiceProduct.getTax() != BigDecimal.ZERO ? newInvoiceProduct.getTax() : BigDecimal.ZERO;
-            BigDecimal existingTotal = existingProduct.getTotal() != null ? existingProduct.getTotal() : BigDecimal.ZERO;
-            BigDecimal newTotal = newInvoiceProduct.getTotal() != null ? newInvoiceProduct.getTotal() : BigDecimal.ZERO;
+        // Mevcut InvoiceProduct'ları al
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAll();
 
-            existingProduct.setQuantity(existingQuantity + newQuantity);
-            existingProduct.setPrice(existingPrice.add(newPrice));
-            existingProduct.setTax(existingTax.add(newTax));
-            existingProduct.setTotal(existingTotal.add(newTotal));
-            invoiceProductRepository.save(existingProduct);
-            return;
+        // Aynı üründen olup olmadığını kontrol et
+        for (InvoiceProduct existingProduct : invoiceProducts) {
+            if (existingProduct.getProduct().getId().equals(newInvoiceProduct.getProduct().getId()) &&
+                    existingProduct.getInvoice().getId().equals(newInvoiceProduct.getInvoice().getId())) {
+                // Mevcut ürün bulundu, miktarını ve fiyatını güncelle
+
+                // Null kontrolleri
+                Integer existingQuantity = existingProduct.getQuantity() != 0 ? existingProduct.getQuantity() : 0;
+                Integer newQuantity = newInvoiceProduct.getQuantity() != 0 ? newInvoiceProduct.getQuantity() : 0;
+                BigDecimal existingPrice = existingProduct.getPrice() != null ? existingProduct.getPrice() : BigDecimal.ZERO;
+                BigDecimal newPrice = newInvoiceProduct.getPrice() != null ? newInvoiceProduct.getPrice() : BigDecimal.ZERO;
+                BigDecimal existingTax = existingProduct.getTax() != BigDecimal.ZERO ? existingProduct.getTax() : BigDecimal.ZERO;
+                BigDecimal newTax = newInvoiceProduct.getTax() != BigDecimal.ZERO ? newInvoiceProduct.getTax() : BigDecimal.ZERO;
+                BigDecimal existingTotal = existingProduct.getTotal() != null ? existingProduct.getTotal() : BigDecimal.ZERO;
+                BigDecimal newTotal = newInvoiceProduct.getTotal() != null ? newInvoiceProduct.getTotal() : BigDecimal.ZERO;
+
+                existingProduct.setQuantity(existingQuantity + newQuantity);
+                existingProduct.setPrice(existingPrice.add(newPrice));
+                existingProduct.setTax(existingTax.add(newTax));
+                existingProduct.setTotal(existingTotal.add(newTotal));
+                invoiceProductRepository.save(existingProduct);
+                return;
+            }
+            invoiceProductRepository.save(newInvoiceProduct);
         }
-      invoiceProductRepository.save(newInvoiceProduct);
+
+
+
+
+
     }
-      
+
+    @Override
+    public List<InvoiceProductDto> getAllInvoiceProductsById(Long id) {
+        return invoiceProductRepository.findAllInvoiceProductsByInvoiceId(id).stream().map(p -> mapperUtil.convert(p, new InvoiceProductDto())).toList();
+
+    }
     @Override
     public InvoiceProductDto getInvoiceProductById(Long id) {
         return mapperUtil.convert(invoiceProductRepository.findById(id).orElse(null), new InvoiceProductDto());
-    }
-          public List<InvoiceProductDto> getAllInvoiceProductsById(Long id) {
-        return invoiceProductRepository.findAllInvoiceProductsByInvoiceId(id).stream().map(p->mapperUtil.convert(p, new InvoiceProductDto())).toList();
-    }
-
-    @Override
-    public InvoiceProductDto updateInvoiceProduct(Long id, InvoiceProduct invoiceProduct) {
-        return null;
-    }
-
-    @Override
-    public void deleteInvoiceProduct(Long id) {
-       
-    }
-
-    @Override
-    public void save(InvoiceProductDto invoiceProductDTO) {
-
     }
 }
