@@ -106,7 +106,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
                 BigDecimal newTotal = newInvoiceProduct.getTotal() != null ? newInvoiceProduct.getTotal() : BigDecimal.ZERO;
 
                 existingProduct.setQuantity(existingQuantity + newQuantity);
-                existingProduct.setPrice(existingPrice.add(newPrice));
+                existingProduct.setPrice(newPrice);
                 existingProduct.setTax(existingTax.add(newTax));
                 existingProduct.setTotal(existingTotal.add(newTotal));
                 invoiceProductRepository.save(existingProduct);
