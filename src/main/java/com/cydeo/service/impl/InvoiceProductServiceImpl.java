@@ -15,7 +15,6 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     private final InvoiceProductRepository invoiceProductRepository;
     private final MapperUtil mapperUtil;
 
-
     public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository, MapperUtil mapperUtil) {
         this.invoiceProductRepository = invoiceProductRepository;
         this.mapperUtil = mapperUtil;
@@ -23,22 +22,29 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
 
     @Override
-    public List<InvoiceProduct> getAllInvoiceProducts() {
-        return getAllInvoiceProducts();
+    public List<InvoiceProductDto> getAllInvoiceProducts() {
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAll();
+        return invoiceProducts.stream().map(p->mapperUtil.convert(p, new InvoiceProductDto())).toList() ;
     }
 
     @Override
-    public InvoiceProduct getInvoiceProductById(Long id) {
-        return getInvoiceProductById(id);
+    public List<InvoiceProductDto> getAllInvoiceProductsById(Long id) {
+        return invoiceProductRepository.findAllInvoiceProductsByInvoiceId(id).stream().map(p->mapperUtil.convert(p, new InvoiceProductDto())).toList();
     }
 
     @Override
-    public InvoiceProduct createInvoiceProduct(InvoiceProduct invoiceProduct) {
+    public InvoiceProductDto getInvoiceProductById(Long id) {
+        return mapperUtil.convert(invoiceProductRepository.findById(id).orElse(null), new InvoiceProductDto());
+    }
+
+    @Override
+    public InvoiceProductDto createInvoiceProduct(InvoiceProduct invoiceProduct) {
+        invoiceProductRepository.save(mapperUtil.convert(invoiceProduct, new InvoiceProduct()));
         return createInvoiceProduct(invoiceProduct);
     }
 
     @Override
-    public InvoiceProduct updateInvoiceProduct(Long id, InvoiceProduct invoiceProduct) {
+    public InvoiceProductDto updateInvoiceProduct(Long id, InvoiceProduct invoiceProduct) {
         return null;
     }
 
@@ -49,7 +55,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     }
 
     @Override
-    public void save(InvoiceProductDto invoiceProductDto) {
-        invoiceProductRepository.save(mapperUtil.convert(invoiceProductDto,new InvoiceProduct()));
+    public void save(InvoiceProductDto invoiceProductDTO) {
+
     }
 }
