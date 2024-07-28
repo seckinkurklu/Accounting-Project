@@ -10,4 +10,7 @@ public interface ProductService {
     void save(ProductDto productDto);
     void delete(Long id);
 
+
+ void   increaseProductQuantityInStock(Long id,Integer quantity);
+
 }
