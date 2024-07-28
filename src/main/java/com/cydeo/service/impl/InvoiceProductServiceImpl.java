@@ -26,15 +26,13 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         this.mapperUtil = mapperUtil;
         this.securityService = securityService;
     }
-
-
-
-
+  
     public List<InvoiceProductDto> getAllInvoiceProducts() {
         // Mevcut kullanıcıyı al
-        UserDto loggedUser = securityService.getLoggedInUser();
-        User user = mapperUtil.convert(loggedUser,new User());
-        Company companyTitle = user.getCompany();
+//         UserDto loggedUser = securityService.getLoggedInUser();
+//         User user = mapperUtil.convert(loggedUser,new User());
+//         Company companyTitle = user.getCompany();
+      //Update edilecek - Omer
 
         // Kullanıcıya ait InvoiceProduct nesnelerini al
 //        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllByInvoiceCompany(companyTitle);
@@ -65,7 +63,6 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
             BigDecimal basePrice = price.multiply(BigDecimal.valueOf(quantity));
             invoiceProductDto.setTotal(basePrice);
 
-
             BigDecimal taxRate = invoiceProduct.getTax();
             invoiceProductDto.setTax(taxRate);
 
@@ -79,23 +76,11 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         }).toList();
 
         return invoiceProductDtos;
+
     }
 
-
-
-
-    @Override
-    public InvoiceProductDto getInvoiceProductById(Long id) {
-
-        List<InvoiceProduct> invoiceProduct=invoiceProductRepository.findAllByInvoice_Id(id);
-
-        return mapperUtil.convert(invoiceProduct,new  InvoiceProductDto());
-    }
-
-
-//
 @Override
-public void createInvoiceProduct(InvoiceProductDto invoiceProductDto) {
+public void createInvoiceProduct(InvoiceProductDto invoiceProductDto) {. // hep birlikteyken ismi degisrilebilir. 
     // InvoiceProductDto'yu InvoiceProduct'a dönüştür
     InvoiceProduct newInvoiceProduct = mapperUtil.convert(invoiceProductDto, new InvoiceProduct());
 
@@ -125,22 +110,25 @@ public void createInvoiceProduct(InvoiceProductDto invoiceProductDto) {
             invoiceProductRepository.save(existingProduct);
             return;
         }
+      invoiceProductRepository.save(newInvoiceProduct);
+    }
+      
+    @Override
+    public InvoiceProductDto getInvoiceProductById(Long id) {
+        return mapperUtil.convert(invoiceProductRepository.findById(id).orElse(null), new InvoiceProductDto());
+    }
+          public List<InvoiceProductDto> getAllInvoiceProductsById(Long id) {
+        return invoiceProductRepository.findAllInvoiceProductsByInvoiceId(id).stream().map(p->mapperUtil.convert(p, new InvoiceProductDto())).toList();
     }
 
-    // Aynı ürün bulunamadıysa, yeni ürünü ekle
-    invoiceProductRepository.save(newInvoiceProduct);
-}
-
-
     @Override
-    public InvoiceProduct updateInvoiceProduct(Long id, InvoiceProduct invoiceProduct) {
+    public InvoiceProductDto updateInvoiceProduct(Long id, InvoiceProduct invoiceProduct) {
         return null;
     }
 
     @Override
     public void deleteInvoiceProduct(Long id) {
-        deleteInvoiceProduct(id);
-
+       
     }
 
     @Override

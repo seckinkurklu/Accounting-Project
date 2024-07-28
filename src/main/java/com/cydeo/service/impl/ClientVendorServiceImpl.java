@@ -10,11 +10,7 @@ import com.cydeo.util.MapperUtil;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-
 import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
-
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
