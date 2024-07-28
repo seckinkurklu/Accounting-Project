@@ -24,10 +24,9 @@ public class ClientVendorController {
     @GetMapping("/list")
     public String getClientVendors(Model model){
 
-        model.addAttribute("clientVendors",clientVendorService.listAllClientVendor());
+        model.addAttribute("clientVendors",clientVendorService.listAllByCompanyTitle());
 
         return "/clientVendor/clientVendor-list";
-
 
     }
 
@@ -50,9 +49,6 @@ public class ClientVendorController {
         return "redirect:/clientVendors/list";
     }
 
-
-
-
 @GetMapping("/update/{id}")
 public String editClientVendor(@PathVariable("id") Long id, Model model) {
     List<ClientVendorType> clientVendorTypes = Arrays.asList(ClientVendorType.values());
@@ -68,14 +64,9 @@ public String editClientVendor(@PathVariable("id") Long id, Model model) {
     @PostMapping("/update/{id}")
     public String updateClientVendor(@ModelAttribute("clientVendor") ClientVendorDto clientVendorDto){
 
-
         clientVendorService.update(clientVendorDto);
 
         return "redirect:/clientVendors/list";
     }
-
-
-
-
 
 }

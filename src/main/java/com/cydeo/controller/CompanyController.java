@@ -23,4 +23,6 @@ public class CompanyController {
         return "company/company-list";
     }
 
+    // add create endpoint
+
 }
