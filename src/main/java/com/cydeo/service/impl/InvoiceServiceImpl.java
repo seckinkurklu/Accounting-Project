@@ -112,7 +112,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
     @Override
     public InvoiceDto save(InvoiceDto invoiceDto) {
-        Long id = invoiceDto.getClientVendor().getId();// vendor id (th:value="${vendor.id}")--th:field="*{clientVendor}
+        Long id = invoiceDto.getClientVendorDto().getId();// vendor id (th:value="${vendor.id}")--th:field="*{clientVendor}
 
         ClientVendor clientVendor = clientVendorRepository.getReferenceById(id);
         Invoice invoice = mapperUtil.convert(invoiceDto, new Invoice());
