@@ -1,18 +1,24 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.repository.InvoiceProductRepository;
 import com.cydeo.service.InvoiceProductService;
+import com.cydeo.util.MapperUtil;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
+@Service
 public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     private final InvoiceProductRepository invoiceProductRepository;
+    private final MapperUtil mapperUtil;
 
-    public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository) {
+
+    public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository, MapperUtil mapperUtil) {
         this.invoiceProductRepository = invoiceProductRepository;
+        this.mapperUtil = mapperUtil;
     }
 
 
@@ -40,5 +46,10 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     public void deleteInvoiceProduct(Long id) {
         deleteInvoiceProduct(id);
 
+    }
+
+    @Override
+    public void save(InvoiceProductDto invoiceProductDto) {
+        invoiceProductRepository.save(mapperUtil.convert(invoiceProductDto,new InvoiceProduct()));
     }
 }
