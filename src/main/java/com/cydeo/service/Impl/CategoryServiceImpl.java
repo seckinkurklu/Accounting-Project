@@ -9,7 +9,6 @@ import com.cydeo.entity.User;
 import com.cydeo.repository.CategoryRepository;
 import com.cydeo.repository.ProductRepository;
 import com.cydeo.service.CategoryService;
-import com.cydeo.service.CompanyService;
 import com.cydeo.service.UserService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
