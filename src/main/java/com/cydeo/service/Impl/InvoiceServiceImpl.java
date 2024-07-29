@@ -29,8 +29,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 
 @Service
@@ -67,7 +66,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     public InvoiceDto getInvoiceById(Long id) {
         Invoice invoice = invoiceRepository.findById(id).get();
 
-        return mapperUtil.convert(invoice, new InvoiceDto());
+        return mapperUtil.convert(invoice,new InvoiceDto());
     }
 
     @Override
@@ -80,9 +79,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         return null;
     }
 
+
     @Override
     public void deleteInvoice(Long id) {
         invoiceRepository.deleteById(id);
+
     }
 
     //for US-49
@@ -90,7 +91,8 @@ public class InvoiceServiceImpl implements InvoiceService {
     public List<InvoiceDto> listAllPurchaseInvoice() {
         UserDto loggedInUser = securityService.getLoggedInUser();
         String companyTitle = loggedInUser.getCompany().getTitle();
-        //Purchase Invoices should be sorted by their invoice no in descending order (latest invoices should be at the top).
+        //US-48-Only purchase invoices of the current user's company should be listed in the list.
+        //US-48-Purchase Invoices should be sorted by their invoice no in descending order (latest invoices should be at the top).
         List<Invoice> invoices = invoiceRepository.findAllByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(InvoiceType.PURCHASE, companyTitle);
 
         List<InvoiceDto> invoiceDtoList = invoices.stream().map(p -> mapperUtil.convert(p, new InvoiceDto())).toList();
@@ -192,7 +194,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             invoiceProduct.setRemainingQuantity(invoiceProduct.getQuantity());
 
 
-            invoiceProductService.createInvoiceProduct(invoiceProduct);
+            invoiceProductService.save(invoiceProduct);
         });
     }
 
