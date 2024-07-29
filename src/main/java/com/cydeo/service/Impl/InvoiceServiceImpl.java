@@ -67,7 +67,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public InvoiceDto getInvoiceById(Long id) {
         Invoice invoice = invoiceRepository.findById(id).get();
-        return mapperUtil.convert(invoice, new InvoiceDto());
+        return mapperUtil.convert(invoice,new InvoiceDto());
     }
 
     @Override
