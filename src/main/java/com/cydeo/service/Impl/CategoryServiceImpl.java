@@ -48,7 +48,7 @@ public class CategoryServiceImpl implements CategoryService {
 //        List<Category> categoryList = categoryRepository.findAllByCompanyOrderByDescriptionAsc(mapperUtil.convert(companyDto, new Company()));
 //        return categoryList.stream().map(category -> mapperUtil.convert(category, new CategoryDto())).toList();
 //    }
-//---> listAllByCompany() is updated for US 41 to display hover over
+//---> listAllByCompany() is updated for US 41 to display hover over, we can delete above method
     public List<CategoryDto> listAllByCompany() {
         UserDto loggedUser = userService.getLoggedUser();
         String title = loggedUser.getCompany().getTitle();

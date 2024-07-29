@@ -13,4 +13,5 @@ public interface CategoryService {
     List<CategoryDto> listAllByCompany();
     CategoryDto findCategoryById(Long id);
 
+    boolean categoryHasProduct(Long id);
 }
