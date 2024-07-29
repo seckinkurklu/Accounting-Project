@@ -36,7 +36,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
         // Kullanıcıya ait InvoiceProduct nesnelerini al
 //        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllByInvoiceCompany(companyTitle);
-        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAll();
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllByIsDeletedFalse();
 
         // InvoiceProduct nesnelerini InvoiceProductDto'ya dönüştür
         List<InvoiceProductDto> invoiceProductDtos = invoiceProducts.stream()
@@ -82,7 +82,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
 
     @Override
-    public void createInvoiceProduct(InvoiceProductDto invoiceProductDto) { // hep birlikteyken ismi degisrilebilir.
+    public void save(InvoiceProductDto invoiceProductDto) { // hep birlikteyken ismi degisrilebilir.
         // InvoiceProductDto'yu InvoiceProduct'a dönüştür
         InvoiceProduct newInvoiceProduct = mapperUtil.convert(invoiceProductDto, new InvoiceProduct());
 
@@ -106,7 +106,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
                 BigDecimal newTotal = newInvoiceProduct.getTotal() != null ? newInvoiceProduct.getTotal() : BigDecimal.ZERO;
 
                 existingProduct.setQuantity(existingQuantity + newQuantity);
-                existingProduct.setPrice(existingPrice.add(newPrice));
+                existingProduct.setPrice(newPrice);
                 existingProduct.setTax(existingTax.add(newTax));
                 existingProduct.setTotal(existingTotal.add(newTotal));
                 invoiceProductRepository.save(existingProduct);
@@ -123,9 +123,19 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     @Override
     public List<InvoiceProductDto> getAllInvoiceProductsById(Long id) {
-        return invoiceProductRepository.findAllInvoiceProductsByInvoiceId(id).stream().map(p -> mapperUtil.convert(p, new InvoiceProductDto())).toList();
+        return invoiceProductRepository.findAllInvoiceProductsByInvoiceIdAndIsDeletedFalse(id).stream().map(p -> mapperUtil.convert(p, new InvoiceProductDto())).toList();
 
     }
+
+    @Override
+    public void delete(Long id) {
+        InvoiceProduct invoiceProduct = invoiceProductRepository.findById(id).orElse(null);
+        if (invoiceProduct != null) {
+            invoiceProduct.setIsDeleted(true);
+            invoiceProductRepository.save(invoiceProduct);
+        }
+    }
+
     @Override
     public InvoiceProductDto getInvoiceProductById(Long id) {
         return mapperUtil.convert(invoiceProductRepository.findById(id).orElse(null), new InvoiceProductDto());

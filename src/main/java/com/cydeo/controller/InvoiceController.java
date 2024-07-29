@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 public class InvoiceController {
@@ -96,13 +97,33 @@ public class InvoiceController {
         newInvoiceProduct.setInvoice(invoice);
         InvoiceProductDto convertedInvoiceProductDto = mapperUtil.convert(newInvoiceProduct,new InvoiceProductDto());
         // InvoiceProduct'ı kaydet
-        invoiceProductService.createInvoiceProduct(convertedInvoiceProductDto);
+        invoiceProductService.save(convertedInvoiceProductDto);
         // Redirect attributes ekle
         redirectAttributes.addAttribute("id",id);
         return "redirect:/purchaseInvoices/update/{id}";
     }
 
 //order of methods has been modified to display appropriate page
+
+
+    @GetMapping("/purchaseInvoices/removeInvoiceProduct/{id}/{invoiceProductId}")
+    public String removeInvoiceProduct(@PathVariable("id") Long id,@PathVariable("invoiceProductId") Long invoiceProductId,Model model){
+
+        invoiceProductService.delete(invoiceProductId);
+
+        return "redirect:/purchaseInvoices/update/{id}";
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

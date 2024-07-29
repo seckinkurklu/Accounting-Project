@@ -193,7 +193,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             invoiceProduct.setRemainingQuantity(invoiceProduct.getQuantity());
 
 
-            invoiceProductService.createInvoiceProduct(invoiceProduct);
+            invoiceProductService.save(invoiceProduct);
         });
     }
 
