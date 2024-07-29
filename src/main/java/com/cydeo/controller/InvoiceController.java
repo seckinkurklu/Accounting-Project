@@ -125,7 +125,7 @@ public class InvoiceController {
     public String removeInvoiceProduct(@PathVariable("id") Long id,@PathVariable("invoiceProductId") Long invoiceProductId,Model model){
 
         invoiceProductService.delete(invoiceProductId);
-        
+
         return "redirect:/purchaseInvoices/update/{id}";
     }
 
