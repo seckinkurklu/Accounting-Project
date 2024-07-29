@@ -29,7 +29,7 @@ public class CompanyController {
         companyService.activateCompany(company_id);
         return "redirect:/companies/list";
     }
-    @GetMapping("/activate/{company-id}")
+    @GetMapping("/deactivate/{company-id}")
     public String deactivateCompany(@PathVariable("company-id") long company_id, Model model){
         companyService.deactivateCompany(company_id);
         return "redirect:/companies/list";
