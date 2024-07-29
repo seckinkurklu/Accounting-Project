@@ -12,4 +12,5 @@ public interface ClientVendorService {
 
     void save(ClientVendorDto clientVendorDto);
     void update(ClientVendorDto clientVendorDto);
+
 }

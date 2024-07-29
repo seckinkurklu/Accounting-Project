@@ -67,7 +67,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     public InvoiceDto getInvoiceById(Long id) {
         Invoice invoice = invoiceRepository.findById(id).get();
 
-        return mapperUtil.convert(invoice,new InvoiceDto());
+        return mapperUtil.convert(invoice, new InvoiceDto());
     }
 
     @Override
@@ -80,11 +80,9 @@ public class InvoiceServiceImpl implements InvoiceService {
         return null;
     }
 
-
     @Override
     public void deleteInvoice(Long id) {
         invoiceRepository.deleteById(id);
-
     }
 
     //for US-49

@@ -60,17 +60,9 @@ public class CategoryServiceImpl implements CategoryService {
             return categoryDto;
         }).toList();
     }
-
     @Override
     public CategoryDto findCategoryById(Long id) {
         return mapperUtil.convert(categoryRepository.findById(id).get(),new CategoryDto());
-    }
-
-    @Override
-    public boolean categoryHasProduct(Long id) {
-        Category category = categoryRepository.findById(id).get();
-        CategoryDto categoryDto = mapperUtil.convert(category, new CategoryDto());
-        return categoryDto.isHasProduct();
     }
 
 }
