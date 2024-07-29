@@ -13,6 +13,7 @@ public interface InvoiceProductService {
     void save(InvoiceProductDto invoiceProductDto);
 
     List<InvoiceProductDto> getAllInvoiceProductsById(Long id);
+    void delete(Long id);
 
 
 
