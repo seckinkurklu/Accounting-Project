@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 public class InvoiceController {
@@ -118,6 +119,26 @@ public class InvoiceController {
 
 
     }
+
+
+    @GetMapping("/purchaseInvoices/removeInvoiceProduct/{id}/{invoiceProductId}")
+    public String removeInvoiceProduct(@PathVariable("id") Long id,@PathVariable("invoiceProductId") Long invoiceProductId,Model model){
+
+        invoiceProductService.delete(invoiceProductId);
+        
+        return "redirect:/purchaseInvoices/update/{id}";
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
