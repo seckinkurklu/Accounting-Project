@@ -22,6 +22,6 @@ public interface InvoiceService {
     String newInvoiceNo();
 
     Long getId(String invoiceNo);
-void approve(Long invoiceId);
+    void approve(Long invoiceId);
 
 }

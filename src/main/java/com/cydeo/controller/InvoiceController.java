@@ -46,8 +46,6 @@ public class InvoiceController {
     @GetMapping("/purchaseInvoices/list")
     public String invoicePurchaseDtoList(Model model) {
         model.addAttribute("invoices", invoiceService.listAllPurchaseInvoice());
-
-
         return "/invoice/purchase-invoice-list";
     }
 
@@ -68,42 +66,9 @@ public class InvoiceController {
 
     @PostMapping("/purchaseInvoices/create")
     public String savePurchaseInvoice(@ModelAttribute ("invoiceDto")InvoiceDto invoiceDto){
-
         InvoiceDto saved = invoiceService.save(invoiceDto);
-
-        //"Save" button should save the last created purchase invoice to the database,
-        //and land user to the "Edit Purchase Invoice" page
-//        Long id = saved.getId();
-//        redirectAttributes.addAttribute("id", id);
         return "redirect:/purchaseInvoices/list";
 
-    }
-    @PostMapping("/purchaseInvoices/addInvoiceProduct/{id}")
-    public String addProduct(@PathVariable("id") Long id, @ModelAttribute("newInvoiceProduct") InvoiceProductDto invoiceProductDto, RedirectAttributes redirectAttributes) {
-        // İlgili invoice'ı al
-        Invoice invoice = invoiceRepository.findById(id).get();
-
-        // InvoiceProductDto'yu InvoiceProduct'a dönüştür
-        InvoiceProduct newInvoiceProduct = mapperUtil.convert(invoiceProductDto, new InvoiceProduct());
-
-        if (newInvoiceProduct==null || invoiceProductDto==null){
-
-            return "redirect:/purchaseInvoices/update";
-        }
-
-
-        // InvoiceProduct'ı ilgili invoice ile ilişkilendir
-        newInvoiceProduct.setInvoice(invoice);
-
-        InvoiceProductDto convertedInvoiceProductDto = mapperUtil.convert(newInvoiceProduct,new InvoiceProductDto());
-        // InvoiceProduct'ı kaydet
-        invoiceProductService.createInvoiceProduct(convertedInvoiceProductDto);
-        // Redirect attributes ekle
-
-        redirectAttributes.addAttribute("id",id);
-
-
-        return "redirect:/purchaseInvoices/update/{id}";
     }
 
     @GetMapping("/purchaseInvoices/update/{id}") // to Add Product
@@ -114,10 +79,30 @@ public class InvoiceController {
         model.addAttribute("newInvoiceProduct",new InvoiceProduct());
         model.addAttribute("products",productService.listAllProducts());
         model.addAttribute("invoiceProducts",invoiceProductService.getAllInvoiceProducts()); // guncellenecek
-       return "invoice/purchase-invoice-update";
-
+        return "invoice/purchase-invoice-update";
 
     }
+    @PostMapping("/purchaseInvoices/addInvoiceProduct/{id}")
+    public String addProduct(@PathVariable("id") Long id, @ModelAttribute("newInvoiceProduct") InvoiceProductDto invoiceProductDto, RedirectAttributes redirectAttributes) {
+        // İlgili invoice'ı al
+        Invoice invoice = invoiceRepository.findById(id).get();
+        // InvoiceProductDto'yu InvoiceProduct'a dönüştür
+        InvoiceProduct newInvoiceProduct = mapperUtil.convert(invoiceProductDto, new InvoiceProduct());
+        if (newInvoiceProduct==null || invoiceProductDto==null){
+
+            return "redirect:/purchaseInvoices/update";
+        }
+        // InvoiceProduct'ı ilgili invoice ile ilişkilendir
+        newInvoiceProduct.setInvoice(invoice);
+        InvoiceProductDto convertedInvoiceProductDto = mapperUtil.convert(newInvoiceProduct,new InvoiceProductDto());
+        // InvoiceProduct'ı kaydet
+        invoiceProductService.createInvoiceProduct(convertedInvoiceProductDto);
+        // Redirect attributes ekle
+        redirectAttributes.addAttribute("id",id);
+        return "redirect:/purchaseInvoices/update/{id}";
+    }
+
+
 
 
 
