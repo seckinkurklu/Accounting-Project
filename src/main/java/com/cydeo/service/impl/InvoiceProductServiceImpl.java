@@ -82,7 +82,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
 
     @Override
-    public void createInvoiceProduct(InvoiceProductDto invoiceProductDto) { // hep birlikteyken ismi degisrilebilir.
+    public void save(InvoiceProductDto invoiceProductDto) { // hep birlikteyken ismi degisrilebilir.
         // InvoiceProductDto'yu InvoiceProduct'a dönüştür
         InvoiceProduct newInvoiceProduct = mapperUtil.convert(invoiceProductDto, new InvoiceProduct());
 

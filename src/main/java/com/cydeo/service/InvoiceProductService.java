@@ -10,7 +10,7 @@ import java.util.List;
 public interface InvoiceProductService {
     List<InvoiceProductDto> getAllInvoiceProducts();
     InvoiceProductDto getInvoiceProductById(Long id);
-    void createInvoiceProduct(InvoiceProductDto invoiceProductDto);
+    void save(InvoiceProductDto invoiceProductDto);
 
     List<InvoiceProductDto> getAllInvoiceProductsById(Long id);
 

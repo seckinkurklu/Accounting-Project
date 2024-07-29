@@ -97,7 +97,7 @@ public class InvoiceController {
 
         InvoiceProductDto convertedInvoiceProductDto = mapperUtil.convert(newInvoiceProduct,new InvoiceProductDto());
         // InvoiceProduct'ı kaydet
-        invoiceProductService.createInvoiceProduct(convertedInvoiceProductDto);
+        invoiceProductService.save(convertedInvoiceProductDto);
         // Redirect attributes ekle
 
         redirectAttributes.addAttribute("id",id);
