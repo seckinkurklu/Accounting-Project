@@ -9,7 +9,6 @@ import com.cydeo.entity.User;
 import com.cydeo.repository.CategoryRepository;
 import com.cydeo.repository.ProductRepository;
 import com.cydeo.service.CategoryService;
-import com.cydeo.service.CompanyService;
 import com.cydeo.service.UserService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
@@ -49,19 +48,17 @@ public class CategoryServiceImpl implements CategoryService {
 //        return categoryList.stream().map(category -> mapperUtil.convert(category, new CategoryDto())).toList();
 //    }
 //---> listAllByCompany() is updated for US 41 to display hover over, we can delete above method
+    @Override
     public List<CategoryDto> listAllByCompany() {
         UserDto loggedUser = userService.getLoggedUser();
-        String title = loggedUser.getCompany().getTitle();
-        List<Category> categories = categoryRepository.findAllByCompany_Title(title);
-        return categories.stream().map(category -> {
-            CategoryDto categoryDto = mapperUtil.convert(category,new CategoryDto());
-            boolean hasProduct = productRepository.existsByCategory(category);
-            categoryDto.setHasProduct(hasProduct);
-            return categoryDto;
-        }).toList();
+        CompanyDto companyDto = loggedUser.getCompany();
+        List<Category> categoryList = categoryRepository.findAllByCompanyOrderByDescriptionAsc(mapperUtil.convert(companyDto, new Company()));
+        return categoryList.stream().map(category -> mapperUtil.convert(category, new CategoryDto())).collect(Collectors.toList());
     }
+
     @Override
     public CategoryDto findCategoryById(Long id) {
+
         return mapperUtil.convert(categoryRepository.findById(id).get(),new CategoryDto());
     }
 
