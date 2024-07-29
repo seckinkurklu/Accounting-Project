@@ -9,9 +9,6 @@ import java.util.List;
  */
 public interface CategoryService {
     List<CategoryDto> listAllCategory();
-
     List<CategoryDto> listAllByCompany();
     CategoryDto findCategoryById(Long id);
-
-    boolean categoryHasProduct(Long id);
 }

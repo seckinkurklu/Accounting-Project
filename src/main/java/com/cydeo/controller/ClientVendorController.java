@@ -25,9 +25,7 @@ public class ClientVendorController {
     public String getClientVendors(Model model){
 
         model.addAttribute("clientVendors",clientVendorService.listAllByCompanyTitle());
-
         return "/clientVendor/clientVendor-list";
-
     }
 
 
