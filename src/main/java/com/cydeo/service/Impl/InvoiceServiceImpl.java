@@ -33,6 +33,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
+
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
 
@@ -66,7 +67,6 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public InvoiceDto getInvoiceById(Long id) {
         Invoice invoice = invoiceRepository.findById(id).get();
-
         return mapperUtil.convert(invoice, new InvoiceDto());
     }
 
@@ -80,9 +80,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         return null;
     }
 
+
     @Override
     public void deleteInvoice(Long id) {
         invoiceRepository.deleteById(id);
+
     }
 
     //for US-49
@@ -190,6 +192,8 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceProductList.forEach(invoiceProduct -> {
             invoiceProduct.setProfitLoss(BigDecimal.ZERO);
             invoiceProduct.setRemainingQuantity(invoiceProduct.getQuantity());
+
+
             invoiceProductService.save(invoiceProduct);
         });
     }
