@@ -190,9 +190,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceProductList.forEach(invoiceProduct -> {
             invoiceProduct.setProfitLoss(BigDecimal.ZERO);
             invoiceProduct.setRemainingQuantity(invoiceProduct.getQuantity());
-
-
-            invoiceProductService.createInvoiceProduct(invoiceProduct);
+            invoiceProductService.save(invoiceProduct);
         });
     }
 
