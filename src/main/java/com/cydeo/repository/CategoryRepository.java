@@ -15,4 +15,6 @@ import java.util.List;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     List<Category> findAllByCompanyOrderByDescriptionAsc(Company company);
+
+    List<Category> findAllByCompany_Title(String title);
 }
