@@ -102,7 +102,7 @@ public class InvoiceController {
         return "redirect:/purchaseInvoices/update/{id}";
     }
 
-
+//order of methods has been modified to display appropriate page
 
 
 
