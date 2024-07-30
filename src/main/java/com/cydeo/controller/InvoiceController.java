@@ -12,6 +12,7 @@ import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
 import com.cydeo.service.ProductService;
 
+import com.cydeo.service.s_impl.InvoiceServiceImpl;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,16 +32,17 @@ public class InvoiceController {
     private final MapperUtil mapperUtil;
     private final InvoiceProductService invoiceProductService;
     private final InvoiceRepository invoiceRepository;
+    private final InvoiceServiceImpl invoiceServiceImpl;
 
 
-    public InvoiceController(InvoiceService invoiceService, ClientVendorService clientVendorService, ProductService productService, MapperUtil mapperUtil, InvoiceProductService invoiceProductService, InvoiceRepository invoiceRepository) {
+    public InvoiceController(InvoiceService invoiceService, ClientVendorService clientVendorService, ProductService productService, MapperUtil mapperUtil, InvoiceProductService invoiceProductService, InvoiceRepository invoiceRepository, InvoiceServiceImpl invoiceServiceImpl) {
         this.invoiceService = invoiceService;
         this.clientVendorService = clientVendorService;
         this.productService = productService;
         this.mapperUtil = mapperUtil;
         this.invoiceProductService = invoiceProductService;
         this.invoiceRepository = invoiceRepository;
-
+        this.invoiceServiceImpl = invoiceServiceImpl;
     }
 
     @GetMapping("/purchaseInvoices/list")
@@ -115,11 +117,10 @@ public class InvoiceController {
     public String printPurchaseInvoice(@PathVariable("id") Long id, Model model) {
 
         InvoiceDto invoice = invoiceService.getInvoiceById(id);
-        CompanyDto company =  companyService.findById(id);
-        List<InvoiceProductDto> invoiceProductList = invoiceProductService.getAllInvoiceProductsById(id);
+        List<InvoiceDto> invoiceProductList = invoiceService.listAllPurchaseInvoice();
 
         model.addAttribute("invoice", invoice);
-        model.addAttribute("company", company);
+        model.addAttribute("company", invoice.getCompany());
         model.addAttribute("invoiceProducts",invoiceProductList);
         return "invoice/invoice_print";
     }
@@ -127,11 +128,10 @@ public class InvoiceController {
     @GetMapping("/salesInvoices/print/{id}")
     public String printSalesInvoice(@PathVariable("id") Long id, Model model) {
         InvoiceDto invoice = invoiceService.getInvoiceById(id);
-        CompanyDto company =  companyService.findById(id);
-        List<InvoiceProductDto> invoiceProductList = invoiceProductService.getAllInvoiceProductsById(id);
+        List<InvoiceDto> invoiceProductList = invoiceService.listAllSalesInvoice();
 
         model.addAttribute("invoice", invoice);
-        model.addAttribute("company", company);
+        model.addAttribute("company", invoice.getCompany());
         model.addAttribute("invoiceProducts",invoiceProductList);
         return "invoice/invoice_print";
     }
