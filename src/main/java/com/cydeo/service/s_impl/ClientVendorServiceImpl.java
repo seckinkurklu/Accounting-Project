@@ -7,6 +7,7 @@ import com.cydeo.repository.ClientVendorRepository;
 import com.cydeo.repository.UserRepository;
 import com.cydeo.service.ClientVendorService;
 import com.cydeo.util.MapperUtil;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -57,8 +58,11 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
     @Override
     public void save(ClientVendorDto clientVendorDto) {
+        String username= SecurityContextHolder.getContext().getAuthentication().getName(); // find username who logged to system.
+        User user= userRepository.findByUsername(username); // from DB, we get that user.
 
         ClientVendor clientVendor = mapperUtil.convert(clientVendorDto,new ClientVendor());
+        clientVendor.setCompany(user.getCompany());
         clientVendorRepository.save(clientVendor);
 
     }
