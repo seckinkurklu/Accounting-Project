@@ -184,6 +184,14 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     }
 
+
+    @Override
+    public boolean existByClientVendorId(Long id) {
+
+        return  invoiceRepository.existsByClientVendor_Id(id);
+    }
+
+
     public void savePurchaseInvoiceToProductProfitLoss(List<InvoiceProductDto> invoiceProductList) {
         invoiceProductList.forEach(invoiceProduct -> {
             invoiceProduct.setProfitLoss(BigDecimal.ZERO);
