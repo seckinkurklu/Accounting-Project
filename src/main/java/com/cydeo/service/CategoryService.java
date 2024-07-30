@@ -11,4 +11,7 @@ public interface CategoryService {
     List<CategoryDto> listAllCategory();
     List<CategoryDto> listAllByCompany();
     CategoryDto findCategoryById(Long id);
+    void deleteById(Long id);
+
+    void save(CategoryDto categoryDto);
 }
