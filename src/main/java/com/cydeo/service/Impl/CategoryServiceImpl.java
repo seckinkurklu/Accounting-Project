@@ -37,13 +37,21 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryList.stream().map(category -> mapperUtil.convert(category,new CategoryDto())).collect(Collectors.toList());
     }
 
+//    @Override
+//    public List<CategoryDto> listAllByCompany() {
+//        UserDto loggedUser = userService.getLoggedUser();
+//        CompanyDto companyDto = loggedUser.getCompany();
+//        List<Category> categoryList = categoryRepository.findAllByCompanyOrderByDescriptionAsc(mapperUtil.convert(companyDto, new Company()));
+//        return categoryList.stream().map(category -> mapperUtil.convert(category, new CategoryDto())).toList();
+//    }
+//---> listAllByCompany() is updated for US 41 to display hover over, we can delete above method
+
     @Override
     public List<CategoryDto> listAllByCompany() {
         UserDto loggedUser = userService.getLoggedUser();
         CompanyDto companyDto = loggedUser.getCompany();
 
         List<Category> categoryList = categoryRepository.findAllByCompanyOrderByDescriptionAsc(mapperUtil.convert(companyDto, new Company()));
-
 
         return categoryList.stream().map(category -> mapperUtil.convert(category, new CategoryDto())).collect(Collectors.toList());
     }
