@@ -18,4 +18,5 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
             "ORDER BY CASE WHEN c.companyStatus = 'ACTIVE' THEN 0 ELSE 1 END, c.title")
     List<Company> findAllCompanyIdNot1();
 
+
 }

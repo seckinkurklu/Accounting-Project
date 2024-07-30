@@ -11,6 +11,7 @@ import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -36,6 +37,25 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyDto findById(Long id) {
         return mapperUtil.convert(companyRepository.findById(id), new CompanyDto());
+    }
+
+    @Override
+    public void save(CompanyDto companyDto) {
+        companyDto.setCompanyStatus(CompanyStatus.PASSIVE);
+        Company company = mapperUtil.convert(companyDto, new Company());
+        companyRepository.save(company);
+    }
+
+    @Override
+    public void update(CompanyDto companyDto) {
+        Optional<Company> foundCompany = companyRepository.findById(companyDto.getId());
+        Company convertedCompany = mapperUtil.convert(companyDto, new Company());
+        if (foundCompany.isPresent()) {
+            convertedCompany.setId(foundCompany.get().getId());
+            convertedCompany.setCompanyStatus(CompanyStatus.ACTIVE);
+            companyRepository.save(convertedCompany);
+        }
+
     }
 
     @Override

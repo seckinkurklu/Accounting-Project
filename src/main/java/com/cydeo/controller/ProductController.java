@@ -40,8 +40,6 @@ public class ProductController {
         model.addAttribute("categories",categoryService.listAllCategory());
         model.addAttribute("productUnits", ProductUnit.values());
 
-
-
         return "product/product-create";
 
     }

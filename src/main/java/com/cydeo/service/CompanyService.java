@@ -8,6 +8,8 @@ public interface CompanyService {
     List<CompanyDto> listAllCompanies();
     CompanyDto findById(Long id);
     Long getCompanyIdByLoggedInUser();
+    void save(CompanyDto companyDto);
+    void update(CompanyDto companyDto);
     void activateCompany(Long companyId);
     void deactivateCompany(Long companyId);
 }
