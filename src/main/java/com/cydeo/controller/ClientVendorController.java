@@ -61,9 +61,7 @@ public String editClientVendor(@PathVariable("id") Long id, Model model) {
 
     @PostMapping("/update/{id}")
     public String updateClientVendor(@ModelAttribute("clientVendor") ClientVendorDto clientVendorDto){
-
         clientVendorService.update(clientVendorDto);
-
         return "redirect:/clientVendors/list";
     }
 
