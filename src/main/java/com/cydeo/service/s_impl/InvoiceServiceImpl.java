@@ -139,6 +139,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             return p;
         }).toList();
 
+
         return invoices.stream().map(p -> mapperUtil.convert(p, new InvoiceDto())).toList();
     }
 
