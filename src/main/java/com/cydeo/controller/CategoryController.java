@@ -40,6 +40,10 @@ public class CategoryController {
         return "redirect:/categories/list";
     }
 
-
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable("id") Long id) {
+        categoryService.deleteById(id);
+        return "redirect:/categories/list";
+    }
     
 }
