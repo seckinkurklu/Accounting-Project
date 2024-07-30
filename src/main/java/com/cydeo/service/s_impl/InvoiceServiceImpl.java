@@ -119,6 +119,26 @@ public class InvoiceServiceImpl implements InvoiceService {
         UserDto loggedInUser = securityService.getLoggedInUser();
         String companyTitle = loggedInUser.getCompany().getTitle();
         List<Invoice> invoices = invoiceRepository.findAllByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(InvoiceType.SALES, companyTitle);
+
+        List<InvoiceDto> invoiceDtoList = invoices.stream().map(p -> mapperUtil.convert(p, new InvoiceDto())).toList();
+
+        invoiceDtoList = invoiceDtoList.stream().map(p -> {
+            Long id = mapperUtil.convert(p, new Invoice()).getId();
+            InvoiceProduct invoiceProduct = invoiceProductRepository.findById(id).get();
+
+            int quantity = invoiceProduct.getQuantity();
+
+            BigDecimal priceTotal = invoiceProduct.getPrice().multiply(BigDecimal.valueOf(quantity));
+            p.setPrice(priceTotal);
+
+            BigDecimal tax = invoiceProduct.getTax();
+            BigDecimal totalTax = tax.multiply(priceTotal).divide(BigDecimal.valueOf(100));
+            p.setTax(totalTax);
+            //p.setTotal(totalPriceWithTax);
+            p.setTotal(priceTotal.add(totalTax));
+            return p;
+        }).toList();
+
         return invoices.stream().map(p -> mapperUtil.convert(p, new InvoiceDto())).toList();
     }
 
