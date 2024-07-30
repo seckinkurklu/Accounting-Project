@@ -124,7 +124,17 @@ public class InvoiceController {
         return "invoice/invoice_print";
     }
 
+    @GetMapping("/salesInvoices/print/{id}")
+    public String printSalesInvoice(@PathVariable("id") Long id, Model model) {
+        InvoiceDto invoice = invoiceService.getInvoiceById(id);
+        CompanyDto company =  companyService.findById(id);
+        List<InvoiceProductDto> invoiceProductList = invoiceProductService.getAllInvoiceProductsById(id);
 
+        model.addAttribute("invoice", invoice);
+        model.addAttribute("company", company);
+        model.addAttribute("invoiceProducts",invoiceProductList);
+        return "invoice/invoice_print";
+    }
 
 
 
