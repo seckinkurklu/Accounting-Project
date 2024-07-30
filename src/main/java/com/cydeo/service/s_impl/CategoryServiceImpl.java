@@ -1,11 +1,10 @@
-package com.cydeo.service.impl;
+package com.cydeo.service.s_impl;
 
 import com.cydeo.dto.CategoryDto;
 import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.Category;
 import com.cydeo.entity.Company;
-import com.cydeo.entity.User;
 import com.cydeo.repository.CategoryRepository;
 import com.cydeo.service.CategoryService;
 import com.cydeo.service.UserService;
@@ -37,21 +36,13 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryList.stream().map(category -> mapperUtil.convert(category,new CategoryDto())).collect(Collectors.toList());
     }
 
-//    @Override
-//    public List<CategoryDto> listAllByCompany() {
-//        UserDto loggedUser = userService.getLoggedUser();
-//        CompanyDto companyDto = loggedUser.getCompany();
-//        List<Category> categoryList = categoryRepository.findAllByCompanyOrderByDescriptionAsc(mapperUtil.convert(companyDto, new Company()));
-//        return categoryList.stream().map(category -> mapperUtil.convert(category, new CategoryDto())).toList();
-//    }
-//---> listAllByCompany() is updated for US 41 to display hover over, we can delete above method
-
     @Override
     public List<CategoryDto> listAllByCompany() {
         UserDto loggedUser = userService.getLoggedUser();
         CompanyDto companyDto = loggedUser.getCompany();
 
         List<Category> categoryList = categoryRepository.findAllByCompanyOrderByDescriptionAsc(mapperUtil.convert(companyDto, new Company()));
+
 
         return categoryList.stream().map(category -> mapperUtil.convert(category, new CategoryDto())).collect(Collectors.toList());
     }

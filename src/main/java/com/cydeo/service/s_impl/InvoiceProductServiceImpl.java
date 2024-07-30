@@ -1,10 +1,7 @@
-package com.cydeo.service.impl;
+package com.cydeo.service.s_impl;
 
 import com.cydeo.dto.InvoiceProductDto;
-import com.cydeo.dto.UserDto;
-import com.cydeo.entity.Company;
 import com.cydeo.entity.InvoiceProduct;
-import com.cydeo.entity.User;
 import com.cydeo.repository.InvoiceProductRepository;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.SecurityService;

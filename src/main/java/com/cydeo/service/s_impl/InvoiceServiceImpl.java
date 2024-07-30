@@ -1,4 +1,4 @@
-package com.cydeo.service.impl;
+package com.cydeo.service.s_impl;
 
 import com.cydeo.converter.ClientVendorDTOConverter;
 import com.cydeo.dto.InvoiceDto;
@@ -28,10 +28,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 
 
 @Service
