@@ -68,10 +68,8 @@ public class InvoiceController {
     @PostMapping("/purchaseInvoices/create")
     public String savePurchaseInvoice(@ModelAttribute ("invoiceDto")InvoiceDto invoiceDto){
         InvoiceDto saved = invoiceService.save(invoiceDto);
-        return "redirect:/purchaseInvoices/list";
-
+        return "redirect:/purchaseInvoices/update/" + saved.getId();
     }
-
     @GetMapping("/purchaseInvoices/update/{id}") // to Add Product
     public String updatePurchaseInvoice(@PathVariable Long id, Model model){
 

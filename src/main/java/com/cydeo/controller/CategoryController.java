@@ -27,4 +27,5 @@ public class CategoryController {
         model.addAttribute("categories",categoryService.listAllByCompany());
         return "/category/category-list";
     }
+    
 }

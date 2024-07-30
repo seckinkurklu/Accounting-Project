@@ -2,6 +2,7 @@ package com.cydeo.repository;
 
 import com.cydeo.entity.Category;
 import com.cydeo.entity.Company;
+import com.cydeo.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,4 +18,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     List<Category> findAllByCompanyOrderByDescriptionAsc(Company company);
 
     List<Category> findAllByCompany_Title(String title);
+
+   // List<Product> findAllByCategoryOrderByDescriptionAsc(Category category);
 }
