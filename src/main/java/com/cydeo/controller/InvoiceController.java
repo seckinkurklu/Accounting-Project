@@ -1,6 +1,7 @@
 
 package com.cydeo.controller;
 
+import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.entity.Invoice;
@@ -14,16 +15,14 @@ import com.cydeo.service.ProductService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Controller
+@RequestMapping("/invoices")
 public class InvoiceController {
 
     private final InvoiceService invoiceService;
@@ -112,7 +111,18 @@ public class InvoiceController {
         return "redirect:/purchaseInvoices/update/{id}";
     }
 
+    @GetMapping("/purchaseInvoices/print/{id}")
+    public String printPurchaseInvoice(@PathVariable("id") Long id, Model model) {
 
+        InvoiceDto invoice = invoiceService.getInvoiceById(id);
+        CompanyDto company =  companyService.findById(id);
+        List<InvoiceProductDto> invoiceProductList = invoiceProductService.getAllInvoiceProductsById(id);
+
+        model.addAttribute("invoice", invoice);
+        model.addAttribute("company", company);
+        model.addAttribute("invoiceProducts",invoiceProductList);
+        return "invoice/invoice_print";
+    }
 
 
 
