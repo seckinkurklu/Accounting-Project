@@ -1,12 +1,11 @@
 package com.cydeo.controller;
 
 
+import com.cydeo.dto.CategoryDto;
 import com.cydeo.service.CategoryService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * author:AbduShukur
@@ -27,5 +26,20 @@ public class CategoryController {
         model.addAttribute("categories",categoryService.listAllByCompany());
         return "/category/category-list";
     }
+
+    @GetMapping("/create")
+    public String createCategory(Model model) {
+        model.addAttribute("newCategory", new CategoryDto());
+        model.addAttribute("categories",categoryService.listAllByCompany());
+        return "/category/category-create";
+    }
+
+    @PostMapping("/create")
+    public String createCategory(@ModelAttribute CategoryDto categoryDto, Model model) {
+        categoryService.save(categoryDto);
+        return "redirect:/categories/list";
+    }
+
+
     
 }
