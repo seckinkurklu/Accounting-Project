@@ -71,15 +71,6 @@ public class CategoryServiceImpl implements CategoryService {
         return mapperUtil.convert(categoryRepository.findById(id).get(),new CategoryDto());
     }
 
-//    @Override
-//    public CategoryDto save(CategoryDto categoryDto) {
-//        UserDto currentUser = userService.getLoggedUser();
-//        categoryDto.setCompany(currentUser.getCompany());
-//        Category categoryToSave = mapperUtil.convert(categoryDto, new Category());
-//        Category savedCategory = categoryRepository.save(categoryToSave);
-//        return mapperUtil.convert(savedCategory, new CategoryDto());
-//    }
-
     @Override
     public void save(CategoryDto categoryDto) {
         UserDto loggedInUser = securityService.getLoggedInUser();
