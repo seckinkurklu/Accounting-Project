@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.util.List;
-@Repository
+//@Repository
 public interface InvoiceRepository extends JpaRepository<Invoice,Long> {
 
     List<Invoice> findAll();
@@ -24,8 +24,9 @@ public interface InvoiceRepository extends JpaRepository<Invoice,Long> {
     List<Invoice> findAllByInvoiceType(InvoiceType invoiceType);
     Invoice findInvoiceByInvoiceNo(String invoiceNumber);
 
-    List<Invoice> findTop3ByAndCompany_TitleAndStatusOrderByDateDesc( String companyTitle, InvoiceStatus status);
+    //List<Invoice> findTop3ByAndCompany_TitleAndStatusOrderByDateDesc( String companyTitle, InvoiceStatus status);
 
+    List<Invoice> findTop3ByAndCompany_TitleAndInvoiceStatus_AndInvoiceTypeOrderByDateDesc(String companyTitle, InvoiceStatus status, InvoiceType invoiceType);
 
     boolean existsByClientVendor_Id(Long clientVendorId);
 
