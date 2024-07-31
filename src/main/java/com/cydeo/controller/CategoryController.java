@@ -78,8 +78,8 @@ public class CategoryController {
             return "category/category-update";
         }
         categoryService.update(categoryDto);
-      return "redirect:/categories/list";
-
+        return "redirect:/categories/list";
+    }
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable("id") Long id) {
         categoryService.deleteById(id);

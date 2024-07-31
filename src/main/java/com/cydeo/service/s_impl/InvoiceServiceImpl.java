@@ -223,7 +223,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         UserDto loggedInUser = securityService.getLoggedInUser();
         String companyTitle = loggedInUser.getCompany().getTitle();
 
-      List<Invoice> invoices= invoiceRepository.findTop3ByAndCompany_TitleAndStatusOrderByDateDesc(companyTitle, InvoiceStatus.APPROVED);
+      List<Invoice> invoices= invoiceRepository.findTop3ByAndCompany_TitleAndInvoiceStatus_AndInvoiceTypeOrderByDateDesc(companyTitle, InvoiceStatus.APPROVED, InvoiceType.SALES);
       List<InvoiceDto> ConvertedInvoice= invoices.stream()
               .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto())).toList();
         return ConvertedInvoice;
