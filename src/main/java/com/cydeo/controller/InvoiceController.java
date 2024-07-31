@@ -1,6 +1,7 @@
 
 package com.cydeo.controller;
 
+import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.entity.Invoice;
@@ -11,19 +12,18 @@ import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
 import com.cydeo.service.ProductService;
 
+import com.cydeo.service.s_impl.InvoiceServiceImpl;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Controller
+@RequestMapping("/invoices")
 public class InvoiceController {
 
     private final InvoiceService invoiceService;
@@ -32,16 +32,17 @@ public class InvoiceController {
     private final MapperUtil mapperUtil;
     private final InvoiceProductService invoiceProductService;
     private final InvoiceRepository invoiceRepository;
+    private final InvoiceServiceImpl invoiceServiceImpl;
 
 
-    public InvoiceController(InvoiceService invoiceService, ClientVendorService clientVendorService, ProductService productService, MapperUtil mapperUtil, InvoiceProductService invoiceProductService, InvoiceRepository invoiceRepository) {
+    public InvoiceController(InvoiceService invoiceService, ClientVendorService clientVendorService, ProductService productService, MapperUtil mapperUtil, InvoiceProductService invoiceProductService, InvoiceRepository invoiceRepository, InvoiceServiceImpl invoiceServiceImpl) {
         this.invoiceService = invoiceService;
         this.clientVendorService = clientVendorService;
         this.productService = productService;
         this.mapperUtil = mapperUtil;
         this.invoiceProductService = invoiceProductService;
         this.invoiceRepository = invoiceRepository;
-
+        this.invoiceServiceImpl = invoiceServiceImpl;
     }
 
     @GetMapping("/purchaseInvoices/list")
@@ -118,6 +119,31 @@ public class InvoiceController {
         invoiceService.removeInvoiceById(id);
         return "redirect:/salesInvoices/list";
     }
+
+    @GetMapping("/purchaseInvoices/print/{id}")
+    public String printPurchaseInvoice(@PathVariable("id") Long id, Model model) {
+
+        InvoiceDto invoice = invoiceService.getInvoiceById(id);
+        List<InvoiceDto> invoiceProductList = invoiceService.listAllPurchaseInvoice();
+
+        model.addAttribute("invoice", invoice);
+        model.addAttribute("company", invoice.getCompany());
+        model.addAttribute("invoiceProducts",invoiceProductList);
+        return "invoice/invoice_print";
+    }
+
+    @GetMapping("/salesInvoices/print/{id}")
+    public String printSalesInvoice(@PathVariable("id") Long id, Model model) {
+        InvoiceDto invoice = invoiceService.getInvoiceById(id);
+        List<InvoiceDto> invoiceProductList = invoiceService.listAllSalesInvoice();
+
+        model.addAttribute("invoice", invoice);
+        model.addAttribute("company", invoice.getCompany());
+        model.addAttribute("invoiceProducts",invoiceProductList);
+        return "invoice/invoice_print";
+    }
+
+
 
 
 }
