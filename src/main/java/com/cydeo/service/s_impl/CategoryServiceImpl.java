@@ -3,10 +3,16 @@ package com.cydeo.service.s_impl;
 import com.cydeo.dto.CategoryDto;
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.Category;
+
+import com.cydeo.service.CompanyService;
+
+import com.cydeo.entity.Company;
+import com.cydeo.entity.User;
 import com.cydeo.repository.CategoryRepository;
 import com.cydeo.repository.ProductRepository;
 import com.cydeo.service.CategoryService;
-import com.cydeo.service.CompanyService;
+import com.cydeo.service.SecurityService;
+
 import com.cydeo.service.UserService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
@@ -24,14 +30,22 @@ public class CategoryServiceImpl implements CategoryService {
     private final MapperUtil mapperUtil;
     private final UserService userService;
     private final ProductRepository productRepository;
+
     private final CompanyService companyService;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository, MapperUtil mapperUtil, UserService userService, ProductRepository productRepository, CompanyService companyService) {
+    private final SecurityService securityService;
+
+    public CategoryServiceImpl(CategoryRepository categoryRepository, MapperUtil mapperUtil, UserService userService, ProductRepository productRepository, SecurityService securityService) {
+
         this.categoryRepository = categoryRepository;
         this.mapperUtil = mapperUtil;
         this.userService = userService;
         this.productRepository = productRepository;
+
         this.companyService = companyService;
+
+        this.securityService = securityService;
+
     }
 
     @Override
@@ -85,4 +99,30 @@ public class CategoryServiceImpl implements CategoryService {
         categoryDto.setCompany(companyService.findById(category.getCompany().getId()));
         return categoryDto;
     }
+  @Override
+    public void save(CategoryDto categoryDto) {
+        UserDto loggedInUser = securityService.getLoggedInUser();
+        CompanyDto loggedInUserCompany = loggedInUser.getCompany();
+        categoryDto.setCompany(loggedInUserCompany);
+        categoryRepository.save(mapperUtil.convert(categoryDto,new Category()));
+    }
+    @Override
+    public void deleteById(Long id) {
+        categoryRepository.deleteById(id);
+    }
+
+    @Override
+    public List<CategoryDto> getCategoriesForCurrentUser() {
+        UserDto currentUser = userService.getCurrentUser();
+        Company company = mapperUtil.convert(currentUser,new User()).getCompany();
+
+        List<Category> categories = categoryRepository.findAllByCompanyIdOrderByDescriptionAsc(company.getId());
+
+        return categories.stream()
+                .map(category -> mapperUtil.convert(category,new CategoryDto())).collect(Collectors.toList());
+
+    }
+
+
+
 }

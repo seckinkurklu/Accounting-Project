@@ -11,4 +11,5 @@ public interface ClientVendorRepository extends JpaRepository<ClientVendor, Long
     List<ClientVendor> findAllByCompanyTitleOrderByClientVendorName(String companyTitle);
     ClientVendor findByClientVendorName(String clientVendorName);
 
+    List<ClientVendor> findAllByIsDeletedFalse();
 }

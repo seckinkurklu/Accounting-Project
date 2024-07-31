@@ -24,4 +24,13 @@ public interface InvoiceService {
     Long getId(String invoiceNo);
     void approve(Long invoiceId);
 
+
+    void removeInvoiceById(Long id);
+
+    List<InvoiceDto> listLastThreeApprovedSalesInvoices();
+
+
+    boolean existByClientVendorId(Long id);
+
+
 }

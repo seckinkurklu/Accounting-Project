@@ -64,5 +64,11 @@ public String editClientVendor(@PathVariable("id") Long id, Model model) {
         clientVendorService.update(clientVendorDto);
         return "redirect:/clientVendors/list";
     }
+    @GetMapping("/delete/{id}")
+    public String deleteClientVendor(@PathVariable("id") Long id){
 
+        clientVendorService.delete(id);
+
+        return "redirect:/clientVendors/list";
+    }
 }

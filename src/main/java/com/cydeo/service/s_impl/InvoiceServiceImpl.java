@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -119,6 +120,27 @@ public class InvoiceServiceImpl implements InvoiceService {
         UserDto loggedInUser = securityService.getLoggedInUser();
         String companyTitle = loggedInUser.getCompany().getTitle();
         List<Invoice> invoices = invoiceRepository.findAllByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(InvoiceType.SALES, companyTitle);
+
+        List<InvoiceDto> invoiceDtoList = invoices.stream().map(p -> mapperUtil.convert(p, new InvoiceDto())).toList();
+
+        invoiceDtoList = invoiceDtoList.stream().map(p -> {
+            Long id = mapperUtil.convert(p, new Invoice()).getId();
+            InvoiceProduct invoiceProduct = invoiceProductRepository.findById(id).get();
+
+            int quantity = invoiceProduct.getQuantity();
+
+            BigDecimal priceTotal = invoiceProduct.getPrice().multiply(BigDecimal.valueOf(quantity));
+            p.setPrice(priceTotal);
+
+            BigDecimal tax = invoiceProduct.getTax();
+            BigDecimal totalTax = tax.multiply(priceTotal).divide(BigDecimal.valueOf(100));
+            p.setTax(totalTax);
+            //p.setTotal(totalPriceWithTax);
+            p.setTotal(priceTotal.add(totalTax));
+            return p;
+        }).toList();
+
+
         return invoices.stream().map(p -> mapperUtil.convert(p, new InvoiceDto())).toList();
     }
 
@@ -183,6 +205,40 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceToApprove.setDate(LocalDate.now());
 
     }
+
+
+    @Override
+    public void removeInvoiceById(Long id) {
+        Optional<Invoice> invoice = invoiceRepository.findById(id);
+        if(invoice.isPresent()) {
+            invoice.get().setIsDeleted(true);
+            invoiceRepository.save(invoice.get());
+        }
+    }
+
+
+
+    @Override
+    public List<InvoiceDto> listLastThreeApprovedSalesInvoices() {
+        UserDto loggedInUser = securityService.getLoggedInUser();
+        String companyTitle = loggedInUser.getCompany().getTitle();
+
+      List<Invoice> invoices= invoiceRepository.findTop3ByAndCompany_TitleAndStatusOrderByDateDesc(companyTitle, InvoiceStatus.APPROVED);
+      List<InvoiceDto> ConvertedInvoice= invoices.stream()
+              .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto())).toList();
+        return ConvertedInvoice;
+    }
+
+
+
+    @Override
+    public boolean existByClientVendorId(Long id) {
+
+        return  invoiceRepository.existsByClientVendor_Id(id);
+    }
+
+
+
 
     public void savePurchaseInvoiceToProductProfitLoss(List<InvoiceProductDto> invoiceProductList) {
         invoiceProductList.forEach(invoiceProduct -> {

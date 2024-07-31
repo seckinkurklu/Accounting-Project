@@ -92,4 +92,14 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public UserDto getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username);
+
+        return mapperUtil.convert(user,new UserDto());
+
+    }
+
 }
