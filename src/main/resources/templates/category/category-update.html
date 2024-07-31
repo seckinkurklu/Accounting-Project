@@ -49,8 +49,7 @@
                                                                 type="reset">Reset
                                                         </button>
                                                     </div>
-                                                    <div th:if="${category.product.size()>0}" class="row">
-                                                        <div class="col-12 col-md-8">
+                                                    <div th:if="${category.product != null and #lists.size(category.product) > 0}" class="row">                                                        <div class="col-12 col-md-8">
                                                             <div class="form-group">
                                                                 <div class="controls">
                                                                     <div class="alert alert-warning" role="alert">
