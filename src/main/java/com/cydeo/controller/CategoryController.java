@@ -2,15 +2,21 @@ package com.cydeo.controller;
 
 
 import com.cydeo.dto.CategoryDto;
+
 import com.cydeo.exception.CategoryNotFoundException;
+
 import com.cydeo.service.CategoryService;
 import com.cydeo.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import org.springframework.web.bind.annotation.*;
+
 
 /**
  * author:AbduShukur
@@ -37,6 +43,7 @@ public class CategoryController {
     @GetMapping("/create")
     public String creatCategory(Model model){
         model.addAttribute("newCategory",new CategoryDto());
+
         return "/category/category-create";
     }
 
@@ -45,23 +52,30 @@ public class CategoryController {
         if(result.hasErrors()) {
             return "/category/category-create";
         }
+
         categoryService.save(categoryDto);
         return "redirect:/categories/list";
     }
 
+
     @GetMapping("/update/{id}")
-    public String updateCategoryForm1(@PathVariable("id") Long id, Model model) throws CategoryNotFoundException {
+    public String updateCategoryForm1(@PathVariable("id") Long id, Model model)  {
         model.addAttribute("category", categoryService.getCategoryById(id));
         model.addAttribute("product", productService.listAllProducts());
         return "category/category-update";
     }
 
     @PostMapping("/update/{id}")
-    public String updateCategoryForm2( @ModelAttribute("category") @Valid CategoryDto categoryDto,BindingResult result,Model model) throws CategoryNotFoundException {
+    public String updateCategoryForm2( @ModelAttribute("category") @Valid CategoryDto categoryDto,BindingResult result,Model model)  {
         if(result.hasErrors()) {
             return "category/category-update";
         }
         categoryService.update(categoryDto);
+      return "redirect:/categories/list";
+
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable("id") Long id) {
+        categoryService.deleteById(id);
         return "redirect:/categories/list";
     }
     

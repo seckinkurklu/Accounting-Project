@@ -69,4 +69,5 @@ public class CompanyController {
         companyService.deactivateCompany(company_id);
         return "redirect:/companies/list";
     }
+
 }
