@@ -1,14 +1,21 @@
 package com.cydeo.service.s_impl;
 
+import com.cydeo.dto.ClientVendorDto;
 import com.cydeo.dto.ProductDto;
+import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Product;
+import com.cydeo.entity.User;
 import com.cydeo.mapper.ProductMapper;
 import com.cydeo.repository.ProductRepository;
-import com.cydeo.service.ProductService;
+import com.cydeo.repository.UserRepository;
+import com.cydeo.service.*;
 import com.cydeo.util.MapperUtil;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -16,19 +23,25 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
     private final MapperUtil mapperUtil;
+    private final InvoiceProductService invoiceProductService;
+    private final SecurityService securityService;
 
-    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper, MapperUtil mapperUtil) {
+
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper, MapperUtil mapperUtil, InvoiceService invoiceService, InvoiceProductService invoiceProductService, SecurityService securityService) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
         this.mapperUtil = mapperUtil;
+        this.invoiceProductService = invoiceProductService;
+        this.securityService = securityService;
     }
 
 
-    @Override
     public List<ProductDto> listAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return products.stream()
-                .map(product -> mapperUtil.convert(product, new ProductDto())).toList();
+        Long companyId = securityService.getLoggedInCompanyId();
+        List<Product> productList = productRepository.findAllByCompanyId(companyId);
+        return productList.stream()
+                .map(product -> mapperUtil.convert(product,new ProductDto()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -46,13 +59,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void delete(Long id) {
-        Product product = productRepository.findByIdAndIsDeleted(id, false);
-        product.setIsDeleted(true);
-        productRepository.save(product);
-
-
+        Product product=productRepository.findByIdAndIsDeleted(id,false).orElseThrow(
+                () -> new EntityNotFoundException("Product cannot be found with ID "+id)
+        );
+        if (product.getQuantityInStock() == 0 && !invoiceProductService.existsByProductIdAndIsDeleted(id,false)){
+            product.setIsDeleted(true);
+            productRepository.save(product);
+        }
     }
-
     @Override
     public void increaseProductQuantityInStock(Long id, Integer quantity) {
         Product product=productRepository.findById(id)

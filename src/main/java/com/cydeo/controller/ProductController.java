@@ -73,6 +73,11 @@ public class ProductController {
         productService.save(productDto);
         return "redirect:/products/list";
     }
+    @GetMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable("id") Long id){
+    productService.delete(id);
+        return "redirect:/products/list";
+    }
 
 
 

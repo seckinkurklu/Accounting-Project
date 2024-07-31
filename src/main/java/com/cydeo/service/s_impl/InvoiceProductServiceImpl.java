@@ -196,6 +196,11 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     }
 
     @Override
+    public boolean existsByProductIdAndIsDeleted(Long id, boolean isDeleted) {
+        return invoiceProductRepository.existsByProductIdAndIsDeleted(id,isDeleted);
+    }
+
+    @Override
     public InvoiceProductDto getInvoiceProductById(Long id) {
         return mapperUtil.convert(invoiceProductRepository.findById(id).orElse(null), new InvoiceProductDto());
     }

@@ -20,4 +20,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     List<Category> findAllByCompany_Title(String title);
 
    // List<Product> findAllByCategoryOrderByDescriptionAsc(Category category);
+
 }

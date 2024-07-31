@@ -22,6 +22,7 @@ import com.cydeo.service.InvoiceService;
 import com.cydeo.service.ProductService;
 import com.cydeo.service.SecurityService;
 import com.cydeo.util.MapperUtil;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -36,18 +37,18 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final MapperUtil mapperUtil;
     private final UserRepository userRepository;
-    private final ClientVendorDTOConverter clientVendorDTOConverter;
+
     private final ClientVendorRepository clientVendorRepository;
     private final InvoiceProductRepository invoiceProductRepository;
     private final SecurityService securityService;
     private final InvoiceProductService invoiceProductService;
     private final ProductService productService;
 
-    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, MapperUtil mapperUtil, UserRepository userRepository, ClientVendorDTOConverter clientVendorDTOConverter, ClientVendorRepository clientVendorRepository, InvoiceProductRepository invoiceProductRepository, SecurityService securityService, InvoiceProductService invoiceProductService, ProductService productService) {
+    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, MapperUtil mapperUtil, UserRepository userRepository, ClientVendorRepository clientVendorRepository, InvoiceProductRepository invoiceProductRepository, SecurityService securityService,
+                              InvoiceProductService invoiceProductService,@Lazy ProductService productService) {
         this.invoiceRepository = invoiceRepository;
         this.mapperUtil = mapperUtil;
         this.userRepository = userRepository;
-        this.clientVendorDTOConverter = clientVendorDTOConverter;
         this.clientVendorRepository = clientVendorRepository;
         this.invoiceProductRepository = invoiceProductRepository;
         this.securityService = securityService;
@@ -182,6 +183,16 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceToApprove.setInvoiceStatus(InvoiceStatus.APPROVED);
         invoiceToApprove.setDate(LocalDate.now());
 
+    }
+
+    @Override
+    public boolean existByProductId(Long productId) {
+        return invoiceRepository.existsById(productId);
+    }
+
+    @Override
+    public boolean existByClientVendorId(Long id) {
+        return invoiceRepository.existsByClientVendor_Id(id);
     }
 
     public void savePurchaseInvoiceToProductProfitLoss(List<InvoiceProductDto> invoiceProductList) {

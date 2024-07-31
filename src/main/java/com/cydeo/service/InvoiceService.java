@@ -23,5 +23,7 @@ public interface InvoiceService {
 
     Long getId(String invoiceNo);
     void approve(Long invoiceId);
+   boolean existByProductId(Long productId);
 
+    boolean existByClientVendorId(Long id);
 }
