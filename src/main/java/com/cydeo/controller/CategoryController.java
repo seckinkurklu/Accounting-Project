@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 /**
  * author:AbduShukur
  * date:7/24/2024
@@ -35,7 +37,7 @@ public class CategoryController {
     }
 
     @PostMapping("/create")
-    public String createCategory(@ModelAttribute CategoryDto categoryDto, Model model) {
+    public String createCategory(@ModelAttribute @Valid CategoryDto categoryDto, Model model) {
         categoryService.save(categoryDto);
         return "redirect:/categories/list";
     }
