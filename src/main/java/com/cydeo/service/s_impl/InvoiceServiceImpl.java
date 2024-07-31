@@ -108,7 +108,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             //p.setTotal(totalPriceWithTax);
             p.setTotal(priceTotal.add(totalTax));
             return p;
-        }).toList();
+        }).toList(); //..
 
         return invoiceDtoList;
     }
