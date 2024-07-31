@@ -205,6 +205,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     }
 
+
     @Override
     public List<InvoiceDto> listLastThreeApprovedSalesInvoices() {
         UserDto loggedInUser = securityService.getLoggedInUser();
@@ -215,6 +216,16 @@ public class InvoiceServiceImpl implements InvoiceService {
               .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto())).toList();
         return ConvertedInvoice;
     }
+
+
+
+    @Override
+    public boolean existByClientVendorId(Long id) {
+
+        return  invoiceRepository.existsByClientVendor_Id(id);
+    }
+
+
 
     public void savePurchaseInvoiceToProductProfitLoss(List<InvoiceProductDto> invoiceProductList) {
         invoiceProductList.forEach(invoiceProduct -> {
