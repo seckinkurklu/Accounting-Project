@@ -1,6 +1,7 @@
 package com.cydeo.service.s_impl;
 
 import com.cydeo.dto.CategoryDto;
+import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.Category;
 
@@ -35,18 +36,15 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final SecurityService securityService;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository, MapperUtil mapperUtil, UserService userService, ProductRepository productRepository, SecurityService securityService) {
-
+    public CategoryServiceImpl(CategoryRepository categoryRepository, MapperUtil mapperUtil, UserService userService, ProductRepository productRepository, CompanyService companyService, SecurityService securityService) {
         this.categoryRepository = categoryRepository;
         this.mapperUtil = mapperUtil;
         this.userService = userService;
         this.productRepository = productRepository;
-
         this.companyService = companyService;
-
         this.securityService = securityService;
-
     }
+
 
     @Override
     public List<CategoryDto> listAllCategory() {
@@ -73,13 +71,21 @@ public class CategoryServiceImpl implements CategoryService {
         return mapperUtil.convert(categoryRepository.findById(id).get(),new CategoryDto());
     }
 
+//    @Override
+//    public CategoryDto save(CategoryDto categoryDto) {
+//        UserDto currentUser = userService.getLoggedUser();
+//        categoryDto.setCompany(currentUser.getCompany());
+//        Category categoryToSave = mapperUtil.convert(categoryDto, new Category());
+//        Category savedCategory = categoryRepository.save(categoryToSave);
+//        return mapperUtil.convert(savedCategory, new CategoryDto());
+//    }
+
     @Override
-    public CategoryDto save(CategoryDto categoryDto) {
-        UserDto currentUser = userService.getLoggedUser();
-        categoryDto.setCompany(currentUser.getCompany());
-        Category categoryToSave = mapperUtil.convert(categoryDto, new Category());
-        Category savedCategory = categoryRepository.save(categoryToSave);
-        return mapperUtil.convert(savedCategory, new CategoryDto());
+    public void save(CategoryDto categoryDto) {
+        UserDto loggedInUser = securityService.getLoggedInUser();
+        CompanyDto loggedInUserCompany = loggedInUser.getCompany();
+        categoryDto.setCompany(loggedInUserCompany);
+        categoryRepository.save(mapperUtil.convert(categoryDto,new Category()));
     }
 
     @Override
@@ -99,13 +105,7 @@ public class CategoryServiceImpl implements CategoryService {
         categoryDto.setCompany(companyService.findById(category.getCompany().getId()));
         return categoryDto;
     }
-  @Override
-    public void save(CategoryDto categoryDto) {
-        UserDto loggedInUser = securityService.getLoggedInUser();
-        CompanyDto loggedInUserCompany = loggedInUser.getCompany();
-        categoryDto.setCompany(loggedInUserCompany);
-        categoryRepository.save(mapperUtil.convert(categoryDto,new Category()));
-    }
+
     @Override
     public void deleteById(Long id) {
         categoryRepository.deleteById(id);

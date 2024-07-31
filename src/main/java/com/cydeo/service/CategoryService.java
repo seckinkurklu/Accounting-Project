@@ -12,7 +12,7 @@ public interface CategoryService {
     List<CategoryDto> listAllByCompany();
     CategoryDto findCategoryById(Long id);
 
-    CategoryDto save(CategoryDto categoryDto);
+    //CategoryDto save(CategoryDto categoryDto);
     CategoryDto update(CategoryDto categoryDto);
 
     CategoryDto getCategoryById(Long id);
