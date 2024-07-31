@@ -2,7 +2,6 @@ package com.cydeo.controller;
 
 
 import com.cydeo.dto.CategoryDto;
-import com.cydeo.exception.CategoryNotFoundException;
 import com.cydeo.service.CategoryService;
 import com.cydeo.service.ProductService;
 import org.springframework.stereotype.Controller;
@@ -50,15 +49,15 @@ public class CategoryController {
     }
 
     @GetMapping("/update/{id}")
-    public String updateCategoryForm1(@PathVariable("id") Long id, Model model) throws CategoryNotFoundException {
+    public String updateCategoryForm1(@PathVariable("id") Long id, Model model) {
         model.addAttribute("category", categoryService.getCategoryById(id));
         model.addAttribute("product", productService.listAllProducts());
         return "category/category-update";
     }
 
     @PostMapping("/update/{id}")
-    public String updateCategoryForm2( @ModelAttribute("category") @Valid CategoryDto categoryDto,BindingResult result,Model model) throws CategoryNotFoundException {
-        if(result.hasErrors()) {
+    public String updateCategoryForm2( @ModelAttribute("category") @Valid CategoryDto categoryDto,BindingResult result) {
+        if (result.hasErrors()) {
             return "category/category-update";
         }
         categoryService.update(categoryDto);
