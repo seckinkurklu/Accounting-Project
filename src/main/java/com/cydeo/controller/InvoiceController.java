@@ -112,30 +112,12 @@ public class InvoiceController {
         return "redirect:/purchaseInvoices/update/{id}";
     }
 
+    @GetMapping("/salesInvoices/delete/{id}")
+    public String deleteFromSalesInvoiceList(@PathVariable Long id) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        invoiceService.removeInvoiceById(id);
+        return "redirect:/salesInvoices/list";
+    }
 
 
 }

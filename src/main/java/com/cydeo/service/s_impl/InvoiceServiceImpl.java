@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -182,6 +183,15 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceToApprove.setInvoiceStatus(InvoiceStatus.APPROVED);
         invoiceToApprove.setDate(LocalDate.now());
 
+    }
+
+    @Override
+    public void removeInvoiceById(Long id) {
+        Optional<Invoice> invoice = invoiceRepository.findById(id);
+        if(invoice.isPresent()) {
+            invoice.get().setIsDeleted(true);
+            invoiceRepository.save(invoice.get());
+        }
     }
 
     public void savePurchaseInvoiceToProductProfitLoss(List<InvoiceProductDto> invoiceProductList) {
