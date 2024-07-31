@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Controller
 @RequestMapping("/products")
 public class ProductController {
@@ -45,7 +47,7 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public String insertProduct(@ModelAttribute("newProduct") ProductDto productDto, BindingResult bindingResult, Model model){
+    public String insertProduct(@ModelAttribute("newProduct") @Valid ProductDto productDto, BindingResult bindingResult, Model model){
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("categories", categoryService.listAllCategory());
