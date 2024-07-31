@@ -23,7 +23,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Controller
-@RequestMapping("/invoices")
+@RequestMapping
 public class InvoiceController {
 
     private final InvoiceService invoiceService;
@@ -113,6 +113,13 @@ public class InvoiceController {
         return "redirect:/purchaseInvoices/update/{id}";
     }
 
+    @GetMapping("/salesInvoices/delete/{id}")
+    public String deleteFromSalesInvoiceList(@PathVariable Long id) {
+
+        invoiceService.removeInvoiceById(id);
+        return "redirect:/salesInvoices/list";
+    }
+
     @GetMapping("/purchaseInvoices/print/{id}")
     public String printPurchaseInvoice(@PathVariable("id") Long id, Model model) {
 
@@ -135,25 +142,6 @@ public class InvoiceController {
         model.addAttribute("invoiceProducts",invoiceProductList);
         return "invoice/invoice_print";
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

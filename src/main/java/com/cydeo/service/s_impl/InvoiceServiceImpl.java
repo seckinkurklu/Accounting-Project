@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -108,7 +109,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             //p.setTotal(totalPriceWithTax);
             p.setTotal(priceTotal.add(totalTax));
             return p;
-        }).toList();
+        }).toList(); //..
 
         return invoiceDtoList;
     }
@@ -207,10 +208,36 @@ public class InvoiceServiceImpl implements InvoiceService {
 
 
     @Override
+    public void removeInvoiceById(Long id) {
+        Optional<Invoice> invoice = invoiceRepository.findById(id);
+        if(invoice.isPresent()) {
+            invoice.get().setIsDeleted(true);
+            invoiceRepository.save(invoice.get());
+        }
+    }
+
+
+
+    @Override
+    public List<InvoiceDto> listLastThreeApprovedSalesInvoices() {
+        UserDto loggedInUser = securityService.getLoggedInUser();
+        String companyTitle = loggedInUser.getCompany().getTitle();
+
+      List<Invoice> invoices= invoiceRepository.findTop3ByAndCompany_TitleAndInvoiceStatus_AndInvoiceTypeOrderByDateDesc(companyTitle, InvoiceStatus.APPROVED, InvoiceType.SALES);
+      List<InvoiceDto> ConvertedInvoice= invoices.stream()
+              .map(invoice -> mapperUtil.convert(invoice, new InvoiceDto())).toList();
+        return ConvertedInvoice;
+    }
+
+
+
+    @Override
     public boolean existByClientVendorId(Long id) {
 
         return  invoiceRepository.existsByClientVendor_Id(id);
     }
+
+
 
 
     public void savePurchaseInvoiceToProductProfitLoss(List<InvoiceProductDto> invoiceProductList) {
