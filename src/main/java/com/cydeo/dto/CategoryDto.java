@@ -12,5 +12,5 @@ public class CategoryDto {
     private String description;
     private CompanyDto company;
     private boolean hasProduct;
-    private ProductDto productDto;
+    private ProductDto product;
 }
