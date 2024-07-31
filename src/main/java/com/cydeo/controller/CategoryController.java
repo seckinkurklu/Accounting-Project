@@ -19,6 +19,9 @@ import javax.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.validation.Valid;
+
+
 /**
  * author:AbduShukur
  * date:7/24/2024
@@ -52,10 +55,12 @@ public class CategoryController {
 
 
     @PostMapping("/create")
+
     public String create(@ModelAttribute("newCategory") @Valid CategoryDto categoryDto, BindingResult result) {
         if(result.hasErrors()) {
             return "/category/category-create";
         }
+
 
         categoryService.save(categoryDto);
         return "redirect:/categories/list";
