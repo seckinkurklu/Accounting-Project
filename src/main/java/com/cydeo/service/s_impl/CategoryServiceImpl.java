@@ -74,6 +74,17 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.deleteById(id);
     }
 
+    @Override
+    public List<CategoryDto> getCategoriesForCurrentUser() {
+        UserDto currentUser = userService.getCurrentUser();
+        Company company = mapperUtil.convert(currentUser,new User()).getCompany();
+
+        List<Category> categories = categoryRepository.findAllByCompanyIdOrderByDescriptionAsc(company.getId());
+
+        return categories.stream()
+                .map(category -> mapperUtil.convert(category,new CategoryDto())).collect(Collectors.toList());
+
+    }
 
 
 }
