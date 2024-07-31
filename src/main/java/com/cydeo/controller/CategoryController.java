@@ -27,17 +27,20 @@ public class CategoryController {
         this.productService = productService;
     }
 
+
     @GetMapping("/list")
     public String CategoryList(Model model) {
         model.addAttribute("categories",categoryService.listAllByCompany());
         return "/category/category-list";
     }
 
+
     @GetMapping("/create")
     public String creatCategory(Model model){
         model.addAttribute("newCategory",new CategoryDto());
         return "/category/category-create";
     }
+
 
     @PostMapping("/create")
     public String create(@ModelAttribute("newCategory") @Valid CategoryDto categoryDto, BindingResult result) {
@@ -48,12 +51,14 @@ public class CategoryController {
         return "redirect:/categories/list";
     }
 
+
     @GetMapping("/update/{id}")
     public String updateCategoryForm1(@PathVariable("id") Long id, Model model) {
         model.addAttribute("category", categoryService.getCategoryById(id));
         model.addAttribute("product", productService.listAllProducts());
         return "category/category-update";
     }
+
 
     @PostMapping("/update/{id}")
     public String updateCategoryForm2( @ModelAttribute("category") @Valid CategoryDto categoryDto,BindingResult result) {
