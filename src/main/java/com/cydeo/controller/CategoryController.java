@@ -55,13 +55,13 @@ public class CategoryController {
 
 
     @PostMapping("/create")
+    public String create(@ModelAttribute("newCategory") @Valid CategoryDto categoryDto, BindingResult result,  Model model) {
 
-    public String create(@ModelAttribute("newCategory") @Valid CategoryDto categoryDto, BindingResult result) {
+        if (categoryService.findByDescription(categoryDto.getDescription())!=null)
+            result.rejectValue("description", "error.description", "This description already exists.");
         if(result.hasErrors()) {
             return "/category/category-create";
         }
-
-
         categoryService.save(categoryDto);
         return "redirect:/categories/list";
     }
