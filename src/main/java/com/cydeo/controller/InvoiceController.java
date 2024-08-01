@@ -23,7 +23,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Controller
-@RequestMapping
 public class InvoiceController {
 
     private final InvoiceService invoiceService;
@@ -49,12 +48,6 @@ public class InvoiceController {
     public String invoicePurchaseDtoList(Model model) {
         model.addAttribute("invoices", invoiceService.listAllPurchaseInvoice());
         return "/invoice/purchase-invoice-list";
-    }
-
-    @GetMapping("/salesInvoices/list")
-    public String invoiceSalesDtoList(Model model) {
-        model.addAttribute("invoices", invoiceService.listAllSalesInvoice());
-        return "/invoice/sales-invoice-list";
     }
 
     @GetMapping("/purchaseInvoices/create")
