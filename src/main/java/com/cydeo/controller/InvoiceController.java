@@ -23,7 +23,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Controller
-@RequestMapping("/invoices")
+@RequestMapping
 public class InvoiceController {
 
     private final InvoiceService invoiceService;
