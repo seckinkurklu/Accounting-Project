@@ -1,9 +1,8 @@
 package com.cydeo.service;
 
-import java.util.List;
 import java.util.Map;
 
-public interface ReportService {
+public interface ReportingService {
 
 
     Map<String,Double> getMonthlyProfitLossByCompany();

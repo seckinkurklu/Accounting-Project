@@ -1,25 +1,21 @@
 package com.cydeo.service.s_impl;
 
 import com.cydeo.repository.InvoiceProductRepository;
-import com.cydeo.service.InvoiceProductService;
-import com.cydeo.service.ReportService;
+import com.cydeo.service.ReportingService;
 import com.cydeo.service.SecurityService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 @Service
-public class ReportServiceImpl implements ReportService {
+public class ReportingServiceImpl implements ReportingService {
 private final InvoiceProductRepository productRepository;
     private final InvoiceProductRepository invoiceProductRepository;
 private final SecurityService securityService;
-    public ReportServiceImpl(InvoiceProductRepository productRepository, InvoiceProductRepository invoiceProductRepository, SecurityService securityService) {
+    public ReportingServiceImpl(InvoiceProductRepository productRepository, InvoiceProductRepository invoiceProductRepository, SecurityService securityService) {
         this.productRepository = productRepository;
         this.invoiceProductRepository = invoiceProductRepository;
         this.securityService = securityService;
@@ -40,7 +36,9 @@ private final SecurityService securityService;
 
             monthlySums.put(month, monthlySums.getOrDefault(month, 0.0) + profitLoss);
         }
-
-        return monthlySums;
+        //sorted based on date in descending order
+        Map<String, Double> sortedMap = new TreeMap<>(Collections.reverseOrder());
+        sortedMap.putAll(monthlySums);
+        return sortedMap;
     }
 }
