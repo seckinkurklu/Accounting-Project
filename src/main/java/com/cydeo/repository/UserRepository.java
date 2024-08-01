@@ -14,5 +14,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findAllByRole_Description(String role);
 
+    List<User> findAllByCompany_Id(Long id);
+
+    int countAllByCompany_IdAndRole_Description(Long id, String admin);
+
+
+
+
+
+
 
 }

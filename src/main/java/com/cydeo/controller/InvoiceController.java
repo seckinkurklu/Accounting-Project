@@ -51,11 +51,6 @@ public class InvoiceController {
         return "/invoice/purchase-invoice-list";
     }
 
-    @GetMapping("/salesInvoices/list")
-    public String invoiceSalesDtoList(Model model) {
-        model.addAttribute("invoices", invoiceService.listAllSalesInvoice());
-        return "/invoice/sales-invoice-list";
-    }
 
     @GetMapping("/purchaseInvoices/create")
     public String createPurchaseInvoice(Model model){
