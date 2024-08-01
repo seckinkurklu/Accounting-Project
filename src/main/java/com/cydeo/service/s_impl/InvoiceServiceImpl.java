@@ -64,7 +64,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public InvoiceDto getInvoiceById(Long id) {
         Invoice invoice = invoiceRepository.findById(id).get();
-        return mapperUtil.convert(invoice,new InvoiceDto());
+      InvoiceDto invoiceDto=mapperUtil.convert(invoice,new InvoiceDto());
+      List<InvoiceProductDto> invoiceProductDtoList=invoiceProductService.getAllInvoiceProductsById(id);
+     BigDecimal invoiceTotal= invoiceProductDtoList.stream().map(InvoiceProductDto::getTotal).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+    invoiceDto.setTotal(invoiceTotal);
+    return invoiceDto;
     }
 
     @Override
