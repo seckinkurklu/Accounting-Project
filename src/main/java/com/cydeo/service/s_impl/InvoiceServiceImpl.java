@@ -64,7 +64,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public InvoiceDto getInvoiceById(Long id) {
         Invoice invoice = invoiceRepository.findById(id).get();
-        return mapperUtil.convert(invoice,new InvoiceDto());
+      InvoiceDto invoiceDto=mapperUtil.convert(invoice,new InvoiceDto());
+      List<InvoiceProductDto> invoiceProductDtoList=invoiceProductService.getAllInvoiceProductsById(id);
+     BigDecimal invoiceTotal= invoiceProductDtoList.stream().map(InvoiceProductDto::getTotal).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+    invoiceDto.setTotal(invoiceTotal);
+    return invoiceDto;
     }
 
     @Override
@@ -206,6 +210,11 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     }
 
+    @Override
+    public boolean existByProductId(Long productId) {
+        return invoiceRepository.existsById(productId);
+    }
+
 
     @Override
     public void removeInvoiceById(Long id) {
@@ -215,9 +224,6 @@ public class InvoiceServiceImpl implements InvoiceService {
             invoiceRepository.save(invoice.get());
         }
     }
-
-
-
     @Override
     public List<InvoiceDto> listLastThreeApprovedSalesInvoices() {
         UserDto loggedInUser = securityService.getLoggedInUser();

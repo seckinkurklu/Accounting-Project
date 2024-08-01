@@ -22,4 +22,5 @@ public interface InvoiceProductRepository extends JpaRepository<InvoiceProduct, 
    List<InvoiceProduct> findAllByIsDeletedFalse();
 
 
+   boolean existsByProductIdAndIsDeleted(Long id, boolean isDeleted);
 }
