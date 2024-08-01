@@ -23,7 +23,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Controller
-@RequestMapping
 public class InvoiceController {
 
     private final InvoiceService invoiceService;
@@ -50,7 +49,6 @@ public class InvoiceController {
         model.addAttribute("invoices", invoiceService.listAllPurchaseInvoice());
         return "/invoice/purchase-invoice-list";
     }
-
 
     @GetMapping("/purchaseInvoices/create")
     public String createPurchaseInvoice(Model model){

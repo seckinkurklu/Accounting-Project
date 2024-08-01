@@ -47,9 +47,16 @@ public class CategoryController {
         return "/category/category-create";
     }
     @PostMapping("/create")
+    public String create(@ModelAttribute("newCategory") @Valid CategoryDto categoryDto, BindingResult result,  Model model) {
+
+
+        if (categoryService.findByDescription(categoryDto.getDescription())!=null)
+            result.rejectValue("description", "error.description", "This description already exists.");
+        if(result.hasErrors()) {
 
     public String create(@ModelAttribute("newCategory") @Valid CategoryDto categoryDto, BindingResult result) {
         if (result.hasErrors()) {
+
             return "/category/category-create";
         }
         categoryService.save(categoryDto);
@@ -63,13 +70,19 @@ public class CategoryController {
     }
 
     @PostMapping("/update/{id}")
+    public String updateCategoryForm2( @ModelAttribute("category") @Valid CategoryDto categoryDto,BindingResult result) {
+        if (categoryService.findByDescription(categoryDto.getDescription())!=null)
+            result.rejectValue("description", "error.description", "This description already exists.");
+
     public String updateCategoryForm2(@ModelAttribute("category") @Valid CategoryDto categoryDto, BindingResult result) {
+
         if (result.hasErrors()) {
             return "category/category-update";
         }
         categoryService.update(categoryDto);
         return "redirect:/categories/list";
     }
+      
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable("id") Long id) {
         categoryService.deleteById(id);
