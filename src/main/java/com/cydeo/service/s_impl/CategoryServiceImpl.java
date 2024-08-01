@@ -48,7 +48,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryDto> listAllCategory() {
-        List<Category> categoryList = categoryRepository.findAll();
+       Long id= securityService.getLoggedInCompanyId();
+        List<Category> categoryList = categoryRepository.findAllByCompanyIdOrderByDescriptionAsc(id);
         return categoryList.stream().map(category -> mapperUtil.convert(category,new CategoryDto())).collect(Collectors.toList());
     }
 

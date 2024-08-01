@@ -39,4 +39,7 @@ public class SecurityServiceImpl implements SecurityService {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return userService.findByUsername(username);
     }
+    public  Long getLoggedInCompanyId(){
+       return getLoggedInUser().getCompany().getId();
+    };
 }
