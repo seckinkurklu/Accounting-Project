@@ -80,14 +80,6 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 //
 //    }
 
-
-
-
-
-
-
-
-
     public List<InvoiceProductDto> getAllInvoiceProducts() {
         // Kullanıcıya ait InvoiceProduct nesnelerini al
         List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllByIsDeletedFalse();
@@ -193,6 +185,11 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
             invoiceProduct.setIsDeleted(true);
             invoiceProductRepository.save(invoiceProduct);
         }
+    }
+
+    @Override
+    public boolean existsByProductIdAndIsDeleted(Long id, boolean isDeleted) {
+        return invoiceProductRepository.existsByProductIdAndIsDeleted(id,isDeleted);
     }
 
     @Override

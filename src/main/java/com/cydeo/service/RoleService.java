@@ -10,4 +10,5 @@ public interface RoleService {
 
     List<RoleDto> listAllRoles();
 
+    List<RoleDto> listRolesByLoggedInUser();
 }

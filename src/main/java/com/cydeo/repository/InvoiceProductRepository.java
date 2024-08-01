@@ -30,4 +30,5 @@ public interface InvoiceProductRepository extends JpaRepository<InvoiceProduct, 
    List<Object[]> dateAndProfitLossByCompanyTitle(@Param("title") String companyTitle);
 
 
+   boolean existsByProductIdAndIsDeleted(Long id, boolean isDeleted);
 }
