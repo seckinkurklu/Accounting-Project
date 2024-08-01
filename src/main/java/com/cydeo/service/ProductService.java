@@ -12,7 +12,6 @@ public interface ProductService {
 
     void delete(Long id);
 
-//    List<ProductDto> getProductsForCurrentUser(Long userId);
     void increaseProductQuantityInStock(Long id, Integer quantity);
 
 }

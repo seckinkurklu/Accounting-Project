@@ -18,11 +18,15 @@ public class ClientVendorController {
     public ClientVendorController(ClientVendorService clientVendorService) {
         this.clientVendorService = clientVendorService;
     }
+
+
     @GetMapping("/list")
     public String getClientVendors(Model model){
         model.addAttribute("clientVendors",clientVendorService.listAllByCompanyTitle());
         return "/clientVendor/clientVendor-list";
     }
+
+
     @GetMapping("/create")
     public String createClientVendor(Model model){
         model.addAttribute("newClientVendor",new ClientVendorDto());
@@ -30,11 +34,15 @@ public class ClientVendorController {
         model.addAttribute("clientVendorTypes",clientVendorTypes); // types are taken to UI
         return "/clientVendor/clientVendor-create";
     }
+
+
     @PostMapping("/create")
     public String insertClientVendor(@ModelAttribute("newClientVendor")ClientVendorDto clientVendorDto){
         clientVendorService.save(clientVendorDto);
         return "redirect:/clientVendors/list";
     }
+
+
 @GetMapping("/update/{id}")
 public String editClientVendor(@PathVariable("id") Long id, Model model) {
     List<ClientVendorType> clientVendorTypes = Arrays.asList(ClientVendorType.values());
@@ -49,6 +57,7 @@ public String editClientVendor(@PathVariable("id") Long id, Model model) {
         clientVendorService.update(clientVendorDto);
         return "redirect:/clientVendors/list";
     }
+
     @GetMapping("/delete/{id}")
     public String deleteClientVendor(@PathVariable("id") Long id){
         clientVendorService.delete(id);

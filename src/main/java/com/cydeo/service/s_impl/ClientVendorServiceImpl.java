@@ -8,6 +8,7 @@ import com.cydeo.repository.UserRepository;
 import com.cydeo.service.ClientVendorService;
 import com.cydeo.service.InvoiceService;
 import com.cydeo.util.MapperUtil;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     private final MapperUtil mapperUtil;
     private final InvoiceService invoiceService;
 
-    public ClientVendorServiceImpl(ClientVendorRepository clientVendorRepository, UserRepository userRepository, MapperUtil mapperUtil, InvoiceService invoiceService) {
+    public ClientVendorServiceImpl(ClientVendorRepository clientVendorRepository, UserRepository userRepository, MapperUtil mapperUtil,@Lazy InvoiceService invoiceService) {
         this.clientVendorRepository = clientVendorRepository;
         this.userRepository = userRepository;
         this.mapperUtil = mapperUtil;

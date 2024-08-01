@@ -25,5 +25,9 @@ public interface InvoiceService {
     void approve(Long invoiceId);
    boolean existByProductId(Long productId);
 
+    List<InvoiceDto> listLastThreeApprovedSalesInvoices();
+
     boolean existByClientVendorId(Long id);
+
+    void removeInvoiceById(Long id);
 }

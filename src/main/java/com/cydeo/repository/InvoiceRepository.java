@@ -2,6 +2,7 @@ package com.cydeo.repository;
 
 import com.cydeo.entity.Company;
 import com.cydeo.entity.Invoice;
+import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.w3c.dom.stylesheets.LinkStyle;
@@ -23,4 +24,6 @@ public interface InvoiceRepository extends JpaRepository<Invoice,Long> {
     Invoice findInvoiceByInvoiceNo(String invoiceNumber);
 
     boolean existsByClientVendor_Id(Long id);
+
+    List<Invoice> findTop3ByAndCompany_TitleAndInvoiceStatus_AndInvoiceTypeOrderByDateDesc(String companyTitle, InvoiceStatus invoiceStatus, InvoiceType invoiceType);
 }

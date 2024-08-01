@@ -206,6 +206,11 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     }
 
+    @Override
+    public boolean existByProductId(Long productId) {
+        return invoiceRepository.existsById(productId);
+    }
+
 
     @Override
     public void removeInvoiceById(Long id) {
@@ -215,9 +220,6 @@ public class InvoiceServiceImpl implements InvoiceService {
             invoiceRepository.save(invoice.get());
         }
     }
-
-
-
     @Override
     public List<InvoiceDto> listLastThreeApprovedSalesInvoices() {
         UserDto loggedInUser = securityService.getLoggedInUser();

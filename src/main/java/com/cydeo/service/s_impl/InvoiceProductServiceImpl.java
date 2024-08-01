@@ -80,14 +80,6 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 //
 //    }
 
-
-
-
-
-
-
-
-
     public List<InvoiceProductDto> getAllInvoiceProducts() {
         // Kullanıcıya ait InvoiceProduct nesnelerini al
         List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllByIsDeletedFalse();

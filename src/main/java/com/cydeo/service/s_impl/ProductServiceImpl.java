@@ -10,6 +10,7 @@ import com.cydeo.repository.ProductRepository;
 import com.cydeo.repository.UserRepository;
 import com.cydeo.service.*;
 import com.cydeo.util.MapperUtil;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
     private final SecurityService securityService;
 
 
-    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper, MapperUtil mapperUtil, InvoiceService invoiceService, InvoiceProductService invoiceProductService, SecurityService securityService) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper, MapperUtil mapperUtil, @Lazy InvoiceService invoiceService, InvoiceProductService invoiceProductService, SecurityService securityService) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
         this.mapperUtil = mapperUtil;
@@ -38,7 +39,7 @@ public class ProductServiceImpl implements ProductService {
 
     public List<ProductDto> listAllProducts() {
         Long companyId = securityService.getLoggedInCompanyId();
-        List<Product> productList = productRepository.findAllByCompanyId(companyId);
+        List<Product> productList = productRepository.findAllByCompanyIdAndIsDeleted(companyId,false);
         return productList.stream()
                 .map(product -> mapperUtil.convert(product,new ProductDto()))
                 .collect(Collectors.toList());
@@ -57,16 +58,16 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
     }
 
-    @Override
-    public void delete(Long id) {
-        Product product=productRepository.findByIdAndIsDeleted(id,false).orElseThrow(
-                () -> new EntityNotFoundException("Product cannot be found with ID "+id)
-        );
-        if (product.getQuantityInStock() == 0 && !invoiceProductService.existsByProductIdAndIsDeleted(id,false)){
-            product.setIsDeleted(true);
-            productRepository.save(product);
-        }
-    }
+@Override
+public void delete(Long id) {
+    Product product=productRepository.findByIdAndIsDeleted(id,false).orElseThrow(
+            () -> new EntityNotFoundException("Product cannot be found with ID "+id)
+    );
+    if (product.getQuantityInStock() == 0 && !invoiceProductService.existsByProductIdAndIsDeleted(id,false)){
+        product.setIsDeleted(true);
+        productRepository.save(product);
+    }}
+
     @Override
     public void increaseProductQuantityInStock(Long id, Integer quantity) {
         Product product=productRepository.findById(id)
