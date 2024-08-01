@@ -1,5 +1,6 @@
 package com.cydeo.service;
 import com.cydeo.dto.CategoryDto;
+import com.cydeo.exception.CategoryNotFoundException;
 
 import java.util.List;
 
@@ -12,7 +13,6 @@ public interface CategoryService {
     List<CategoryDto> listAllByCompany();
     CategoryDto findCategoryById(Long id);
 
-    //CategoryDto save(CategoryDto categoryDto);
     CategoryDto update(CategoryDto categoryDto);
 
     CategoryDto getCategoryById(Long id);
@@ -20,5 +20,6 @@ public interface CategoryService {
     void deleteById(Long id);
     List<CategoryDto> getCategoriesForCurrentUser();
     void save(CategoryDto categoryDto);
+    CategoryDto findByDescription(String description);
 
 }
