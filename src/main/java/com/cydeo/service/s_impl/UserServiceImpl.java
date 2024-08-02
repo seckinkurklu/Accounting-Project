@@ -2,6 +2,7 @@ package com.cydeo.service.s_impl;
 
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.User;
+import com.cydeo.exception.UserNotFoundException;
 import com.cydeo.mapper.UserMapper;
 import com.cydeo.repository.UserRepository;
 import com.cydeo.service.UserService;
@@ -60,7 +61,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findById(Long id) {
-        return null;
+        return userRepository.findById(id).map(user -> mapperUtil.convert(user, new UserDto())).orElse(null);
     }
 
     @Override
@@ -72,10 +73,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUser(UserDto userDtoToBeUpdate) {
+    public UserDto updateUser(UserDto userDtoToBeUpdate) throws UserNotFoundException {
 
         User existingUser = userRepository.findById(userDtoToBeUpdate.getId())
-                .orElseThrow(() -> new RuntimeException("User can't found with id " + userDtoToBeUpdate.getId()));
+                .orElseThrow(() -> new UserNotFoundException("User can't found with id " + userDtoToBeUpdate.getId()));
         existingUser.setUsername(userDtoToBeUpdate.getUsername());
         existingUser.setPassword(passwordEncoder.encode(userDtoToBeUpdate.getPassword()));
         userRepository.save(existingUser);
@@ -83,9 +84,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void deleteUser(Long id) throws UserNotFoundException {
 
-        User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
         user.setIsDeleted(true);
         userRepository.save(user);
 
