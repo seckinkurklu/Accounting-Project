@@ -44,7 +44,6 @@ public class ExecutionTimeAspect {
 
         log.info("Time taken to execute: {} ms - Method: {}"
                 , (afterTime - beforeTime), joinPoint.getSignature().toShortString());
-
         return result;
     }
 }
