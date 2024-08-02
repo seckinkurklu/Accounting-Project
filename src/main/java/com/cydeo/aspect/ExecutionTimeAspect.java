@@ -5,7 +5,6 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,19 +15,36 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class ExecutionTimeAspect {
 
-    private static final Logger logger = LoggerFactory.getLogger(ExecutionTimeAspect.class);
-    @Pointcut("execution(* com.cydeo.controller.DashboardController.getExchangeRates(*))")
-    public void  getExchangeRatesPC() {}
+   //private static final Logger logger = LoggerFactory.getLogger(ExecutionTimeAspect.class);
 
-    @Around(" getExchangeRatesPC()")
-    public void beforeConsumingAPI(ProceedingJoinPoint joinPoint) throws Throwable {
-        long start = System.currentTimeMillis(); // Start time
+    @Pointcut("@annotation(com.cydeo.annotation.ExecutionTime)")
+    public void executionTimeAnnotationPC() {}
 
-        Object proceed = joinPoint.proceed(); // Proceed with the method execution
+    @Around("executionTimeAnnotationPC()")
+    public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+//        long start = System.currentTimeMillis();
+//        Object proceed = joinPoint.proceed();
+//        long executionTime = System.currentTimeMillis() - start;
+//
+//        String methodName = joinPoint.getSignature().getName();
+//        String className = joinPoint.getSignature().getDeclaringTypeName();
+//
+//        log.info("Execution of {}#{} took {} ms", className, methodName, executionTime);
+//        return proceed;
+        long beforeTime = System.currentTimeMillis();
+        Object result = null;
+        log.info("Execution starts:");
 
-        long executionTime = System.currentTimeMillis() - start; // Calculate execution time
+        try {
+            result = joinPoint.proceed();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        long afterTime = System.currentTimeMillis();
 
-        // Log the method signature and execution time
-        logger.info("{} executed in {} ms", joinPoint.getSignature(), executionTime);
+        log.info("Time taken to execute: {} ms - Method: {}"
+                , (afterTime - beforeTime), joinPoint.getSignature().toShortString());
+
+        return result;
     }
 }
