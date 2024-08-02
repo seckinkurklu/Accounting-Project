@@ -26,10 +26,9 @@ public interface InvoiceProductRepository extends JpaRepository<InvoiceProduct, 
 
    List<InvoiceProduct> findAllByIsDeletedFalse();
 
+   boolean existsByProductIdAndIsDeleted(Long id, boolean isDeleted);
+
    @Query(value = "select i.date, ip.profit_loss from invoices i join invoice_products ip on i.id = ip.invoice_id\n" +
            "join companies c on i.company_id = c.id where c.title=?1 and i.invoice_status =?2", nativeQuery = true)
    List<Object[]> dateAndProfitLossByCompanyTitle(@Param("title") String companyTitle, @Param("invoice_status")String invoiceStatus);
-
-
-   boolean existsByProductIdAndIsDeleted(Long id, boolean isDeleted);
 }
