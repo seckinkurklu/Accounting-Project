@@ -29,15 +29,15 @@ public class UserController {
     @GetMapping("/list")
     public String listAllUsers(Model model) {
 
-        model.addAttribute("users", userService.getLoggedUser());
+        model.addAttribute("users", userService.listAllUsers());
         return "/user/user-list";
     }
 
     @GetMapping("/create")
     public String CreateUser(Model model) {
         model.addAttribute("newUser", new UserDto());
-        model.addAttribute("userRoles", roleService.listAllRoles());
-        model.addAttribute("companies", userService.listAllUsers());
+        model.addAttribute("userRoles", roleService.listRolesByLoggedInUser());
+        model.addAttribute("companies", companyService.listCompaniesByLoggedInUser());
 
         return "/user/user-create";
     }

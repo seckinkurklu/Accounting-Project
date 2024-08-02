@@ -18,4 +18,6 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
 
     List<Company> findAllCompanyIdNot1();
 
+    List<Company> findCompaniesByTitleIsNot(String title);
+
 }

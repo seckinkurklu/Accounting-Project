@@ -64,15 +64,16 @@ public class ProductController {
         model.addAttribute("product",productService.getProductById(id));
         model.addAttribute("categories",categoryService.listAllCategory());
         model.addAttribute("productUnits",ProductUnit.values());
-
-
         return "product/product-update";
     }
-
     @PostMapping("/update/{id}")
     public String updateProduct(@ModelAttribute("product") ProductDto productDto){
-
         productService.save(productDto);
+        return "redirect:/products/list";
+    }
+    @GetMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable("id") Long id){
+    productService.delete(id);
         return "redirect:/products/list";
     }
 
