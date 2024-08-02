@@ -1,7 +1,10 @@
 package com.cydeo.service.s_impl;
 
+import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.InvoiceProductDto;
+import com.cydeo.entity.Company;
 import com.cydeo.entity.InvoiceProduct;
+import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.repository.InvoiceProductRepository;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.SecurityService;
@@ -190,6 +193,14 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     @Override
     public boolean existsByProductIdAndIsDeleted(Long id, boolean isDeleted) {
         return invoiceProductRepository.existsByProductIdAndIsDeleted(id,isDeleted);
+    }
+
+    @Override
+    public List<InvoiceProductDto> findAllApprovedInvoiceInvoiceProduct(InvoiceStatus invoiceStatus) {
+        CompanyDto companyDto=securityService.getLoggedInUser().getCompany();
+        Company company=mapperUtil.convert(companyDto,new Company());
+        return invoiceProductRepository.findByInvoice_CompanyAndInvoice_InvoiceStatusOrderByInsertDateTime(company,invoiceStatus)
+                .stream().map(invoiceProduct -> mapperUtil.convert(invoiceProduct, new InvoiceProductDto())).toList();
     }
 
     @Override
