@@ -17,10 +17,10 @@ public class ExecutionTimeAspect {
 
    //private static final Logger logger = LoggerFactory.getLogger(ExecutionTimeAspect.class);
 
-    @Pointcut("@annotation(com.cydeo.annotation.ExecutionTime)")
-    public void executionTimeAnnotationPC() {}
+//    @Pointcut("@annotation(com.cydeo.annotation.ExecutionTime)")
+//    public void executionTimeAnnotationPC() {}
 
-    @Around("executionTimeAnnotationPC()")
+    @Around("@annotation(com.cydeo.annotation.ExecutionTime)")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
 //        long start = System.currentTimeMillis();
 //        Object proceed = joinPoint.proceed();
