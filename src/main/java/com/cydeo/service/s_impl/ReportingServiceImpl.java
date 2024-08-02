@@ -1,5 +1,6 @@
 package com.cydeo.service.s_impl;
 
+import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.repository.InvoiceProductRepository;
 import com.cydeo.service.ReportingService;
 import com.cydeo.service.SecurityService;
@@ -24,7 +25,8 @@ private final SecurityService securityService;
     @Override
     public Map<String, Double> getMonthlyProfitLossByCompany() {
         String companyTitle= securityService.getLoggedInUser().getCompany().getTitle();
-        List<Object[]> results = invoiceProductRepository.dateAndProfitLossByCompanyTitle(companyTitle);
+        String invoiceStatus = InvoiceStatus.APPROVED.name(); //convert Enum value to String
+        List<Object[]> results = invoiceProductRepository.dateAndProfitLossByCompanyTitle(companyTitle, invoiceStatus);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         Map<String, Double> monthlySums = new HashMap<>();
