@@ -27,7 +27,6 @@ public class ExecutionTimeAspect {
 //        long executionTime = System.currentTimeMillis() - start;
 //        String methodName = joinPoint.getSignature().getName();
 //        String className = joinPoint.getSignature().getDeclaringTypeName();
-//
 //        log.info("Execution of {}#{} took {} ms", className, methodName, executionTime);
 //        return proceed;
         long beforeTime = System.currentTimeMillis();
