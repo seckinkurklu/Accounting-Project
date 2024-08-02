@@ -1,7 +1,9 @@
 package com.cydeo.service.s_impl;
 
+import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.repository.InvoiceProductRepository;
+import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.ReportingService;
 import com.cydeo.service.SecurityService;
 import org.springframework.stereotype.Service;
@@ -13,18 +15,22 @@ import java.util.*;
 
 @Service
 public class ReportingServiceImpl implements ReportingService {
-private final InvoiceProductRepository productRepository;
+    private final InvoiceProductRepository productRepository;
     private final InvoiceProductRepository invoiceProductRepository;
-private final SecurityService securityService;
-    public ReportingServiceImpl(InvoiceProductRepository productRepository, InvoiceProductRepository invoiceProductRepository, SecurityService securityService) {
+    private final SecurityService securityService;
+    private final InvoiceProductService invoiceProductService;
+
+    public ReportingServiceImpl(InvoiceProductRepository productRepository, InvoiceProductRepository invoiceProductRepository, SecurityService securityService, InvoiceProductService invoiceProductService) {
         this.productRepository = productRepository;
         this.invoiceProductRepository = invoiceProductRepository;
         this.securityService = securityService;
+        this.invoiceProductService = invoiceProductService;
     }
+
 
     @Override
     public Map<String, Double> getMonthlyProfitLossByCompany() {
-        String companyTitle= securityService.getLoggedInUser().getCompany().getTitle();
+        String companyTitle = securityService.getLoggedInUser().getCompany().getTitle();
         String invoiceStatus = InvoiceStatus.APPROVED.name(); //convert Enum value to String
         List<Object[]> results = invoiceProductRepository.dateAndProfitLossByCompanyTitle(companyTitle, invoiceStatus);
 
@@ -42,5 +48,11 @@ private final SecurityService securityService;
         Map<String, Double> sortedMap = new TreeMap<>(Collections.reverseOrder());
         sortedMap.putAll(monthlySums);
         return sortedMap;
+    }
+
+    @Override
+    public List<InvoiceProductDto> getInvoiceProductList() {
+        return invoiceProductService. findAllApprovedInvoiceInvoiceProduct(InvoiceStatus.APPROVED);
+
     }
 }
