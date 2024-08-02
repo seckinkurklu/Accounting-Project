@@ -60,8 +60,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto findById(Long id) {
-        return userRepository.findById(id).map(user -> mapperUtil.convert(user, new UserDto())).orElse(null);
+    public UserDto findById(Long id) throws UserNotFoundException {
+        return userRepository.findById(id).map(user -> mapperUtil.convert(user, new UserDto())).orElseThrow(() -> new UserNotFoundException("User can't found with id " + id));
     }
 
     @Override
