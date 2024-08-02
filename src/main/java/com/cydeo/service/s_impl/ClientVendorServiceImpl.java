@@ -106,11 +106,11 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         ClientVendor clientVendor=clientVendorRepository.findById(id).orElseThrow(
                     () -> new EntityNotFoundException("Client/Vendor cannot be found with ID "+id)
             );
-        ClientVendorDto convertedClientVendor=mapperUtil.convert(clientVendor,new ClientVendorDto());
-      boolean hasInvoiceByClientVendorId=  invoiceService.existByClientVendorId(convertedClientVendor.getId());
-       if (! hasInvoiceByClientVendorId){
+//        ClientVendorDto convertedClientVendor=mapperUtil.convert(clientVendor,new ClientVendorDto());
+//      boolean hasInvoiceByClientVendorId=  invoiceService.existByClientVendorId(convertedClientVendor.getId());
+//       if (! hasInvoiceByClientVendorId){
        clientVendor.setIsDeleted(true);
             clientVendorRepository.save(clientVendor);}
-    }
+//    }
 
 }
