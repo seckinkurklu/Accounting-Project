@@ -47,7 +47,7 @@ public class PerformanceAspect {
 
 
 
-    @AfterThrowing(pointcut = "@annotation(com.cydeo.annotation.ExecutionTime)" ,throwing = "exception")
+    @AfterThrowing(pointcut = "execution(* com.cydeo..*(..))", throwing = "exception")
     public void logException(JoinPoint joinPoint, Throwable exception) {
         log.error("Exception in method: {}() - Exception: {} - Message: {}",
                 joinPoint.getSignature().getName(),
