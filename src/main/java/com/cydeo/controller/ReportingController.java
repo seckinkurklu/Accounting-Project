@@ -22,7 +22,7 @@ public class ReportingController {
         return "report/profit-loss-report";
     }
 
-    @GetMapping("/stockReportList")
+    @GetMapping("/stockData")
     public String stockDateList(Model model){
 model.addAttribute("invoiceProducts",reportService.getInvoiceProductList());
         return "report/stock-report";
