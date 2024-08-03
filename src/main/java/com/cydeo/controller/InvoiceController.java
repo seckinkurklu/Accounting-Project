@@ -23,7 +23,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Controller
-@RequestMapping("/invoices")
 public class InvoiceController {
 
     private final InvoiceService invoiceService;
@@ -32,29 +31,23 @@ public class InvoiceController {
     private final MapperUtil mapperUtil;
     private final InvoiceProductService invoiceProductService;
     private final InvoiceRepository invoiceRepository;
-    private final InvoiceServiceImpl invoiceServiceImpl;
 
 
-    public InvoiceController(InvoiceService invoiceService, ClientVendorService clientVendorService, ProductService productService, MapperUtil mapperUtil, InvoiceProductService invoiceProductService, InvoiceRepository invoiceRepository, InvoiceServiceImpl invoiceServiceImpl) {
+
+    public InvoiceController(InvoiceService invoiceService, ClientVendorService clientVendorService, ProductService productService, MapperUtil mapperUtil, InvoiceProductService invoiceProductService, InvoiceRepository invoiceRepository) {
         this.invoiceService = invoiceService;
         this.clientVendorService = clientVendorService;
         this.productService = productService;
         this.mapperUtil = mapperUtil;
         this.invoiceProductService = invoiceProductService;
         this.invoiceRepository = invoiceRepository;
-        this.invoiceServiceImpl = invoiceServiceImpl;
+
     }
 
     @GetMapping("/purchaseInvoices/list")
     public String invoicePurchaseDtoList(Model model) {
         model.addAttribute("invoices", invoiceService.listAllPurchaseInvoice());
         return "/invoice/purchase-invoice-list";
-    }
-
-    @GetMapping("/salesInvoices/list")
-    public String invoiceSalesDtoList(Model model) {
-        model.addAttribute("invoices", invoiceService.listAllSalesInvoice());
-        return "/invoice/sales-invoice-list";
     }
 
     @GetMapping("/purchaseInvoices/create")
@@ -124,8 +117,7 @@ public class InvoiceController {
     public String printPurchaseInvoice(@PathVariable("id") Long id, Model model) {
 
         InvoiceDto invoice = invoiceService.getInvoiceById(id);
-        List<InvoiceDto> invoiceProductList = invoiceService.listAllPurchaseInvoice();
-
+        List<InvoiceProductDto> invoiceProductList = invoiceProductService.getAllInvoiceProductsById(id);
         model.addAttribute("invoice", invoice);
         model.addAttribute("company", invoice.getCompany());
         model.addAttribute("invoiceProducts",invoiceProductList);

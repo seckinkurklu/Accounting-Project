@@ -14,6 +14,7 @@ public interface InvoiceProductService {
 
     List<InvoiceProductDto> getAllInvoiceProductsById(Long id);
     void delete(Long id);
+    boolean existsByProductIdAndIsDeleted(Long id,boolean isDeleted);
 
 
 

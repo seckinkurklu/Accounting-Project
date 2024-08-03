@@ -1,15 +1,18 @@
 package com.cydeo.service.s_impl;
 
 import com.cydeo.dto.CompanyDto;
+import com.cydeo.dto.RoleDto;
 import com.cydeo.entity.Company;
 import com.cydeo.enums.CompanyStatus;
-import com.cydeo.exception.CompanyNotFounException;
+import com.cydeo.exception.CompanyNotFoundException;
 import com.cydeo.repository.CompanyRepository;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.SecurityService;
+import com.cydeo.service.UserService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,11 +23,13 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
     private final SecurityService securityService;
     private final MapperUtil mapperUtil;
+    private final UserService userService;
 
-    public CompanyServiceImpl(CompanyRepository companyRepository, SecurityService securityService, MapperUtil mapperUtil) {
+    public CompanyServiceImpl(CompanyRepository companyRepository, SecurityService securityService, MapperUtil mapperUtil, UserService userService) {
         this.companyRepository = companyRepository;
         this.securityService = securityService;
         this.mapperUtil = mapperUtil;
+        this.userService = userService;
     }
 
 
@@ -66,7 +71,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public void activateCompany(Long companyId) {
         Company companyToActivate=companyRepository.findById(companyId)
-                .orElseThrow(()->new CompanyNotFounException("Company with id: " + companyId + " Not Found "));
+                .orElseThrow(()->new CompanyNotFoundException("Company with id: " + companyId + " Not Found "));
         companyToActivate.setCompanyStatus(CompanyStatus.ACTIVE);
         companyRepository.save(companyToActivate);
     }
@@ -74,8 +79,25 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public void deactivateCompany(Long companyId) {
         Company companyToDeactivate=companyRepository.findById(companyId)
-                .orElseThrow(()->new CompanyNotFounException("Company with id: " + companyId + " Not Found "));
+                .orElseThrow(()->new CompanyNotFoundException("Company with id: " + companyId + " Not Found "));
         companyToDeactivate.setCompanyStatus(CompanyStatus.ACTIVE);
         companyRepository.save(companyToDeactivate);
+
+
+
+    }
+
+    @Override
+    public List<CompanyDto> listCompaniesByLoggedInUser() {
+        RoleDto loggedInUserRole  = userService.getLoggedUser().getRole();
+        List<Company> companyList = new ArrayList<>();
+
+        if (loggedInUserRole.getDescription().equals("Root User")){
+            companyList.addAll(companyRepository.findCompaniesByTitleIsNot("CYDEO"));
+        } else{
+            companyList.add(companyRepository.findById(userService.getLoggedUser().getCompany().getId()).get());
+        }
+
+        return companyList.stream().map(company -> mapperUtil.convert(company, new CompanyDto())).collect(Collectors.toList());
     }
 }

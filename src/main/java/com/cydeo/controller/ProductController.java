@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Controller
 @RequestMapping("/products")
 public class ProductController {
@@ -45,7 +47,7 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public String insertProduct(@ModelAttribute("newProduct") ProductDto productDto, BindingResult bindingResult, Model model){
+    public String insertProduct(@ModelAttribute("newProduct") @Valid ProductDto productDto, BindingResult bindingResult, Model model){
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("categories", categoryService.listAllCategory());
@@ -62,15 +64,16 @@ public class ProductController {
         model.addAttribute("product",productService.getProductById(id));
         model.addAttribute("categories",categoryService.listAllCategory());
         model.addAttribute("productUnits",ProductUnit.values());
-
-
         return "product/product-update";
     }
-
     @PostMapping("/update/{id}")
     public String updateProduct(@ModelAttribute("product") ProductDto productDto){
-
         productService.save(productDto);
+        return "redirect:/products/list";
+    }
+    @GetMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable("id") Long id){
+    productService.delete(id);
         return "redirect:/products/list";
     }
 

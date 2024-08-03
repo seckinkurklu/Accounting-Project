@@ -23,14 +23,11 @@ public interface InvoiceService {
 
     Long getId(String invoiceNo);
     void approve(Long invoiceId);
-
-
-    void removeInvoiceById(Long id);
+   boolean existByProductId(Long productId);
 
     List<InvoiceDto> listLastThreeApprovedSalesInvoices();
 
-
     boolean existByClientVendorId(Long id);
 
-
+    void removeInvoiceById(Long id);
 }

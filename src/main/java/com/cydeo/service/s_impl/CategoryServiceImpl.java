@@ -5,6 +5,7 @@ import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.Category;
 
+import com.cydeo.exception.CategoryNotFoundException;
 import com.cydeo.service.CompanyService;
 
 import com.cydeo.entity.Company;
@@ -48,7 +49,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryDto> listAllCategory() {
-        List<Category> categoryList = categoryRepository.findAll();
+       Long id= securityService.getLoggedInCompanyId();
+        List<Category> categoryList = categoryRepository.findAllByCompanyIdOrderByDescriptionAsc(id);
         return categoryList.stream().map(category -> mapperUtil.convert(category,new CategoryDto())).collect(Collectors.toList());
     }
 
@@ -77,6 +79,17 @@ public class CategoryServiceImpl implements CategoryService {
         CompanyDto loggedInUserCompany = loggedInUser.getCompany();
         categoryDto.setCompany(loggedInUserCompany);
         categoryRepository.save(mapperUtil.convert(categoryDto,new Category()));
+    }
+
+    @Override
+    public CategoryDto findByDescription(String description) {
+        Category byDescription = categoryRepository.findByDescription(description);
+        return mapperUtil.convert(byDescription, new CategoryDto());
+    }
+
+
+    public boolean existCategory(Long id) {
+        return categoryRepository.existsById(id);
     }
 
     @Override
