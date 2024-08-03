@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 
         List<User> userList = userRepository.findAll();
 
-        return userList.stream().map(user -> mapperUtil.convert(user, new UserDto())).collect(Collectors.toList());
+        return userList.stream().map(user -> mapperUtil.convert(user, new UserDto())).toList();
     }
 
     @Override
