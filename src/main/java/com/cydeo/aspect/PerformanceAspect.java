@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 @Aspect
@@ -38,6 +39,35 @@ public class PerformanceAspect {
 
         log.info("Time taken to execute: {} ms - Method: {}"
                 , (afterTime - beforeTime), joinPoint.getSignature().toShortString());
+        return result;
+    }
+
+    @Pointcut("@annotation(com.cydeo.annotation.ExecutionTime)")
+    public void executionTimePC() {}
+
+    @Around("executionTimePC()")
+    public Object logRunTime(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+
+        long beforeTime = System.currentTimeMillis();
+        Object result = null;
+        log.info("Execution starts:");
+
+        try {
+            result = proceedingJoinPoint.proceed();
+        } catch (Throwable throwable) {
+            //  runtime exception
+            log.error("Exception in method: {}() - Exception: {} - Message: {}",
+                    proceedingJoinPoint.getSignature().getName(),
+                    throwable.getClass().getSimpleName(),
+                    throwable.getMessage());
+            throw throwable; // rethrow the exception after logging
+        }
+
+        long afterTime = System.currentTimeMillis();
+
+        log.info("Time taken to execute: {} ms - Method: {}",
+                (afterTime - beforeTime), proceedingJoinPoint.getSignature().toShortString());
+
         return result;
     }
 }
