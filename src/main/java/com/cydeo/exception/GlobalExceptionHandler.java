@@ -16,9 +16,11 @@ import java.util.Optional;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
+
 
 }
