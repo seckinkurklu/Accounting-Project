@@ -52,6 +52,6 @@ public class PerformanceAspect {
         log.error("Exception in method: {}() - Exception: {} - Message: {}",
                 joinPoint.getSignature().getName(),
                 exception.getClass().getSimpleName(),
-                exception.getMessage());
+                exception.getMessage()) ;
     }
 }
