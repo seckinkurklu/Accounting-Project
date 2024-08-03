@@ -21,4 +21,5 @@ public class ReportingController {
         model.addAttribute("monthlyProfitLossDataMap", reportService.getMonthlyProfitLossByCompany());
         return "report/profit-loss-report";
     }
+
 }
