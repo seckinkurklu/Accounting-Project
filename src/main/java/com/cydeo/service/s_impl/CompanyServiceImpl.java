@@ -4,7 +4,7 @@ import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.RoleDto;
 import com.cydeo.entity.Company;
 import com.cydeo.enums.CompanyStatus;
-import com.cydeo.exception.CompanyNotFounException;
+import com.cydeo.exception.CompanyNotFoundException;
 import com.cydeo.repository.CompanyRepository;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.SecurityService;
@@ -71,7 +71,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public void activateCompany(Long companyId) {
         Company companyToActivate=companyRepository.findById(companyId)
-                .orElseThrow(()->new CompanyNotFounException("Company with id: " + companyId + " Not Found "));
+                .orElseThrow(()->new CompanyNotFoundException("Company with id: " + companyId + " Not Found "));
         companyToActivate.setCompanyStatus(CompanyStatus.ACTIVE);
         companyRepository.save(companyToActivate);
     }
@@ -79,7 +79,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public void deactivateCompany(Long companyId) {
         Company companyToDeactivate=companyRepository.findById(companyId)
-                .orElseThrow(()->new CompanyNotFounException("Company with id: " + companyId + " Not Found "));
+                .orElseThrow(()->new CompanyNotFoundException("Company with id: " + companyId + " Not Found "));
         companyToDeactivate.setCompanyStatus(CompanyStatus.ACTIVE);
         companyRepository.save(companyToDeactivate);
 
