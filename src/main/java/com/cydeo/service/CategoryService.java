@@ -1,6 +1,6 @@
 package com.cydeo.service;
 import com.cydeo.dto.CategoryDto;
-import com.cydeo.exception.CategoryNotFoundException;
+
 
 import java.util.List;
 
