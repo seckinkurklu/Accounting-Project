@@ -1,9 +1,12 @@
 package com.cydeo.aspect;
 
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 @Aspect
@@ -39,5 +42,16 @@ public class PerformanceAspect {
         log.info("Time taken to execute: {} ms - Method: {}"
                 , (afterTime - beforeTime), joinPoint.getSignature().toShortString());
         return result;
+    }
+
+
+
+
+    @AfterThrowing(pointcut = "execution(* com.cydeo..*(..))", throwing = "exception")
+    public void logException(JoinPoint joinPoint, Throwable exception) {
+        log.error("Exception in method: {}() - Exception: {} - Message: {}",
+                joinPoint.getSignature().getName(),
+                exception.getClass().getSimpleName(),
+                exception.getMessage()) ;
     }
 }
