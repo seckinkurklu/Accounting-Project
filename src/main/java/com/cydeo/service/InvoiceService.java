@@ -25,7 +25,7 @@ public interface InvoiceService {
 
     Long getId(String invoiceNo);
     void approve(Long invoiceId);
-   boolean existByProductId(Long productId);
+    boolean existByProductId(Long productId);
 
     List<InvoiceDto> listLastThreeApprovedSalesInvoices();
 
