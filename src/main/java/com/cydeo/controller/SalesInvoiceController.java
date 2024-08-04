@@ -1,6 +1,8 @@
 package com.cydeo.controller;
 
 import com.cydeo.dto.InvoiceDto;
+import com.cydeo.enums.InvoiceType;
+import com.cydeo.exception.InvoiceNotFoundException;
 import com.cydeo.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -57,6 +59,13 @@ public class SalesInvoiceController {
         InvoiceDto saved = invoiceService.save(invoiceDto);
         return "redirect:/salesInvoices/list";
 
+    }
+
+    @GetMapping("/approve/{id}")
+    public String getApproveInvoice(@PathVariable("id") Long id) throws InvoiceNotFoundException {
+        InvoiceDto invoiceDto = invoiceService.findById(id);
+        invoiceService.approveSalesInvoice(invoiceDto, InvoiceType.SALES);
+        return "redirect:/salesInvoices/list";
     }
 }
 

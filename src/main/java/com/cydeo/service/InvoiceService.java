@@ -2,7 +2,10 @@ package com.cydeo.service;
 
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.entity.Invoice;
+import com.cydeo.enums.InvoiceType;
+import com.cydeo.exception.InvoiceNotFoundException;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 public interface InvoiceService {
@@ -22,12 +25,19 @@ public interface InvoiceService {
     String newInvoiceNo();
 
     Long getId(String invoiceNo);
+
+
     void approve(Long invoiceId);
-   boolean existByProductId(Long productId);
+
+    boolean existByProductId(Long productId);
 
     List<InvoiceDto> listLastThreeApprovedSalesInvoices();
 
     boolean existByClientVendorId(Long id);
 
     void removeInvoiceById(Long id);
+
+
+    InvoiceDto findById(Long id) throws InvoiceNotFoundException;
+    void approveSalesInvoice(InvoiceDto invoiceDto, InvoiceType invoiceType );
 }

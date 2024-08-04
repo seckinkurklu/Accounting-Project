@@ -25,6 +25,7 @@ import com.cydeo.util.MapperUtil;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -210,6 +211,27 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     }
 
+
+
+    @Override
+    public InvoiceDto findById(Long id) throws InvoiceNotFoundException {
+        return mapperUtil.convert(invoiceRepository.findById(id).orElseThrow(() ->
+                new InvoiceNotFoundException("Invoice Not Found")), new InvoiceDto());
+    }
+
+    @Override
+    public void approveSalesInvoice(InvoiceDto invoiceDto, InvoiceType invoiceType) {
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllByInvoice_Id(invoiceDto.getId());
+
+        invoiceDto.setDate(LocalDate.now());
+        invoiceDto.setInvoiceStatus(InvoiceStatus.APPROVED);
+        for (InvoiceProduct invoiceProduct : invoiceProducts) {
+            invoiceProduct.getProduct().setQuantityInStock(invoiceProduct.getQuantity() - invoiceProduct.getProduct().getQuantityInStock());
+        }
+
+        invoiceRepository.save(mapperUtil.convert(invoiceDto, new Invoice()));
+    }
+
     @Override
     public boolean existByProductId(Long productId) {
         return invoiceRepository.existsById(productId);
@@ -263,6 +285,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             productService.increaseProductQuantityInStock(product.getId(), quantity);
         });
     }
+
 
 
 }
