@@ -1,12 +1,12 @@
 package com.cydeo.client;
 
-import com.cydeo.dto.response.CurrencyDto;
+import com.cydeo.dto.currency_api.CurrencyResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@FeignClient(url="https://cdn.jsdelivr.net", name = "Currency-Client")
+@FeignClient(url = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json", name = "CURRENCY-CLIENT")
 public interface CurrencyClient {
 
-    @GetMapping("/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json")
-    CurrencyDto getCurrency();
+    @GetMapping
+    CurrencyResponse getAllCurrencies();
 }

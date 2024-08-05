@@ -1,7 +1,7 @@
 
 package com.cydeo.controller;
 
-import com.cydeo.dto.CompanyDto;
+
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.entity.Invoice;
@@ -12,7 +12,7 @@ import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
 import com.cydeo.service.ProductService;
 
-import com.cydeo.service.s_impl.InvoiceServiceImpl;
+
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
