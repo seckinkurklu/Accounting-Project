@@ -3,8 +3,11 @@ package com.cydeo.service.s_impl;
 import com.cydeo.dto.ClientVendorDto;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.User;
+import com.cydeo.exception.UserNotFoundException;
+
 import com.cydeo.exception.ClientVendorNotFoundException;
 import com.cydeo.exception.InvoiceNotFoundException;
+
 import com.cydeo.repository.ClientVendorRepository;
 import com.cydeo.repository.UserRepository;
 import com.cydeo.service.ClientVendorService;
@@ -44,7 +47,8 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     @Override
     public List<ClientVendorDto> listAllByCompanyTitle() {
         String username= SecurityContextHolder.getContext().getAuthentication().getName();
-        User byUsername = userRepository.findByUsername(username);
+        User byUsername = userRepository.findByUsername(username)
+                .orElseThrow(()-> new UserNotFoundException("User Name: " + username + "Not Found"));
         List<ClientVendor> allByCompanyTitle = clientVendorRepository.findAllByCompanyTitleAndIsDeletedOrderByClientVendorName(byUsername.getCompany().getTitle(),false);
         List<ClientVendorDto> clientVendorList= allByCompanyTitle.stream().map(p->mapperUtil.convert(p, new ClientVendorDto())).collect(Collectors.toList());
         List<ClientVendorDto> filteredList=clientVendorList.stream().map(cv->{
@@ -74,7 +78,8 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     @Override
     public void save(ClientVendorDto clientVendorDto) {
         String username= SecurityContextHolder.getContext().getAuthentication().getName(); // find username who logged to system.
-        User user= userRepository.findByUsername(username); // from DB, we get that user.
+        User user= userRepository.findByUsername(username)
+                .orElseThrow(()-> new UserNotFoundException("User Name: " + username + "Not Found")); // from DB, we get that user.
 
         ClientVendor clientVendor = mapperUtil.convert(clientVendorDto,new ClientVendor());
         clientVendor.setCompany(user.getCompany());
@@ -110,11 +115,11 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         ClientVendor clientVendor=clientVendorRepository.findById(id).orElseThrow(
                     () -> new EntityNotFoundException("Client/Vendor cannot be found with ID "+id)
             );
-        ClientVendorDto convertedClientVendor=mapperUtil.convert(clientVendor,new ClientVendorDto());
-      boolean hasInvoiceByClientVendorId=  invoiceService.existByClientVendorId(convertedClientVendor.getId());
-       if (! hasInvoiceByClientVendorId){
+//        ClientVendorDto convertedClientVendor=mapperUtil.convert(clientVendor,new ClientVendorDto());
+//      boolean hasInvoiceByClientVendorId=  invoiceService.existByClientVendorId(convertedClientVendor.getId());
+//       if (! hasInvoiceByClientVendorId){
        clientVendor.setIsDeleted(true);
             clientVendorRepository.save(clientVendor);}
-    }
+//    }
 
 }

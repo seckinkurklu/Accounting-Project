@@ -1,5 +1,6 @@
 package com.cydeo.service.s_impl;
 
+
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.dto.ProductDto;
@@ -8,6 +9,17 @@ import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.entity.Product;
 import com.cydeo.exception.ProductLowLimitAlertException;
 import com.cydeo.exception.ProductNotFoundException;
+
+import com.cydeo.dto.CompanyDto;
+
+import com.cydeo.entity.Company;
+import com.cydeo.entity.InvoiceProduct;
+
+import com.cydeo.enums.InvoiceStatus;
+
+import com.cydeo.exception.InvoiceProductNotFoundException;
+
+
 import com.cydeo.repository.InvoiceProductRepository;
 import com.cydeo.repository.InvoiceRepository;
 import com.cydeo.repository.ProductRepository;
@@ -205,6 +217,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     }
 
     @Override
+
     public void checkForLowQuantityAlert(Long id) {
 
         InvoiceProduct invoiceProduct = invoiceProductRepository.findById(id).orElse(null);
@@ -222,6 +235,15 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     }
 
 
+
+
+
+    public List<InvoiceProductDto> findAllApprovedInvoiceInvoiceProduct(InvoiceStatus invoiceStatus) {
+        CompanyDto companyDto=securityService.getLoggedInUser().getCompany();
+        Company company=mapperUtil.convert(companyDto,new Company());
+        return invoiceProductRepository.findByInvoice_CompanyAndInvoice_InvoiceStatusOrderByInsertDateTime(company,invoiceStatus)
+                .stream().map(invoiceProduct -> mapperUtil.convert(invoiceProduct, new InvoiceProductDto())).toList();
+    }
 
 
     @Override
