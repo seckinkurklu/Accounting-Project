@@ -22,7 +22,9 @@ import com.cydeo.exception.InvoiceProductNotFoundException;
 
 import com.cydeo.repository.InvoiceProductRepository;
 import com.cydeo.repository.InvoiceRepository;
+
 import com.cydeo.repository.ProductRepository;
+
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.SecurityService;
 import com.cydeo.util.MapperUtil;
@@ -38,6 +40,15 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     private final InvoiceProductRepository invoiceProductRepository;
     private final MapperUtil mapperUtil;
     private final SecurityService securityService;
+
+    private final InvoiceRepository invoiceRepository;
+
+    public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository, MapperUtil mapperUtil, SecurityService securityService, InvoiceRepository invoiceRepository) {
+        this.invoiceProductRepository = invoiceProductRepository;
+        this.mapperUtil = mapperUtil;
+        this.securityService = securityService;
+        this.invoiceRepository = invoiceRepository;
+
     private final ProductRepository productRepository;
 
 
@@ -46,6 +57,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         this.mapperUtil = mapperUtil;
         this.securityService = securityService;
         this.productRepository = productRepository;
+
     }
 
 //    public List<InvoiceProductDto> getAllInvoiceProducts() {
@@ -218,6 +230,13 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     @Override
 
+    public void deleteByInvoiceId(Long invoiceId) {
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllInvoiceProductsByInvoiceIdAndIsDeletedFalse(invoiceId);
+        for (InvoiceProduct invoiceProduct : invoiceProducts) {
+            delete(invoiceProduct.getId());
+        }
+
+
     public void checkForLowQuantityAlert(Long id) {
 
         InvoiceProduct invoiceProduct = invoiceProductRepository.findById(id).orElse(null);
@@ -243,6 +262,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         Company company=mapperUtil.convert(companyDto,new Company());
         return invoiceProductRepository.findByInvoice_CompanyAndInvoice_InvoiceStatusOrderByInsertDateTime(company,invoiceStatus)
                 .stream().map(invoiceProduct -> mapperUtil.convert(invoiceProduct, new InvoiceProductDto())).toList();
+
     }
 
 
@@ -250,4 +270,9 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     public InvoiceProductDto getInvoiceProductById(Long id) {
         return mapperUtil.convert(invoiceProductRepository.findById(id).orElseThrow(() ->new InvoiceProductNotFoundException("Invoice product not found with id: "+id)), new InvoiceProductDto());
     }
+
+//    @Override
+//    public boolean existsByInvoiceIdAndIsDeleted(Long id, boolean isDeleted) {
+//        return invoiceProductRepository.existsByInvoiceIdAndIsDeleted(id,isDeleted);
+//    }
 }

@@ -32,6 +32,9 @@ public interface InvoiceService {
     boolean existByClientVendorId(Long id);
 
     void removeInvoiceById(Long id);
+    void deletePurchaseInvoice(Long id);
+
+
 
     InvoiceDto findById(Long id) throws InvoiceNotFoundException;
     void approveSalesInvoice(InvoiceDto invoiceDto, InvoiceType invoiceType );
