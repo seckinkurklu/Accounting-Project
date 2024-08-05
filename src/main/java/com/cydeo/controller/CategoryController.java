@@ -4,6 +4,7 @@ package com.cydeo.controller;
 import com.cydeo.dto.CategoryDto;
 
 
+import com.cydeo.exception.CategoryNotFoundException;
 import com.cydeo.service.CategoryService;
 import com.cydeo.service.ProductService;
 import org.springframework.stereotype.Controller;
@@ -14,10 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import org.springframework.web.bind.annotation.*;
 
 
-import javax.validation.Valid;
+
+
 
 
 /**
@@ -47,7 +48,7 @@ public class CategoryController {
         return "/category/category-create";
     }
     @PostMapping("/create")
-    public String create(@ModelAttribute("newCategory") @Valid CategoryDto categoryDto, BindingResult result,  Model model) {
+    public String create(@ModelAttribute("newCategory") @Valid CategoryDto categoryDto, BindingResult result, Model model) {
         if (categoryService.findByDescription(categoryDto.getDescription())!=null)
             result.rejectValue("description", "error.description", "This description already exists.");
         if(result.hasErrors()) {
@@ -55,17 +56,18 @@ public class CategoryController {
             return "/category/category-create";
         }
         categoryService.save(categoryDto);
+        model.addAttribute("categories", categoryService.listAllCategory());
         return "redirect:/categories/list";
     }
     @GetMapping("/update/{id}")
-    public String updateCategoryForm1(@PathVariable("id") Long id, Model model) {
+    public String updateCategoryForm1(@PathVariable("id") Long id, Model model) throws CategoryNotFoundException {
         model.addAttribute("category", categoryService.getCategoryById(id));
         model.addAttribute("product", productService.listAllProducts());
         return "category/category-update";
     }
 
     @PostMapping("/update/{id}")
-    public String updateCategoryForm2( @ModelAttribute("category") @Valid CategoryDto categoryDto,BindingResult result) {
+    public String updateCategoryForm2( @ModelAttribute("category") @Valid CategoryDto categoryDto,BindingResult result) throws CategoryNotFoundException{
         if (categoryService.findByDescription(categoryDto.getDescription())!=null)
             result.rejectValue("description", "error.description", "This description already exists.");
         if (result.hasErrors()) {

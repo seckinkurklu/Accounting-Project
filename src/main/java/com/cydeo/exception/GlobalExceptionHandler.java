@@ -21,20 +21,10 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-
-
-
-
-/**
- * author:AbduShukur
- * date:8/4/2024
- */
-
+//    @ExceptionHandler(UserNotFoundException.class)
+//    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
+//        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+//    }
 
     @ExceptionHandler({CategoryNotFoundException.class,
             ClientVendorNotFoundException.class,
