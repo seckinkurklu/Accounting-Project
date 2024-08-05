@@ -3,6 +3,7 @@ package com.cydeo.service.s_impl;
 import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.repository.InvoiceProductRepository;
+import com.cydeo.repository.InvoiceRepository;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.SecurityService;
 import com.cydeo.util.MapperUtil;
@@ -17,11 +18,13 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     private final InvoiceProductRepository invoiceProductRepository;
     private final MapperUtil mapperUtil;
     private final SecurityService securityService;
+    private final InvoiceRepository invoiceRepository;
 
-    public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository, MapperUtil mapperUtil, SecurityService securityService) {
+    public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository, MapperUtil mapperUtil, SecurityService securityService, InvoiceRepository invoiceRepository) {
         this.invoiceProductRepository = invoiceProductRepository;
         this.mapperUtil = mapperUtil;
         this.securityService = securityService;
+        this.invoiceRepository = invoiceRepository;
     }
 
 //    public List<InvoiceProductDto> getAllInvoiceProducts() {
@@ -193,7 +196,21 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     }
 
     @Override
+    public void deleteByInvoiceId(Long invoiceId) {
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllInvoiceProductsByInvoiceIdAndIsDeletedFalse(invoiceId);
+        for (InvoiceProduct invoiceProduct : invoiceProducts) {
+            delete(invoiceProduct.getId());
+        }
+    }
+
+
+    @Override
     public InvoiceProductDto getInvoiceProductById(Long id) {
         return mapperUtil.convert(invoiceProductRepository.findById(id).orElse(null), new InvoiceProductDto());
     }
+
+//    @Override
+//    public boolean existsByInvoiceIdAndIsDeleted(Long id, boolean isDeleted) {
+//        return invoiceProductRepository.existsByInvoiceIdAndIsDeleted(id,isDeleted);
+//    }
 }

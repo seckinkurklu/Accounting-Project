@@ -30,4 +30,7 @@ public interface InvoiceService {
     boolean existByClientVendorId(Long id);
 
     void removeInvoiceById(Long id);
+    void deletePurchaseInvoice(Long id);
+
+
 }

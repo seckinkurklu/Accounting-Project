@@ -30,6 +30,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static org.apache.tomcat.jni.Mmap.delete;
+
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
@@ -94,7 +96,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         UserDto loggedInUser = securityService.getLoggedInUser();
         String companyTitle = loggedInUser.getCompany().getTitle();
         //Purchase Invoices should be sorted by their invoice no in descending order (latest invoices should be at the top).
-        List<Invoice> invoices = invoiceRepository.findAllByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(InvoiceType.PURCHASE, companyTitle);
+        List<Invoice> invoices = invoiceRepository.findAllByInvoiceTypeAndCompany_TitleAndIsDeletedOrderByInvoiceNoDesc(InvoiceType.PURCHASE, companyTitle,false);
 
         List<InvoiceDto> invoiceDtoList = invoices.stream().map(p -> mapperUtil.convert(p, new InvoiceDto())).toList();
 
@@ -123,7 +125,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     public List<InvoiceDto> listAllSalesInvoice() {
         UserDto loggedInUser = securityService.getLoggedInUser();
         String companyTitle = loggedInUser.getCompany().getTitle();
-        List<Invoice> invoices = invoiceRepository.findAllByInvoiceTypeAndCompany_TitleOrderByInvoiceNoDesc(InvoiceType.SALES, companyTitle);
+        List<Invoice> invoices = invoiceRepository.findAllByInvoiceTypeAndCompany_TitleAndIsDeletedOrderByInvoiceNoDesc(InvoiceType.SALES, companyTitle,false);
 
         List<InvoiceDto> invoiceDtoList = invoices.stream().map(p -> mapperUtil.convert(p, new InvoiceDto())).toList();
 
@@ -263,6 +265,28 @@ public class InvoiceServiceImpl implements InvoiceService {
             productService.increaseProductQuantityInStock(product.getId(), quantity);
         });
     }
+
+    @Override
+    public void deletePurchaseInvoice(Long invoiceId) {
+        Invoice invoiceToBeDeleted = invoiceRepository.findById(invoiceId)
+                .orElseThrow(() -> new InvoiceNotFoundException("Invoice can not found with id: " + invoiceId));
+//    InvoiceProductDto invoiceProduct = mapperUtil.convert(invoiceToBeDeleted, new InvoiceProductDto());
+
+//        if (invoiceProductRepository.existsByInvoiceIdAndIsDeleted((invoiceProduct.getInvoice().getId()),false)) {
+
+            invoiceToBeDeleted.setIsDeleted(true);
+        invoiceProductService.deleteByInvoiceId(invoiceId);
+            invoiceRepository.save(invoiceToBeDeleted);
+    //    }
+    }
+//    public void delete(Long invoiceProductId) {
+//        InvoiceProduct invoiceProduct = invoiceProductRepository.findById(invoiceProductId)
+//                .orElseThrow(() -> new RuntimeException("Invoice product not found with id: " + invoiceProductId));
+//
+//        invoiceProduct.setIsDeleted(true);
+//
+//        invoiceProductRepository.save(invoiceProduct);
+//    }
 
 
 }

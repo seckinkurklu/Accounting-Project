@@ -2,6 +2,7 @@ package com.cydeo.repository;
 
 import com.cydeo.entity.Invoice;
 import com.cydeo.entity.InvoiceProduct;
+import com.cydeo.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -20,7 +21,8 @@ public interface InvoiceProductRepository extends JpaRepository<InvoiceProduct, 
    InvoiceProduct findByIdAndIsDeleted(Long id, Boolean isDeleted);
 
    List<InvoiceProduct> findAllByIsDeletedFalse();
-
+boolean existsByInvoiceIdAndIsDeleted(Long invoiceId, Boolean isDeleted);
 
    boolean existsByProductIdAndIsDeleted(Long id, boolean isDeleted);
+
 }
