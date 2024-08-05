@@ -217,11 +217,11 @@ public class InvoiceServiceImpl implements InvoiceService {
 
 
 
-    @Override
-    public InvoiceDto findById(Long id) throws InvoiceNotFoundException {
-        return mapperUtil.convert(invoiceRepository.findById(id).orElseThrow(() ->
-                new InvoiceNotFoundException("Invoice Not Found")), new InvoiceDto());
-    }
+//    @Override
+//    public InvoiceDto findById(Long id) throws InvoiceNotFoundException {
+//        return mapperUtil.convert(invoiceRepository.findById(id).orElseThrow(() ->
+//                new InvoiceNotFoundException("Invoice Not Found")), new InvoiceDto());
+//    }
 
     @Override
     public void approveSalesInvoice(InvoiceDto invoiceDto, InvoiceType invoiceType) {
@@ -257,18 +257,18 @@ public class InvoiceServiceImpl implements InvoiceService {
                 new InvoiceNotFoundException("Invoice Not Found")), new InvoiceDto());
     }
 
-    @Override
-    public void approveSalesInvoice(InvoiceDto invoiceDto, InvoiceType invoiceType) {
-        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllByInvoiceId(invoiceDto.getId());
-
-        invoiceDto.setDate(LocalDate.now());
-        invoiceDto.setInvoiceStatus(InvoiceStatus.APPROVED);
-        for (InvoiceProduct invoiceProduct : invoiceProducts) {
-            invoiceProduct.getProduct().setQuantityInStock(invoiceProduct.getQuantity() - invoiceProduct.getProduct().getQuantityInStock());
-        }
-
-        invoiceRepository.save(mapperUtil.convert(invoiceDto, new Invoice()));
-    }
+//    @Override
+//    public void approveSalesInvoice(InvoiceDto invoiceDto, InvoiceType invoiceType) {
+//        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllByInvoiceId(invoiceDto.getId());
+//
+//        invoiceDto.setDate(LocalDate.now());
+//        invoiceDto.setInvoiceStatus(InvoiceStatus.APPROVED);
+//        for (InvoiceProduct invoiceProduct : invoiceProducts) {
+//            invoiceProduct.getProduct().setQuantityInStock(invoiceProduct.getQuantity() - invoiceProduct.getProduct().getQuantityInStock());
+//        }
+//
+//        invoiceRepository.save(mapperUtil.convert(invoiceDto, new Invoice()));
+//    }
 
 
     @Override
@@ -324,14 +324,14 @@ public class InvoiceServiceImpl implements InvoiceService {
             invoiceRepository.save(invoiceToBeDeleted);
     //    }
     }
-//    public void delete(Long invoiceProductId) {
-//        InvoiceProduct invoiceProduct = invoiceProductRepository.findById(invoiceProductId)
-//                .orElseThrow(() -> new RuntimeException("Invoice product not found with id: " + invoiceProductId));
-//
-//        invoiceProduct.setIsDeleted(true);
-//
-//        invoiceProductRepository.save(invoiceProduct);
-//    }
+    public void delete(Long invoiceProductId) {
+        InvoiceProduct invoiceProduct = invoiceProductRepository.findById(invoiceProductId)
+                .orElseThrow(() -> new RuntimeException("Invoice product not found with id: " + invoiceProductId));
+
+        invoiceProduct.setIsDeleted(true);
+
+        invoiceProductRepository.save(invoiceProduct);
+    }
 
 
 

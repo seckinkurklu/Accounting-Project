@@ -40,25 +40,17 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     private final InvoiceProductRepository invoiceProductRepository;
     private final MapperUtil mapperUtil;
     private final SecurityService securityService;
-
     private final InvoiceRepository invoiceRepository;
+    private final ProductRepository productRepository;
 
-    public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository, MapperUtil mapperUtil, SecurityService securityService, InvoiceRepository invoiceRepository) {
+    public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository, MapperUtil mapperUtil, SecurityService securityService, InvoiceRepository invoiceRepository, ProductRepository productRepository) {
         this.invoiceProductRepository = invoiceProductRepository;
         this.mapperUtil = mapperUtil;
         this.securityService = securityService;
         this.invoiceRepository = invoiceRepository;
-
-    private final ProductRepository productRepository;
-
-
-    public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository, MapperUtil mapperUtil, SecurityService securityService, ProductRepository productRepository, InvoiceRepository invoiceRepository) {
-        this.invoiceProductRepository = invoiceProductRepository;
-        this.mapperUtil = mapperUtil;
-        this.securityService = securityService;
         this.productRepository = productRepository;
-
     }
+
 
 //    public List<InvoiceProductDto> getAllInvoiceProducts() {
 //        // Mevcut kullanıcıyı al
@@ -156,6 +148,12 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
         return invoiceProductDtos;
     }
+
+    @Override
+    public InvoiceProductDto getInvoiceProductById(Long id) {
+        return mapperUtil.convert(invoiceProductRepository.findById(id).orElseThrow(() ->new InvoiceProductNotFoundException("Invoice product not found with id: "+id)), new InvoiceProductDto());
+    }
+
     @Override
     public void save(InvoiceProductDto invoiceProductDto) {
         // InvoiceProductDto'yu InvoiceProduct'a dönüştür
@@ -229,7 +227,6 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     }
 
     @Override
-
     public void deleteByInvoiceId(Long invoiceId) {
         List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllInvoiceProductsByInvoiceIdAndIsDeletedFalse(invoiceId);
         for (InvoiceProduct invoiceProduct : invoiceProducts) {
@@ -237,8 +234,48 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         }
 
 
-    public void checkForLowQuantityAlert(Long id) {
+//    public void checkForLowQuantityAlert(Long id) {
+//
+//        InvoiceProduct invoiceProduct = invoiceProductRepository.findById(id).orElse(null);
+//        if (invoiceProduct == null) {
+//            throw new IllegalArgumentException("Invoice product not found for ID: " + id);
+//        }
+//
+//        int remainingQuantity = invoiceProduct.getRemainingQuantity();
+//        Product product = invoiceProduct.getProduct();
+//        if (remainingQuantity < product.getLowLimitAlert()) {
+//
+//            throw new ProductLowLimitAlertException("Stock of " + product.getName() + " decreased below low limit!");
+//        }
+//
+//    }
+//
+//
+//
+//
+//
+//    public List<InvoiceProductDto> findAllApprovedInvoiceInvoiceProduct(InvoiceStatus invoiceStatus) {
+//        CompanyDto companyDto=securityService.getLoggedInUser().getCompany();
+//        Company company=mapperUtil.convert(companyDto,new Company());
+//        return invoiceProductRepository.findByInvoice_CompanyAndInvoice_InvoiceStatusOrderByInsertDateTime(company,invoiceStatus)
+//                .stream().map(invoiceProduct -> mapperUtil.convert(invoiceProduct, new InvoiceProductDto())).toList();
+//
+//    }
+//
+//
+//    @Override
+//    public InvoiceProductDto getInvoiceProductById(Long id) {
+//        return mapperUtil.convert(invoiceProductRepository.findById(id).orElseThrow(() ->new InvoiceProductNotFoundException("Invoice product not found with id: "+id)), new InvoiceProductDto());
+//    }
 
+//    @Override
+//    public boolean existsByInvoiceIdAndIsDeleted(Long id, boolean isDeleted) {
+//        return invoiceProductRepository.existsByInvoiceIdAndIsDeleted(id,isDeleted);
+//    }
+}
+
+    @Override
+    public void checkForLowQuantityAlert(Long id) {
         InvoiceProduct invoiceProduct = invoiceProductRepository.findById(id).orElse(null);
         if (invoiceProduct == null) {
             throw new IllegalArgumentException("Invoice product not found for ID: " + id);
@@ -250,29 +287,13 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
             throw new ProductLowLimitAlertException("Stock of " + product.getName() + " decreased below low limit!");
         }
-
     }
 
-
-
-
-
+    @Override
     public List<InvoiceProductDto> findAllApprovedInvoiceInvoiceProduct(InvoiceStatus invoiceStatus) {
         CompanyDto companyDto=securityService.getLoggedInUser().getCompany();
         Company company=mapperUtil.convert(companyDto,new Company());
         return invoiceProductRepository.findByInvoice_CompanyAndInvoice_InvoiceStatusOrderByInsertDateTime(company,invoiceStatus)
                 .stream().map(invoiceProduct -> mapperUtil.convert(invoiceProduct, new InvoiceProductDto())).toList();
-
     }
-
-
-    @Override
-    public InvoiceProductDto getInvoiceProductById(Long id) {
-        return mapperUtil.convert(invoiceProductRepository.findById(id).orElseThrow(() ->new InvoiceProductNotFoundException("Invoice product not found with id: "+id)), new InvoiceProductDto());
-    }
-
-//    @Override
-//    public boolean existsByInvoiceIdAndIsDeleted(Long id, boolean isDeleted) {
-//        return invoiceProductRepository.existsByInvoiceIdAndIsDeleted(id,isDeleted);
-//    }
 }
