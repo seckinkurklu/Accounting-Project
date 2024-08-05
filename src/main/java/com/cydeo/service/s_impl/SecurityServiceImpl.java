@@ -3,6 +3,7 @@ package com.cydeo.service.s_impl;
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.User;
 import com.cydeo.entity.common.UserPrincipal;
+import com.cydeo.exception.UserNotFoundException;
 import com.cydeo.repository.UserRepository;
 import com.cydeo.service.SecurityService;
 import com.cydeo.service.UserService;
@@ -17,7 +18,6 @@ public class SecurityServiceImpl implements SecurityService {
     private final UserRepository userRepository;
     private final UserService userService;
 
-
     public SecurityServiceImpl(UserRepository userRepository, UserService userService) {
         this.userRepository = userRepository;
 
@@ -25,8 +25,9 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user =userRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String username) {
+        User user =userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User name: "+username +"can not be found"));
         if (user==null) {
             throw new UsernameNotFoundException(username);
         }

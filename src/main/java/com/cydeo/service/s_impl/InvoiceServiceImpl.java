@@ -13,6 +13,7 @@ import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 
 import com.cydeo.exception.InvoiceNotFoundException;
+import com.cydeo.exception.UserNotFoundException;
 import com.cydeo.repository.ClientVendorRepository;
 import com.cydeo.repository.InvoiceProductRepository;
 import com.cydeo.repository.InvoiceRepository;
@@ -165,7 +166,8 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setInvoiceType(InvoiceType.PURCHASE);
         invoice.setInvoiceStatus(InvoiceStatus.AWAITING_APPROVAL);
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User byUsername = userRepository.findByUsername(username);
+        User byUsername = userRepository.findByUsername(username)
+                .orElseThrow(()-> new UserNotFoundException("User Name: " + username + "Not Found"));;
 //        System.out.println("================User's company "); // just to verify
 //        System.out.println(byUsername.getCompany().toString());// just to verify
         invoice.setCompany(byUsername.getCompany());
