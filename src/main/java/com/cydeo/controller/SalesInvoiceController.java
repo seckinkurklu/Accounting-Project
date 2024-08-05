@@ -3,6 +3,8 @@ package com.cydeo.controller;
 import com.cydeo.dto.InvoiceDto;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.exception.InvoiceNotFoundException;
+import com.cydeo.exception.ProductLowLimitAlertException;
+import com.cydeo.exception.ProductNotFoundException;
 import com.cydeo.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,6 +42,13 @@ public class SalesInvoiceController {
         return "/invoice/sales-invoice-list";
     }
 
+    @GetMapping("/approve/{id}")
+    public String getApproveInvoice(@PathVariable("id") Long id) throws InvoiceNotFoundException {
+        InvoiceDto invoiceDto = invoiceService.findById(id);
+        invoiceService.approveSalesInvoice(invoiceDto, InvoiceType.SALES);
+        return "redirect:/salesInvoices/list";
+    }
+
     @GetMapping("/create")
     public String createSalesInvoice(Model model) {
 
@@ -61,11 +70,22 @@ public class SalesInvoiceController {
 
     }
 
-    @GetMapping("/approve/{id}")
-    public String getApproveInvoice(@PathVariable("id") Long id) throws InvoiceNotFoundException {
-        InvoiceDto invoiceDto = invoiceService.findById(id);
-        invoiceService.approveSalesInvoice(invoiceDto, InvoiceType.SALES);
+    @PostMapping("/approve/{id}")
+    public String approveSalesInvoice(@PathVariable("id") Long id){
+
+        try {
+            invoiceService.approve(id);
+            invoiceProductService.checkForLowQuantityAlert(id);
+        }catch (ProductNotFoundException | ProductLowLimitAlertException exception){
+            return "redirect:/salesInvoices/error?message=" + exception.getMessage();
+        }
         return "redirect:/salesInvoices/list";
+    }
+
+    @ExceptionHandler({ProductNotFoundException.class, ProductLowLimitAlertException.class})
+    public String handleProductException(Exception e, Model model) {
+        model.addAttribute("errorMessage", e.getMessage());
+        return "error";
     }
 }
 

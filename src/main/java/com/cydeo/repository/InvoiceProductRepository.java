@@ -34,4 +34,5 @@ public interface InvoiceProductRepository extends JpaRepository<InvoiceProduct, 
    List<Object[]> dateAndProfitLossByCompanyTitle(@Param("title") String companyTitle, @Param("invoice_status")String invoiceStatus);
 
    List<InvoiceProduct> findByInvoice_CompanyAndInvoice_InvoiceStatusOrderByInsertDateTime(Company company, InvoiceStatus invoiceStatus);
+
 }

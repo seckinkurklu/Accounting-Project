@@ -18,7 +18,11 @@ public interface InvoiceProductService {
     boolean existsByProductIdAndIsDeleted(Long id,boolean isDeleted);
 
 
+
+    void checkForLowQuantityAlert(Long id);
+
     List<InvoiceProductDto> findAllApprovedInvoiceInvoiceProduct(InvoiceStatus invoiceStatus);
+
 
 }
 

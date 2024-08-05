@@ -5,6 +5,7 @@ import com.cydeo.dto.ProductDto;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Product;
 import com.cydeo.entity.User;
+import com.cydeo.exception.ProductNotFoundException;
 import com.cydeo.mapper.ProductMapper;
 import com.cydeo.repository.ProductRepository;
 import com.cydeo.repository.UserRepository;
@@ -61,7 +62,7 @@ public class ProductServiceImpl implements ProductService {
 @Override
 public void delete(Long id) {
     Product product=productRepository.findByIdAndIsDeleted(id,false).orElseThrow(
-            () -> new EntityNotFoundException("Product cannot be found with ID "+id)
+            () -> new ProductNotFoundException("Product cannot be found with ID "+id)
     );
     if (product.getQuantityInStock() == 0 && !invoiceProductService.existsByProductIdAndIsDeleted(id,false)){
         product.setIsDeleted(true);
@@ -71,10 +72,12 @@ public void delete(Long id) {
     @Override
     public void increaseProductQuantityInStock(Long id, Integer quantity) {
         Product product=productRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(()->new ProductNotFoundException("Product not found with id: " + id));
         int newQuantity=quantity + product.getQuantityInStock();
         product.setQuantityInStock(newQuantity);
 
         productRepository.save(product);
     }
+
+
 }

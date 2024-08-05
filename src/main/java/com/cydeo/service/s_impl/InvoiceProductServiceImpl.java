@@ -1,7 +1,17 @@
 package com.cydeo.service.s_impl;
 
-import com.cydeo.dto.CompanyDto;
+
+import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.InvoiceProductDto;
+import com.cydeo.dto.ProductDto;
+import com.cydeo.entity.Invoice;
+import com.cydeo.entity.InvoiceProduct;
+import com.cydeo.entity.Product;
+import com.cydeo.exception.ProductLowLimitAlertException;
+import com.cydeo.exception.ProductNotFoundException;
+
+import com.cydeo.dto.CompanyDto;
+
 import com.cydeo.entity.Company;
 import com.cydeo.entity.InvoiceProduct;
 
@@ -9,7 +19,10 @@ import com.cydeo.enums.InvoiceStatus;
 
 import com.cydeo.exception.InvoiceProductNotFoundException;
 
+
 import com.cydeo.repository.InvoiceProductRepository;
+import com.cydeo.repository.InvoiceRepository;
+import com.cydeo.repository.ProductRepository;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.SecurityService;
 import com.cydeo.util.MapperUtil;
@@ -17,6 +30,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class InvoiceProductServiceImpl implements InvoiceProductService {
@@ -24,11 +38,14 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     private final InvoiceProductRepository invoiceProductRepository;
     private final MapperUtil mapperUtil;
     private final SecurityService securityService;
+    private final ProductRepository productRepository;
 
-    public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository, MapperUtil mapperUtil, SecurityService securityService) {
+
+    public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository, MapperUtil mapperUtil, SecurityService securityService, ProductRepository productRepository, InvoiceRepository invoiceRepository) {
         this.invoiceProductRepository = invoiceProductRepository;
         this.mapperUtil = mapperUtil;
         this.securityService = securityService;
+        this.productRepository = productRepository;
     }
 
 //    public List<InvoiceProductDto> getAllInvoiceProducts() {
@@ -200,12 +217,34 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     }
 
     @Override
+
+    public void checkForLowQuantityAlert(Long id) {
+
+        InvoiceProduct invoiceProduct = invoiceProductRepository.findById(id).orElse(null);
+        if (invoiceProduct == null) {
+            throw new IllegalArgumentException("Invoice product not found for ID: " + id);
+        }
+
+        int remainingQuantity = invoiceProduct.getRemainingQuantity();
+        Product product = invoiceProduct.getProduct();
+        if (remainingQuantity < product.getLowLimitAlert()) {
+
+            throw new ProductLowLimitAlertException("Stock of " + product.getName() + " decreased below low limit!");
+        }
+
+    }
+
+
+
+
+
     public List<InvoiceProductDto> findAllApprovedInvoiceInvoiceProduct(InvoiceStatus invoiceStatus) {
         CompanyDto companyDto=securityService.getLoggedInUser().getCompany();
         Company company=mapperUtil.convert(companyDto,new Company());
         return invoiceProductRepository.findByInvoice_CompanyAndInvoice_InvoiceStatusOrderByInsertDateTime(company,invoiceStatus)
                 .stream().map(invoiceProduct -> mapperUtil.convert(invoiceProduct, new InvoiceProductDto())).toList();
     }
+
 
     @Override
     public InvoiceProductDto getInvoiceProductById(Long id) {
