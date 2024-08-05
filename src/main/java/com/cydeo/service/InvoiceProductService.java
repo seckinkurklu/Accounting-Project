@@ -2,6 +2,7 @@ package com.cydeo.service;
 
 import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.entity.InvoiceProduct;
+import com.cydeo.enums.InvoiceStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +20,10 @@ public interface InvoiceProductService {
     void deleteByInvoiceId(Long id);
 
 
+
+    void checkForLowQuantityAlert(Long id);
+
+    List<InvoiceProductDto> findAllApprovedInvoiceInvoiceProduct(InvoiceStatus invoiceStatus);
 
 
 }

@@ -13,6 +13,7 @@ import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 
 import com.cydeo.exception.InvoiceNotFoundException;
+import com.cydeo.exception.UserNotFoundException;
 import com.cydeo.repository.ClientVendorRepository;
 import com.cydeo.repository.InvoiceProductRepository;
 import com.cydeo.repository.InvoiceRepository;
@@ -167,7 +168,8 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setInvoiceType(InvoiceType.PURCHASE);
         invoice.setInvoiceStatus(InvoiceStatus.AWAITING_APPROVAL);
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User byUsername = userRepository.findByUsername(username);
+        User byUsername = userRepository.findByUsername(username)
+                .orElseThrow(()-> new UserNotFoundException("User Name: " + username + "Not Found"));;
 //        System.out.println("================User's company "); // just to verify
 //        System.out.println(byUsername.getCompany().toString());// just to verify
         invoice.setCompany(byUsername.getCompany());
@@ -248,6 +250,27 @@ public class InvoiceServiceImpl implements InvoiceService {
             invoiceRepository.save(invoice.get());
         }
     }
+
+    @Override
+    public InvoiceDto findById(Long id) throws InvoiceNotFoundException {
+        return mapperUtil.convert(invoiceRepository.findById(id).orElseThrow(() ->
+                new InvoiceNotFoundException("Invoice Not Found")), new InvoiceDto());
+    }
+
+    @Override
+    public void approveSalesInvoice(InvoiceDto invoiceDto, InvoiceType invoiceType) {
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllByInvoiceId(invoiceDto.getId());
+
+        invoiceDto.setDate(LocalDate.now());
+        invoiceDto.setInvoiceStatus(InvoiceStatus.APPROVED);
+        for (InvoiceProduct invoiceProduct : invoiceProducts) {
+            invoiceProduct.getProduct().setQuantityInStock(invoiceProduct.getQuantity() - invoiceProduct.getProduct().getQuantityInStock());
+        }
+
+        invoiceRepository.save(mapperUtil.convert(invoiceDto, new Invoice()));
+    }
+
+
     @Override
     public List<InvoiceDto> listLastThreeApprovedSalesInvoices() {
         UserDto loggedInUser = securityService.getLoggedInUser();

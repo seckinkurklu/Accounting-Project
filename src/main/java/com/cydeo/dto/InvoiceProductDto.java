@@ -19,5 +19,15 @@ public class InvoiceProductDto {
     private Integer remainingQuantity;
     private InvoiceDto invoice;
     private ProductDto product;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+
+
+    }
+
+    public void setRemainingQuantity(int remainingQuantity) {
+        this.remainingQuantity = remainingQuantity;
+    }
+
 
 }

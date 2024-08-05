@@ -5,7 +5,6 @@ import com.cydeo.entity.Invoice;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.exception.InvoiceNotFoundException;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 public interface InvoiceService {
@@ -25,10 +24,7 @@ public interface InvoiceService {
     String newInvoiceNo();
 
     Long getId(String invoiceNo);
-
-
     void approve(Long invoiceId);
-
     boolean existByProductId(Long productId);
 
     List<InvoiceDto> listLastThreeApprovedSalesInvoices();
@@ -37,7 +33,6 @@ public interface InvoiceService {
 
     void removeInvoiceById(Long id);
     void deletePurchaseInvoice(Long id);
-
 
 
 
