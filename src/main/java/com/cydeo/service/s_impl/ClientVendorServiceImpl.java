@@ -3,6 +3,8 @@ package com.cydeo.service.s_impl;
 import com.cydeo.dto.ClientVendorDto;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.User;
+import com.cydeo.exception.ClientVendorNotFoundException;
+import com.cydeo.exception.InvoiceNotFoundException;
 import com.cydeo.repository.ClientVendorRepository;
 import com.cydeo.repository.UserRepository;
 import com.cydeo.service.ClientVendorService;
@@ -56,8 +58,10 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
     @Override
     public ClientVendorDto findById(Long id) {
-        Optional<ClientVendor> byId = clientVendorRepository.findById(id);
-        return mapperUtil.convert(byId, new ClientVendorDto());
+       ClientVendor clientVendor = clientVendorRepository.findById(id)
+                .orElseThrow(() -> new ClientVendorNotFoundException("clientVendor can not found with id: " + id));
+
+        return mapperUtil.convert(clientVendor, new ClientVendorDto());
     }
 
     @Override
@@ -106,11 +110,11 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         ClientVendor clientVendor=clientVendorRepository.findById(id).orElseThrow(
                     () -> new EntityNotFoundException("Client/Vendor cannot be found with ID "+id)
             );
-        ClientVendorDto convertedClientVendor=mapperUtil.convert(clientVendor,new ClientVendorDto());
-      boolean hasInvoiceByClientVendorId=  invoiceService.existByClientVendorId(convertedClientVendor.getId());
-       if (! hasInvoiceByClientVendorId){
+//        ClientVendorDto convertedClientVendor=mapperUtil.convert(clientVendor,new ClientVendorDto());
+//      boolean hasInvoiceByClientVendorId=  invoiceService.existByClientVendorId(convertedClientVendor.getId());
+//       if (! hasInvoiceByClientVendorId){
        clientVendor.setIsDeleted(true);
             clientVendorRepository.save(clientVendor);}
-    }
+//    }
 
 }

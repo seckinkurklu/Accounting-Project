@@ -11,4 +11,6 @@ public interface ReportingService {
     Map<String,Double> getMonthlyProfitLossByCompany();
 
    List<InvoiceProductDto> getInvoiceProductList();
+
+
 }

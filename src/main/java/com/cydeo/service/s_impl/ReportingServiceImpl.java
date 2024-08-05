@@ -50,9 +50,11 @@ public class ReportingServiceImpl implements ReportingService {
         return sortedMap;
     }
 
+
     @Override
     public List<InvoiceProductDto> getInvoiceProductList() {
         return invoiceProductService. findAllApprovedInvoiceInvoiceProduct(InvoiceStatus.APPROVED);
 
     }
+
 }
