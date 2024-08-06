@@ -2,6 +2,7 @@ package com.cydeo.controller;
 
 
 import com.cydeo.dto.UserDto;
+import com.cydeo.exception.RoleNotFoundException;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.RoleService;
 import com.cydeo.service.UserService;
@@ -34,7 +35,7 @@ public class UserController {
     }
 
     @GetMapping("/create")
-    public String CreateUser(Model model) {
+    public String CreateUser(Model model) throws RoleNotFoundException {
         model.addAttribute("newUser", new UserDto());
         model.addAttribute("userRoles", roleService.listRolesByLoggedInUser());
         model.addAttribute("companies", companyService.listCompaniesByLoggedInUser());
@@ -43,7 +44,7 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public String CreateUser(@Valid @ModelAttribute("newUser") UserDto user, BindingResult bindingResult, Model model) {
+    public String CreateUser(@Valid @ModelAttribute("newUser") UserDto user, BindingResult bindingResult, Model model){
         boolean emailExist = userService.findByUsernameCheck(user.getUsername());
         if (bindingResult.hasErrors()) {
             if (emailExist) {

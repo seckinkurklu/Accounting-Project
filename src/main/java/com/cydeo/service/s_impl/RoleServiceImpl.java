@@ -2,6 +2,7 @@ package com.cydeo.service.s_impl;
 
 import com.cydeo.dto.RoleDto;
 import com.cydeo.entity.Role;
+import com.cydeo.exception.RoleNotFoundException;
 import com.cydeo.repository.RoleRepository;
 import com.cydeo.service.RoleService;
 import com.cydeo.service.UserService;
@@ -32,7 +33,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<RoleDto> listAllRoles() {
+    public List<RoleDto> listAllRoles() throws RoleNotFoundException {
         return roleRepository.findAll().stream()
                 .map(role -> mapperUtil.convert(role, new RoleDto())).collect(Collectors.toList());
     }
