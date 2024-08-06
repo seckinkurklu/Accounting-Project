@@ -80,7 +80,7 @@ public class CompanyServiceImpl implements CompanyService {
     public void deactivateCompany(Long companyId) {
         Company companyToDeactivate=companyRepository.findById(companyId)
                 .orElseThrow(()->new CompanyNotFoundException("Company with id: " + companyId + " Not Found "));
-        companyToDeactivate.setCompanyStatus(CompanyStatus.ACTIVE);
+        companyToDeactivate.setCompanyStatus(CompanyStatus.PASSIVE);
         companyRepository.save(companyToDeactivate);
 
 
