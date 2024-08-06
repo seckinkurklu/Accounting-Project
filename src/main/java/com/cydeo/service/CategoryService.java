@@ -22,4 +22,6 @@ public interface CategoryService {
     void save(CategoryDto categoryDto);
     CategoryDto findByDescription(String description);
 
+
+
 }

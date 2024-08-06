@@ -6,6 +6,7 @@ import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.entity.Invoice;
 import com.cydeo.entity.InvoiceProduct;
+import com.cydeo.exception.InvoiceNotFoundException;
 import com.cydeo.repository.InvoiceRepository;
 import com.cydeo.service.ClientVendorService;
 import com.cydeo.service.InvoiceProductService;
@@ -33,7 +34,6 @@ public class InvoiceController {
     private final InvoiceRepository invoiceRepository;
 
 
-
     public InvoiceController(InvoiceService invoiceService, ClientVendorService clientVendorService, ProductService productService, MapperUtil mapperUtil, InvoiceProductService invoiceProductService, InvoiceRepository invoiceRepository) {
         this.invoiceService = invoiceService;
         this.clientVendorService = clientVendorService;
@@ -51,7 +51,7 @@ public class InvoiceController {
     }
 
     @GetMapping("/purchaseInvoices/create")
-    public String createPurchaseInvoice(Model model){
+    public String createPurchaseInvoice(Model model) {
         model.addAttribute("invoice", new InvoiceDto());
         model.addAttribute("vendors", clientVendorService.listAllByCompanyTitle());
         model.addAttribute("invoiceNo", invoiceService.newInvoiceNo());
@@ -60,38 +60,40 @@ public class InvoiceController {
     }
 
     @PostMapping("/purchaseInvoices/create")
-    public String savePurchaseInvoice(@ModelAttribute ("invoiceDto")InvoiceDto invoiceDto){
+    public String savePurchaseInvoice(@ModelAttribute("invoiceDto") InvoiceDto invoiceDto) {
         InvoiceDto saved = invoiceService.save(invoiceDto);
         return "redirect:/purchaseInvoices/update/" + saved.getId();
     }
+
     @GetMapping("/purchaseInvoices/update/{id}") // to Add Product
-    public String updatePurchaseInvoice(@PathVariable Long id, Model model){
+    public String updatePurchaseInvoice(@PathVariable Long id, Model model) {
 
         model.addAttribute("invoice", invoiceService.getInvoiceById(id));
         model.addAttribute("vendors", clientVendorService.listAllByCompanyTitle());
-        model.addAttribute("newInvoiceProduct",new InvoiceProduct());
-        model.addAttribute("products",productService.listAllProducts());
-        model.addAttribute("invoiceProducts",invoiceProductService.getAllInvoiceProducts()); // guncellenecek
+        model.addAttribute("newInvoiceProduct", new InvoiceProduct());
+        model.addAttribute("products", productService.listAllProducts());
+        model.addAttribute("invoiceProducts", invoiceProductService.getAllInvoiceProducts()); // guncellenecek
         return "invoice/purchase-invoice-update";
 
     }
+
     @PostMapping("/purchaseInvoices/addInvoiceProduct/{id}")
     public String addProduct(@PathVariable("id") Long id, @ModelAttribute("newInvoiceProduct") InvoiceProductDto invoiceProductDto, RedirectAttributes redirectAttributes) {
         // İlgili invoice'ı al
         Invoice invoice = invoiceRepository.findById(id).get();
         // InvoiceProductDto'yu InvoiceProduct'a dönüştür
         InvoiceProduct newInvoiceProduct = mapperUtil.convert(invoiceProductDto, new InvoiceProduct());
-        if (newInvoiceProduct==null || invoiceProductDto==null){
+        if (newInvoiceProduct == null || invoiceProductDto == null) {
 
             return "redirect:/purchaseInvoices/update";
         }
         // InvoiceProduct'ı ilgili invoice ile ilişkilendir
         newInvoiceProduct.setInvoice(invoice);
-        InvoiceProductDto convertedInvoiceProductDto = mapperUtil.convert(newInvoiceProduct,new InvoiceProductDto());
+        InvoiceProductDto convertedInvoiceProductDto = mapperUtil.convert(newInvoiceProduct, new InvoiceProductDto());
         // InvoiceProduct'ı kaydet
         invoiceProductService.save(convertedInvoiceProductDto);
         // Redirect attributes ekle
-        redirectAttributes.addAttribute("id",id);
+        redirectAttributes.addAttribute("id", id);
         return "redirect:/purchaseInvoices/update/{id}";
     }
 
@@ -99,7 +101,7 @@ public class InvoiceController {
 
 
     @GetMapping("/purchaseInvoices/removeInvoiceProduct/{id}/{invoiceProductId}")
-    public String removeInvoiceProduct(@PathVariable("id") Long id,@PathVariable("invoiceProductId") Long invoiceProductId,Model model){
+    public String removeInvoiceProduct(@PathVariable("id") Long id, @PathVariable("invoiceProductId") Long invoiceProductId, Model model) {
 
         invoiceProductService.delete(invoiceProductId);
 
@@ -120,7 +122,7 @@ public class InvoiceController {
         List<InvoiceProductDto> invoiceProductList = invoiceProductService.getAllInvoiceProductsById(id);
         model.addAttribute("invoice", invoice);
         model.addAttribute("company", invoice.getCompany());
-        model.addAttribute("invoiceProducts",invoiceProductList);
+        model.addAttribute("invoiceProducts", invoiceProductList);
         return "invoice/invoice_print";
     }
 
@@ -131,14 +133,19 @@ public class InvoiceController {
 
         model.addAttribute("invoice", invoice);
         model.addAttribute("company", invoice.getCompany());
-        model.addAttribute("invoiceProducts",invoiceProductList);
+        model.addAttribute("invoiceProducts", invoiceProductList);
         return "invoice/invoice_print";
     }
 
 
+    @GetMapping("/purchaseInvoices/delete/{id}")
+    public String deleteFromPurchaseInvoiceList(@PathVariable("id") Long id) {
 
-
+        invoiceService.deletePurchaseInvoice(id);
+        return "redirect:/purchaseInvoices/list";
+    }
 }
+
 /**/
 
 /**/

@@ -5,7 +5,6 @@ import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.Category;
 
-import com.cydeo.exception.CategoryNotFoundException;
 import com.cydeo.service.CompanyService;
 
 import com.cydeo.entity.Company;
@@ -49,9 +48,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryDto> listAllCategory() {
-       Long id= securityService.getLoggedInCompanyId();
-        List<Category> categoryList = categoryRepository.findAllByCompanyIdOrderByDescriptionAsc(id);
-        return categoryList.stream().map(category -> mapperUtil.convert(category,new CategoryDto())).collect(Collectors.toList());
+        UserDto currentUser = userService.getCurrentUser();
+        Long companyId = currentUser.getCompany().getId();
+
+        return categoryRepository.findDistinctCategoriesByCompanyAndIsDeletedFalse(companyId)
+                .stream()
+                .map(category -> mapperUtil.convert(category, new CategoryDto()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -70,7 +73,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto findCategoryById(Long id) {
 
-        return mapperUtil.convert(categoryRepository.findById(id).get(),new CategoryDto());
+        return mapperUtil.convert(categoryRepository.findById(id),new CategoryDto());
     }
 
     @Override
@@ -125,7 +128,20 @@ public class CategoryServiceImpl implements CategoryService {
         return categories.stream()
                 .map(category -> mapperUtil.convert(category,new CategoryDto())).collect(Collectors.toList());
 
+
+
     }
+//
+//    @Override
+//    public List<CategoryDto> listAllCategories() {
+//        UserDto currentUser = userService.getCurrentUser();
+//        Long companyId = currentUser.getCompany().getId();
+//
+//        return categoryRepository.findDistinctCategoriesByCompanyAndIsDeletedFalse(companyId)
+//                .stream()
+//                .map(category -> mapperUtil.convert(category, new CategoryDto()))
+//                .collect(Collectors.toList());
+//    }
 
 
 
