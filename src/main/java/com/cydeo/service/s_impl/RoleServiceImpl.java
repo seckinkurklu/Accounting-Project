@@ -40,7 +40,7 @@ public class RoleServiceImpl implements RoleService {
 
 
     @Override
-    public List<RoleDto> listRolesByLoggedInUser() {
+    public List<RoleDto> listRolesByLoggedInUser ()throws RoleNotFoundException {
         RoleDto loggedInUserRole  = userService.getLoggedUser().getRole();
         List<Role> roleList = new ArrayList<>();
 
