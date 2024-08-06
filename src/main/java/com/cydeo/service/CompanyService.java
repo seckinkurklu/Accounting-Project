@@ -13,4 +13,6 @@ public interface CompanyService {
     void activateCompany(Long companyId);
     void deactivateCompany(Long companyId);
     List<CompanyDto> listCompaniesByLoggedInUser();
+
+    List<String> getCountries();
 }
