@@ -16,4 +16,5 @@ public interface PaymentService {
 
     void deleteById(Long id);
 
+    List<PaymentDto> listPaymentsForYear(int year);
 }
