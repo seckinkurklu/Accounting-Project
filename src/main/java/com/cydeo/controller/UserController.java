@@ -2,6 +2,7 @@ package com.cydeo.controller;
 
 
 import com.cydeo.dto.UserDto;
+import com.cydeo.exception.UserNotFoundException;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.RoleService;
 import com.cydeo.service.UserService;
@@ -60,7 +61,7 @@ public class UserController {
     }
 
     @GetMapping("/update/{id}")
-    public String UpdateUser(@PathVariable("id") Long id, Model model) {
+    public String UpdateUser(@PathVariable("id") Long id, Model model) throws UserNotFoundException {
         model.addAttribute("user", userService.findById(id));
 
         model.addAttribute("userRoles", roleService.listAllRoles());
@@ -81,7 +82,7 @@ public class UserController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteUser(@PathVariable("id") Long id, Model model) {
+    public String deleteUser(@PathVariable("id") Long id, Model model) throws UserNotFoundException {
         UserDto userDto = userService.findById(id);
         if (userDto.isOnlyAdmin()) {
             model.addAttribute("error", "Only admin of the company cannot be deleted");
