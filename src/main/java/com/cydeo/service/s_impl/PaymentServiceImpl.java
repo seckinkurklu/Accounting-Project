@@ -26,7 +26,6 @@ public class PaymentServiceImpl implements PaymentService {
         this.mapperUtil = mapperUtil;
     }
 
-
     @Override
     public PaymentDto findById(Long id) {
         Payment payment = paymentRepository.findById(id).orElseThrow(() -> new RuntimeException("Payment not found"));
