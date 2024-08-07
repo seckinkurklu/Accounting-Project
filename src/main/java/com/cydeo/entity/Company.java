@@ -18,6 +18,11 @@ public class Company extends BaseEntity {
 
     @Column(unique = true)
     private String title;
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     private String phone;
     private String website;
     @Enumerated(EnumType.STRING)
