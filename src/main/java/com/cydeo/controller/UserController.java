@@ -3,6 +3,7 @@ package com.cydeo.controller;
 
 import com.cydeo.dto.UserDto;
 import com.cydeo.exception.UserNotFoundException;
+import com.cydeo.exception.RoleNotFoundException;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.RoleService;
 import com.cydeo.service.UserService;
