@@ -1,6 +1,8 @@
 package com.cydeo.service.s_impl;
 
+import com.cydeo.client.CountryClient;
 import com.cydeo.dto.CompanyDto;
+import com.cydeo.dto.CountryInfoDto;
 import com.cydeo.dto.RoleDto;
 import com.cydeo.entity.Company;
 import com.cydeo.enums.CompanyStatus;
@@ -24,19 +26,21 @@ public class CompanyServiceImpl implements CompanyService {
     private final SecurityService securityService;
     private final MapperUtil mapperUtil;
     private final UserService userService;
+    private final CountryClient countryClient;
 
-    public CompanyServiceImpl(CompanyRepository companyRepository, SecurityService securityService, MapperUtil mapperUtil, UserService userService) {
+    public CompanyServiceImpl(CompanyRepository companyRepository, SecurityService securityService, MapperUtil mapperUtil, UserService userService, CountryClient countryClient) {
         this.companyRepository = companyRepository;
         this.securityService = securityService;
         this.mapperUtil = mapperUtil;
         this.userService = userService;
+        this.countryClient = countryClient;
     }
 
 
     @Override
     public List<CompanyDto> listAllCompanies() {
-        List<Company> companyList= companyRepository.findAll();
-        return companyList.stream().map(p->mapperUtil.convert(p, new CompanyDto())).collect(Collectors.toList());
+        List<Company> companyList = companyRepository.findAll();
+        return companyList.stream().map(p -> mapperUtil.convert(p, new CompanyDto())).collect(Collectors.toList());
     }
 
     @Override
@@ -70,34 +74,41 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public void activateCompany(Long companyId) {
-        Company companyToActivate=companyRepository.findById(companyId)
-                .orElseThrow(()->new CompanyNotFoundException("Company with id: " + companyId + " Not Found "));
+        Company companyToActivate = companyRepository.findById(companyId)
+                .orElseThrow(() -> new CompanyNotFoundException("Company with id: " + companyId + " Not Found "));
         companyToActivate.setCompanyStatus(CompanyStatus.ACTIVE);
         companyRepository.save(companyToActivate);
     }
 
     @Override
     public void deactivateCompany(Long companyId) {
-        Company companyToDeactivate=companyRepository.findById(companyId)
-                .orElseThrow(()->new CompanyNotFoundException("Company with id: " + companyId + " Not Found "));
+        Company companyToDeactivate = companyRepository.findById(companyId)
+                .orElseThrow(() -> new CompanyNotFoundException("Company with id: " + companyId + " Not Found "));
         companyToDeactivate.setCompanyStatus(CompanyStatus.PASSIVE);
         companyRepository.save(companyToDeactivate);
-
 
 
     }
 
     @Override
     public List<CompanyDto> listCompaniesByLoggedInUser() {
-        RoleDto loggedInUserRole  = userService.getLoggedUser().getRole();
+        RoleDto loggedInUserRole = userService.getLoggedUser().getRole();
         List<Company> companyList = new ArrayList<>();
 
-        if (loggedInUserRole.getDescription().equals("Root User")){
+        if (loggedInUserRole.getDescription().equals("Root User")) {
             companyList.addAll(companyRepository.findCompaniesByTitleIsNot("CYDEO"));
-        } else{
+        } else {
             companyList.add(companyRepository.findById(userService.getLoggedUser().getCompany().getId()).get());
         }
 
         return companyList.stream().map(company -> mapperUtil.convert(company, new CompanyDto())).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> getCountries() {
+        List<CountryInfoDto> counryList= countryClient.getCountries().getBody();
+
+        return  counryList.stream()
+                .map(CountryInfoDto::getName).toList();
     }
 }
