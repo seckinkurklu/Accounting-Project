@@ -98,7 +98,6 @@ public class CategoryServiceImpl implements CategoryService {
      * @param description the description of the category to be found
      * @return a CategoryDto object representing the found category, or null if no matching category is found
      */
-
     @Override
     public CategoryDto findByDescription(String description) {
         UserDto loggedInUser = securityService.getLoggedInUser();
