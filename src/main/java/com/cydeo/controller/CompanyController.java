@@ -18,6 +18,7 @@ public class CompanyController {
 
     private final CompanyService companyService;
 
+
     public CompanyController(CompanyService companyService) {
         this.companyService = companyService;
     }
@@ -31,12 +32,15 @@ public class CompanyController {
     @GetMapping("/create")
     public String createCompany(Model model){
         model.addAttribute("newCompany", new CompanyDto());
+        model.addAttribute("countries", companyService.getCountries());
+
         return "/company/company-create";
     }
 
     @PostMapping("/create")
     public String insertCompany(@Valid @ModelAttribute("newCompany") CompanyDto companyDto, BindingResult bindingResult, Model model){
         if (bindingResult.hasErrors()){
+            model.addAttribute("countries", companyService.getCountries());
             return "/company/company-create";
         }
         companyService.save(companyDto);
@@ -46,6 +50,7 @@ public class CompanyController {
     @GetMapping("/update/{id}")
     public String editCompany(@PathVariable("id") Long id, Model model){
         model.addAttribute("company", companyService.findById(id));
+        model.addAttribute("countries", companyService.getCountries());
         return "/company/company-update";
     }
 

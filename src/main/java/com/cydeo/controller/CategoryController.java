@@ -16,11 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 
-
-
-
-
-
 /**
  * author:AbduShukur
  * date:7/24/2024
@@ -49,8 +44,8 @@ public class CategoryController {
     }
     @PostMapping("/create")
     public String create(@ModelAttribute("newCategory") @Valid CategoryDto categoryDto, BindingResult result, Model model) {
-        if (categoryService.findByDescription(categoryDto.getDescription())!=null)
-            result.rejectValue("description", "error.description", "This description already exists.");
+//        if (categoryService.findByDescription(categoryDto.getDescription())!=null)
+//            result.rejectValue("description", "error.description", "This description already exists.");
         if(result.hasErrors()) {
 
             return "/category/category-create";
@@ -68,8 +63,8 @@ public class CategoryController {
 
     @PostMapping("/update/{id}")
     public String updateCategoryForm2( @ModelAttribute("category") @Valid CategoryDto categoryDto,BindingResult result) throws CategoryNotFoundException{
-        if (categoryService.findByDescription(categoryDto.getDescription())!=null)
-            result.rejectValue("description", "error.description", "This description already exists.");
+//        if (categoryService.findByDescription(categoryDto.getDescription())!=null)
+//            result.rejectValue("description", "error.description", "This description already exists.");
         if (result.hasErrors()) {
             return "category/category-update";
         }

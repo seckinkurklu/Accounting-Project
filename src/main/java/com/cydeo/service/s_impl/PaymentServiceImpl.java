@@ -2,12 +2,16 @@ package com.cydeo.service.s_impl;
 
 import com.cydeo.dto.PaymentDto;
 import com.cydeo.entity.Payment;
+import com.cydeo.enums.Months;
 import com.cydeo.repository.PaymentRepository;
 import com.cydeo.service.PaymentService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +25,6 @@ public class PaymentServiceImpl implements PaymentService {
         this.paymentRepository = paymentRepository;
         this.mapperUtil = mapperUtil;
     }
-
 
     @Override
     public PaymentDto findById(Long id) {
@@ -53,8 +56,31 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public void deleteById(Long id) {
-
         paymentRepository.deleteById(id);
+    }
 
+    @Override
+    public List<PaymentDto> listPaymentsForYear(int year) {
+        List<Payment> payments = paymentRepository.findAllByYear(year);
+
+        if (payments.isEmpty()) {
+            createPaymentsForYear(year);
+            payments = paymentRepository.findAllByYear(year);
+        }
+        return payments.stream().map(p->mapperUtil.convert(p, new PaymentDto()))
+                .sorted(Comparator.comparing(payment -> payment.getMonth().ordinal())).toList();
+    }
+
+    private void createPaymentsForYear(int year) {
+        List<Payment> payments = new ArrayList<>();
+        for (Months month : Months.values()) {
+            Payment payment = new Payment();
+            payment.setYear(year);
+            payment.setMonth(month);
+            payment.setAmount(BigDecimal.valueOf(250));
+            payment.setPaid(false);
+            payments.add(payment);
+        }
+        paymentRepository.saveAll(payments);
     }
 }

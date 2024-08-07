@@ -3,6 +3,7 @@ package com.cydeo.controller;
 import com.cydeo.dto.ClientVendorDto;
 import com.cydeo.enums.ClientVendorType;
 import com.cydeo.service.ClientVendorService;
+import com.cydeo.service.CompanyService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +16,10 @@ import java.util.List;
 @RequestMapping("/clientVendors")
 public class ClientVendorController {
     private final ClientVendorService clientVendorService;
-    public ClientVendorController(ClientVendorService clientVendorService) {
+    private final CompanyService companyService;
+    public ClientVendorController(ClientVendorService clientVendorService, CompanyService companyService) {
         this.clientVendorService = clientVendorService;
+        this.companyService = companyService;
     }
 
 
@@ -30,6 +33,7 @@ public class ClientVendorController {
     @GetMapping("/create")
     public String createClientVendor(Model model){
         model.addAttribute("newClientVendor",new ClientVendorDto());
+        model.addAttribute("countries", companyService.getCountries());
         List<ClientVendorType> clientVendorTypes = Arrays.asList(ClientVendorType.values()); // clientVendor types added as like on html file.
         model.addAttribute("clientVendorTypes",clientVendorTypes); // types are taken to UI
         return "/clientVendor/clientVendor-create";
@@ -48,8 +52,9 @@ public String editClientVendor(@PathVariable("id") Long id, Model model) {
     List<ClientVendorType> clientVendorTypes = Arrays.asList(ClientVendorType.values());
     model.addAttribute("clientVendor", clientVendorService.findById(id));
     model.addAttribute("clientVendorTypes", clientVendorTypes);
-    List<String> countries = Arrays.asList("United States");
-    model.addAttribute("countries", countries);
+    model.addAttribute("countries", companyService.getCountries());
+
+
     return "/clientVendor/clientVendor-update";
 }
     @PostMapping("/update/{id}")
