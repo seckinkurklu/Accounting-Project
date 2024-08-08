@@ -6,7 +6,6 @@ import com.cydeo.entity.User;
 import com.cydeo.exception.UserNotFoundException;
 
 import com.cydeo.exception.ClientVendorNotFoundException;
-import com.cydeo.exception.InvoiceNotFoundException;
 
 import com.cydeo.repository.ClientVendorRepository;
 import com.cydeo.repository.UserRepository;
@@ -14,13 +13,11 @@ import com.cydeo.service.ClientVendorService;
 import com.cydeo.service.InvoiceService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,7 +46,8 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         String username= SecurityContextHolder.getContext().getAuthentication().getName();
         User byUsername = userRepository.findByUsername(username)
                 .orElseThrow(()-> new UserNotFoundException("User Name: " + username + "Not Found"));
-        List<ClientVendor> allByCompanyTitle = clientVendorRepository.findAllByCompanyTitleAndIsDeletedOrderByClientVendorName(byUsername.getCompany().getTitle(),false);
+        List<ClientVendor> allByCompanyTitle = clientVendorRepository.findAllByCompanyTitleAndIsDeletedOrderByClientVendorName(byUsername.getCompany()
+                .getTitle(),false);
         List<ClientVendorDto> clientVendorList= allByCompanyTitle.stream().map(p->mapperUtil.convert(p, new ClientVendorDto())).collect(Collectors.toList());
         List<ClientVendorDto> filteredList=clientVendorList.stream().map(cv->{
                     if( invoiceService.existByClientVendorId(cv.getId())){
@@ -75,8 +73,9 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         return mapperUtil.convert(byClientVendorName, new ClientVendorDto());
     }
 
+
     @Override
-    public void save(ClientVendorDto clientVendorDto) {
+    public ClientVendorDto save(ClientVendorDto clientVendorDto) {
         String username= SecurityContextHolder.getContext().getAuthentication().getName(); // find username who logged to system.
         User user= userRepository.findByUsername(username)
                 .orElseThrow(()-> new UserNotFoundException("User Name: " + username + "Not Found")); // from DB, we get that user.
@@ -85,12 +84,12 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         clientVendor.setCompany(user.getCompany());
         clientVendorRepository.save(clientVendor);
 
+        return clientVendorDto;
     }
 
 
-
     @Override
-    public void update(ClientVendorDto clientVendorDto) {
+    public ClientVendorDto update(ClientVendorDto clientVendorDto) {
         if (clientVendorDto==null || clientVendorDto.getId()==null){
             throw new IllegalArgumentException("ClientVendorDto or ClientVendor ID cannot be null");
 
@@ -108,8 +107,9 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         convertedClientVendor.setAddress(clientVendor.getAddress());
         clientVendorRepository.save(convertedClientVendor);
 
-    }
 
+        return clientVendorDto;
+    }
     @Override
     public void delete(Long id) {
         ClientVendor clientVendor=clientVendorRepository.findById(id).orElseThrow(
