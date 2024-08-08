@@ -33,7 +33,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import javax.persistence.EntityNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
-public class ClientVendorServiceImplTest{
+public class ClientVendorServiceImplUnitTest {
 
     @Mock
     private ClientVendorRepository clientVendorRepository;
