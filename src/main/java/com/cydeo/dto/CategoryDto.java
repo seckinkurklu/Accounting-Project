@@ -16,6 +16,7 @@ public class CategoryDto {
 
     @NotBlank(message = "Description is a required field.")
     @Size(min = 2, max = 100, message = "Description must be between 2 and 100 characters long.")
+    @Column(unique = true, nullable = false)
     private String description;
 
     private CompanyDto company;
