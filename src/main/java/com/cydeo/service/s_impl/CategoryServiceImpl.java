@@ -136,9 +136,7 @@ public class CategoryServiceImpl implements CategoryService {
 //        return categories.stream()
 //                .map(category -> mapperUtil.convert(category,new CategoryDto())).collect(Collectors.toList());
 //
-//
-//
-//    }
+//    } // do we need this method?
 //
 //    @Override
 //    public List<CategoryDto> listAllCategories() {
