@@ -61,7 +61,7 @@ public class CategoryController {
     }
     @GetMapping("/update/{id}")
     public String updateCategoryForm1(@PathVariable("id") Long id, Model model) throws CategoryNotFoundException {
-        model.addAttribute("category", categoryService.getCategoryById(id));
+        model.addAttribute("category", categoryService.findById(id));
         model.addAttribute("product", productService.listAllProducts());
         return "category/category-update";
     }
