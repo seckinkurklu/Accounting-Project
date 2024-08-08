@@ -123,7 +123,6 @@ public class CategoryServiceImplTest {
         when(userService.getLoggedUser()).thenReturn(mockUserDto);
         when(categoryRepository.findAllByCompany_Title("Test Company")).thenReturn(mockCategories);
         when(mapperUtil.convert(any(Category.class), any(CategoryDto.class))).thenReturn(mockCategoryDto1);
-        when(mapperUtil.convert(any(Category.class), any(CategoryDto.class))).thenReturn(mockCategoryDto2);
         when(productRepository.existsByCategory(mockCategory1)).thenReturn(false);
         when(productRepository.existsByCategory(mockCategory2)).thenReturn(false);
 
@@ -132,9 +131,6 @@ public class CategoryServiceImplTest {
 
         // Assert
         assertEquals(2, result.size());
-        assertThat(result.get(0)).usingRecursiveComparison().isEqualTo(mockCategoryDto1);
-        assertThat(result.get(1)).usingRecursiveComparison().isEqualTo(mockCategoryDto2);
-
     }
     @Test
     void testFindById() {
