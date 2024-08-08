@@ -17,7 +17,7 @@ public interface CategoryService {
     CategoryDto update(CategoryDto categoryDto);
 
     void deleteById(Long id);
-    List<CategoryDto> getCategoriesForCurrentUser();
+   // List<CategoryDto> getCategoriesForCurrentUser(); do we need this method?
     void save(CategoryDto categoryDto);
     CategoryDto findByDescription(String description);
 
