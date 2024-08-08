@@ -26,8 +26,19 @@ public class ClientVendor extends BaseEntity {
     @JoinColumn(name = "address_id")
     private Address address ;//one-to-one / will be seen under "address_id" column on the "clients_vendors" table
 
+    public void setClientVendorName(String clientVendorName) {
+        this.clientVendorName = clientVendorName;
+    }
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
 
+    public String getClientVendorName() {
+        return clientVendorName;
+    }
+
+
+    public void setName(String s) {
+    }
 }
