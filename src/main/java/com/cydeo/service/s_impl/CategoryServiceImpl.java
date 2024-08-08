@@ -5,6 +5,8 @@ import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.Category;
 
+import com.cydeo.exception.CategoryNotFoundException;
+import com.cydeo.exception.UserNotFoundException;
 import com.cydeo.service.CompanyService;
 
 import com.cydeo.entity.Company;
@@ -18,6 +20,7 @@ import com.cydeo.service.UserService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -71,9 +74,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto findCategoryById(Long id) {
-
-        return mapperUtil.convert(categoryRepository.findById(id),new CategoryDto());
+    public CategoryDto findById(Long id){
+        return categoryRepository.findById(id)
+                .map(category -> mapperUtil.convert(category, new CategoryDto()))
+                .orElseThrow(() -> new CategoryNotFoundException("Category can't found with id " + id));
     }
 
     @Override
@@ -101,16 +105,6 @@ public class CategoryServiceImpl implements CategoryService {
         category.setDescription(categoryDto.getDescription());
         categoryRepository.save(category);
         return mapperUtil.convert(category, categoryDto);
-    }
-
-    @Override
-    public CategoryDto getCategoryById(Long id) {
-        Category category = categoryRepository.findById(id).orElseThrow();
-        CategoryDto categoryDto = new CategoryDto();
-        categoryDto.setId(category.getId());
-        categoryDto.setDescription(category.getDescription());
-        categoryDto.setCompany(companyService.findById(category.getCompany().getId()));
-        return categoryDto;
     }
 
     @Override
