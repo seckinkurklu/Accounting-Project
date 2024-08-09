@@ -87,28 +87,27 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
     }
 
-
-
     @Override
-    public void update(ClientVendorDto clientVendorDto) {
-        if (clientVendorDto==null || clientVendorDto.getId()==null){
+    public ClientVendorDto update(ClientVendorDto clientVendorDto) {
+        if (clientVendorDto == null || clientVendorDto.getId() == null) {
             throw new IllegalArgumentException("ClientVendorDto or ClientVendor ID cannot be null");
-
         }
 
+        ClientVendor convertedClientVendor = mapperUtil.convert(clientVendorDto,new ClientVendor());
+        ClientVendor clientVendor = clientVendorRepository.findById(clientVendorDto.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Client/Vendor cannot be found with ID " + clientVendorDto.getId()));
 
-        ClientVendor clientVendor = clientVendorRepository.getReferenceById(clientVendorDto.getId());
-        if (clientVendor==null){
-            throw new EntityNotFoundException("Client/Vendor cannot be found with ID "+clientVendor.getId());
+        clientVendor.setId(clientVendorDto.getId());
+        clientVendor.setAddress(convertedClientVendor.getAddress());
+        clientVendor.setClientVendorName(convertedClientVendor.getClientVendorName());
+        clientVendor.setWebsite(convertedClientVendor.getWebsite());
+        clientVendor.setAddress(convertedClientVendor.getAddress());
 
-        }
+        clientVendorRepository.save(clientVendor);
 
-        ClientVendor convertedClientVendor=mapperUtil.convert(clientVendorDto,new ClientVendor());
-        convertedClientVendor.setId(clientVendor.getId());
-        convertedClientVendor.setAddress(clientVendor.getAddress());
-        clientVendorRepository.save(convertedClientVendor);
-
+        return mapperUtil.convert(clientVendor,new ClientVendorDto());
     }
+
 
     @Override
     public void delete(Long id) {
