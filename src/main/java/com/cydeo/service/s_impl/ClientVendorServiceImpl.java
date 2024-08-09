@@ -1,6 +1,7 @@
 package com.cydeo.service.s_impl;
 
 import com.cydeo.dto.ClientVendorDto;
+import com.cydeo.dto.UserDto;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.User;
 import com.cydeo.exception.UserNotFoundException;
@@ -11,6 +12,7 @@ import com.cydeo.repository.ClientVendorRepository;
 import com.cydeo.repository.UserRepository;
 import com.cydeo.service.ClientVendorService;
 import com.cydeo.service.InvoiceService;
+import com.cydeo.service.SecurityService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,19 +30,24 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     private final UserRepository userRepository;
     private final MapperUtil mapperUtil;
     private final InvoiceService invoiceService;
+    private final SecurityService securityService;
 
-    public ClientVendorServiceImpl(ClientVendorRepository clientVendorRepository, UserRepository userRepository, MapperUtil mapperUtil,@Lazy InvoiceService invoiceService) {
+    public ClientVendorServiceImpl(ClientVendorRepository clientVendorRepository, UserRepository userRepository, MapperUtil mapperUtil, @Lazy InvoiceService invoiceService, SecurityService securityService) {
         this.clientVendorRepository = clientVendorRepository;
         this.userRepository = userRepository;
         this.mapperUtil = mapperUtil;
         this.invoiceService = invoiceService;
+        this.securityService = securityService;
     }
 
-    @Override
-    public List<ClientVendorDto> listAllClientVendor() {
-        List<ClientVendor> clientVendorRepositoryAll = clientVendorRepository.findAll();
-        return clientVendorRepositoryAll.stream().map(p->mapperUtil.convert(p, new ClientVendorDto())).collect(Collectors.toList());
-    }
+//    @Override
+//    public List<ClientVendorDto> listAllClientVendor() {
+//        String username= SecurityContextHolder.getContext().getAuthentication().getName();
+//        User byUsername = userRepository.findByUsername(username).get();
+//        List<ClientVendor> allByCompanyTitle = clientVendorRepository.findAllByCompanyTitleOrderByClientVendorName(byUsername.getCompany().getTitle());
+//        return allByCompanyTitle.stream().map(p->mapperUtil.convert(p, new ClientVendorDto())).toList();
+//
+//    } it does not necessary
 
     @Override
     public List<ClientVendorDto> listAllByCompanyTitle() {

@@ -7,8 +7,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 /**
  * author:AbduShukur
  * date:7/24/2024
@@ -30,7 +28,7 @@ public class CategoryDTOConverter implements Converter<String, CategoryDto> {
             return null;
         }
 
-        return categoryService.findCategoryById(Long.parseLong(source));
+        return categoryService.findById(Long.parseLong(source));
 
     }
 }
