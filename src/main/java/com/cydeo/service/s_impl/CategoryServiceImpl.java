@@ -6,6 +6,7 @@ import com.cydeo.dto.UserDto;
 import com.cydeo.entity.Category;
 
 import com.cydeo.exception.CategoryNotFoundException;
+import com.cydeo.exception.UserNotFoundException;
 import com.cydeo.service.CompanyService;
 
 import com.cydeo.entity.Company;
@@ -73,9 +74,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto findCategoryById(Long id) {
-
-        return mapperUtil.convert(categoryRepository.findById(id),new CategoryDto());
+    public CategoryDto findById(Long id){
+        return categoryRepository.findById(id)
+                .map(category -> mapperUtil.convert(category, new CategoryDto()))
+                .orElseThrow(() -> new CategoryNotFoundException("Category can't found with id " + id));
     }
 
     @Override
@@ -120,33 +122,21 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto getCategoryById(Long id) {
-        Category category = categoryRepository.findById(id).orElseThrow();
-        CategoryDto categoryDto = new CategoryDto();
-        categoryDto.setId(category.getId());
-        categoryDto.setDescription(category.getDescription());
-        categoryDto.setCompany(companyService.findById(category.getCompany().getId()));
-        return categoryDto;
-    }
-
-    @Override
     public void deleteById(Long id) {
         categoryRepository.deleteById(id);
     }
 
-    @Override
-    public List<CategoryDto> getCategoriesForCurrentUser() {
-        UserDto currentUser = userService.getCurrentUser();
-        Company company = mapperUtil.convert(currentUser,new User()).getCompany();
-
-        List<Category> categories = categoryRepository.findAllByCompanyIdOrderByDescriptionAsc(company.getId());
-
-        return categories.stream()
-                .map(category -> mapperUtil.convert(category,new CategoryDto())).collect(Collectors.toList());
-
-
-
-    }
+//    @Override
+//    public List<CategoryDto> getCategoriesForCurrentUser() {
+//        UserDto currentUser = userService.getCurrentUser();
+//        Company company = mapperUtil.convert(currentUser,new User()).getCompany();
+//
+//        List<Category> categories = categoryRepository.findAllByCompanyIdOrderByDescriptionAsc(company.getId());
+//
+//        return categories.stream()
+//                .map(category -> mapperUtil.convert(category,new CategoryDto())).collect(Collectors.toList());
+//
+//    } // do we need this method?
 //
 //    @Override
 //    public List<CategoryDto> listAllCategories() {
