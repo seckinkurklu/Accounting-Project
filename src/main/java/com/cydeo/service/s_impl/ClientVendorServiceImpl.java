@@ -1,7 +1,6 @@
 package com.cydeo.service.s_impl;
 
 import com.cydeo.dto.ClientVendorDto;
-import com.cydeo.dto.UserDto;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.User;
 import com.cydeo.exception.UserNotFoundException;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -83,7 +81,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
 
     @Override
-    public void save(ClientVendorDto clientVendorDto) {
+    public ClientVendorDto save(ClientVendorDto clientVendorDto) {
         String username= SecurityContextHolder.getContext().getAuthentication().getName(); // find username who logged to system.
         User user= userRepository.findByUsername(username)
                 .orElseThrow(()-> new UserNotFoundException("User Name: " + username + "Not Found")); // from DB, we get that user.
@@ -92,23 +90,24 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         clientVendor.setCompany(user.getCompany());
         clientVendorRepository.save(clientVendor);
 
+        return clientVendorDto;
     }
 
 
 
     @Override
-    public void update(ClientVendorDto clientVendorDto) {
+    public ClientVendorDto update(ClientVendorDto clientVendorDto) {
         if (clientVendorDto==null || clientVendorDto.getId()==null){
             throw new IllegalArgumentException("ClientVendorDto or ClientVendor ID cannot be null");
 
         }
 
 
-        ClientVendor clientVendor = clientVendorRepository.getReferenceById(clientVendorDto.getId());
-        if (clientVendor==null){
-            throw new EntityNotFoundException("Client/Vendor cannot be found with ID "+clientVendor.getId());
-
-        }
+//        ClientVendor clientVendor = clientVendorRepository.getReferenceById(clientVendorDto.getId());
+//        if (clientVendor==null){
+//            throw new EntityNotFoundException("Client/Vendor cannot be found with ID "+clientVendor.getId());
+//
+//        }
 
         ClientVendor convertedClientVendor = mapperUtil.convert(clientVendorDto,new ClientVendor());
         ClientVendor clientVendor = clientVendorRepository.findById(clientVendorDto.getId())
