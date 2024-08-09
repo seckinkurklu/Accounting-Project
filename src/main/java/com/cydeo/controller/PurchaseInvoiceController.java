@@ -6,7 +6,6 @@ import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.InvoiceProductDto;
 import com.cydeo.entity.Invoice;
 import com.cydeo.entity.InvoiceProduct;
-import com.cydeo.exception.InvoiceNotFoundException;
 import com.cydeo.repository.InvoiceRepository;
 import com.cydeo.service.ClientVendorService;
 import com.cydeo.service.InvoiceProductService;
@@ -24,7 +23,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Controller
-public class InvoiceController {
+public class PurchaseInvoiceController {
 
     private final InvoiceService invoiceService;
     private final ClientVendorService clientVendorService;
@@ -34,7 +33,7 @@ public class InvoiceController {
     private final InvoiceRepository invoiceRepository;
 
 
-    public InvoiceController(InvoiceService invoiceService, ClientVendorService clientVendorService, ProductService productService, MapperUtil mapperUtil, InvoiceProductService invoiceProductService, InvoiceRepository invoiceRepository) {
+    public PurchaseInvoiceController(InvoiceService invoiceService, ClientVendorService clientVendorService, ProductService productService, MapperUtil mapperUtil, InvoiceProductService invoiceProductService, InvoiceRepository invoiceRepository) {
         this.invoiceService = invoiceService;
         this.clientVendorService = clientVendorService;
         this.productService = productService;

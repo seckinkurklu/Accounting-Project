@@ -44,4 +44,9 @@ public class ClientVendorDto {
     private CompanyDto company;
     private boolean hasInvoice;
 
+
+
+    public boolean isHasInvoice() {
+        return hasInvoice;
+    }
 }

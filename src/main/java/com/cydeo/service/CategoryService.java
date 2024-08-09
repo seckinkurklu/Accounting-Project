@@ -1,5 +1,6 @@
 package com.cydeo.service;
 import com.cydeo.dto.CategoryDto;
+import com.cydeo.exception.CategoryNotFoundException;
 
 
 import java.util.List;
@@ -11,16 +12,15 @@ import java.util.List;
 public interface CategoryService {
     List<CategoryDto> listAllCategory();
     List<CategoryDto> listAllByCompany();
-    CategoryDto findCategoryById(Long id);
+    CategoryDto findById(Long id);
 
     CategoryDto update(CategoryDto categoryDto);
 
-    CategoryDto getCategoryById(Long id);
-
     void deleteById(Long id);
-    List<CategoryDto> getCategoriesForCurrentUser();
+   // List<CategoryDto> getCategoriesForCurrentUser(); do we need this method?
     void save(CategoryDto categoryDto);
     CategoryDto findByDescription(String description);
+
 
 
 

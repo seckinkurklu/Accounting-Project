@@ -1,20 +1,20 @@
 package com.cydeo.service.s_impl;
 
 import com.cydeo.dto.ClientVendorDto;
+import com.cydeo.dto.UserDto;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.User;
 import com.cydeo.exception.UserNotFoundException;
 
 import com.cydeo.exception.ClientVendorNotFoundException;
-import com.cydeo.exception.InvoiceNotFoundException;
 
 import com.cydeo.repository.ClientVendorRepository;
 import com.cydeo.repository.UserRepository;
 import com.cydeo.service.ClientVendorService;
 import com.cydeo.service.InvoiceService;
+import com.cydeo.service.SecurityService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -30,26 +30,32 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     private final UserRepository userRepository;
     private final MapperUtil mapperUtil;
     private final InvoiceService invoiceService;
+    private final SecurityService securityService;
 
-    public ClientVendorServiceImpl(ClientVendorRepository clientVendorRepository, UserRepository userRepository, MapperUtil mapperUtil,@Lazy InvoiceService invoiceService) {
+    public ClientVendorServiceImpl(ClientVendorRepository clientVendorRepository, UserRepository userRepository, MapperUtil mapperUtil, @Lazy InvoiceService invoiceService, SecurityService securityService) {
         this.clientVendorRepository = clientVendorRepository;
         this.userRepository = userRepository;
         this.mapperUtil = mapperUtil;
         this.invoiceService = invoiceService;
+        this.securityService = securityService;
     }
 
-    @Override
-    public List<ClientVendorDto> listAllClientVendor() {
-        List<ClientVendor> clientVendorRepositoryAll = clientVendorRepository.findAll();
-        return clientVendorRepositoryAll.stream().map(p->mapperUtil.convert(p, new ClientVendorDto())).collect(Collectors.toList());
-    }
+//    @Override
+//    public List<ClientVendorDto> listAllClientVendor() {
+//        String username= SecurityContextHolder.getContext().getAuthentication().getName();
+//        User byUsername = userRepository.findByUsername(username).get();
+//        List<ClientVendor> allByCompanyTitle = clientVendorRepository.findAllByCompanyTitleOrderByClientVendorName(byUsername.getCompany().getTitle());
+//        return allByCompanyTitle.stream().map(p->mapperUtil.convert(p, new ClientVendorDto())).toList();
+//
+//    } it does not necessary
 
     @Override
     public List<ClientVendorDto> listAllByCompanyTitle() {
         String username= SecurityContextHolder.getContext().getAuthentication().getName();
         User byUsername = userRepository.findByUsername(username)
                 .orElseThrow(()-> new UserNotFoundException("User Name: " + username + "Not Found"));
-        List<ClientVendor> allByCompanyTitle = clientVendorRepository.findAllByCompanyTitleAndIsDeletedOrderByClientVendorName(byUsername.getCompany().getTitle(),false);
+        List<ClientVendor> allByCompanyTitle = clientVendorRepository.findAllByCompanyTitleAndIsDeletedOrderByClientVendorName(byUsername.getCompany()
+                .getTitle(),false);
         List<ClientVendorDto> clientVendorList= allByCompanyTitle.stream().map(p->mapperUtil.convert(p, new ClientVendorDto())).collect(Collectors.toList());
         List<ClientVendorDto> filteredList=clientVendorList.stream().map(cv->{
                     if( invoiceService.existByClientVendorId(cv.getId())){
@@ -75,6 +81,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         return mapperUtil.convert(byClientVendorName, new ClientVendorDto());
     }
 
+
     @Override
     public void save(ClientVendorDto clientVendorDto) {
         String username= SecurityContextHolder.getContext().getAuthentication().getName(); // find username who logged to system.
@@ -87,10 +94,20 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
     }
 
+
+
     @Override
-    public ClientVendorDto update(ClientVendorDto clientVendorDto) {
-        if (clientVendorDto == null || clientVendorDto.getId() == null) {
+    public void update(ClientVendorDto clientVendorDto) {
+        if (clientVendorDto==null || clientVendorDto.getId()==null){
             throw new IllegalArgumentException("ClientVendorDto or ClientVendor ID cannot be null");
+
+        }
+
+
+        ClientVendor clientVendor = clientVendorRepository.getReferenceById(clientVendorDto.getId());
+        if (clientVendor==null){
+            throw new EntityNotFoundException("Client/Vendor cannot be found with ID "+clientVendor.getId());
+
         }
 
         ClientVendor convertedClientVendor = mapperUtil.convert(clientVendorDto,new ClientVendor());

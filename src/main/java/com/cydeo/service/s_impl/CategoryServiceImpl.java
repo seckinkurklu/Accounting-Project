@@ -5,6 +5,8 @@ import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.Category;
 
+import com.cydeo.exception.CategoryNotFoundException;
+import com.cydeo.exception.UserNotFoundException;
 import com.cydeo.service.CompanyService;
 
 import com.cydeo.entity.Company;
@@ -18,6 +20,7 @@ import com.cydeo.service.UserService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -71,9 +74,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto findCategoryById(Long id) {
-
-        return mapperUtil.convert(categoryRepository.findById(id),new CategoryDto());
+    public CategoryDto findById(Long id){
+        return categoryRepository.findById(id)
+                .map(category -> mapperUtil.convert(category, new CategoryDto()))
+                .orElseThrow(() -> new CategoryNotFoundException("Category can't found with id " + id));
     }
 
     @Override
@@ -84,12 +88,26 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.save(mapperUtil.convert(categoryDto,new Category()));
     }
 
+
+    /**
+     * Finds a category by its description for the currently logged-in user's company.
+     *
+     * This method retrieves the logged-in user's company and searches for a category
+     * within that company that matches the provided description. If a matching category
+     * is found, it is returned as a CategoryDto object. If no matching category is found,
+     * the method returns null.
+     *
+     * @param description the description of the category to be found
+     * @return a CategoryDto object representing the found category, or null if no matching category is found
+     */
     @Override
     public CategoryDto findByDescription(String description) {
-        Category byDescription = categoryRepository.findByDescription(description);
-        return mapperUtil.convert(byDescription, new CategoryDto());
+        UserDto loggedInUser = securityService.getLoggedInUser();
+        Optional<Category> byDescription = categoryRepository.findByDescriptionAndCompany_Title(description, loggedInUser.getCompany().getTitle());
+        if (!byDescription.isPresent()) return null;
+        Category category = byDescription.get();
+        return mapperUtil.convert(category, new CategoryDto());
     }
-
 
     public boolean existCategory(Long id) {
         return categoryRepository.existsById(id);
@@ -104,33 +122,21 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto getCategoryById(Long id) {
-        Category category = categoryRepository.findById(id).orElseThrow();
-        CategoryDto categoryDto = new CategoryDto();
-        categoryDto.setId(category.getId());
-        categoryDto.setDescription(category.getDescription());
-        categoryDto.setCompany(companyService.findById(category.getCompany().getId()));
-        return categoryDto;
-    }
-
-    @Override
     public void deleteById(Long id) {
         categoryRepository.deleteById(id);
     }
 
-    @Override
-    public List<CategoryDto> getCategoriesForCurrentUser() {
-        UserDto currentUser = userService.getCurrentUser();
-        Company company = mapperUtil.convert(currentUser,new User()).getCompany();
-
-        List<Category> categories = categoryRepository.findAllByCompanyIdOrderByDescriptionAsc(company.getId());
-
-        return categories.stream()
-                .map(category -> mapperUtil.convert(category,new CategoryDto())).collect(Collectors.toList());
-
-
-
-    }
+//    @Override
+//    public List<CategoryDto> getCategoriesForCurrentUser() {
+//        UserDto currentUser = userService.getCurrentUser();
+//        Company company = mapperUtil.convert(currentUser,new User()).getCompany();
+//
+//        List<Category> categories = categoryRepository.findAllByCompanyIdOrderByDescriptionAsc(company.getId());
+//
+//        return categories.stream()
+//                .map(category -> mapperUtil.convert(category,new CategoryDto())).collect(Collectors.toList());
+//
+//    } // do we need this method?
 //
 //    @Override
 //    public List<CategoryDto> listAllCategories() {
