@@ -22,7 +22,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     List<Category> findAllByCompany_Title(String title);
     Optional<Category> findByDescriptionAndCompany_Title(String description, String title);
-
+    
+    Category findByDescription(String description);
 
 
     @Query("SELECT DISTINCT c FROM Category c WHERE c.company.id = :companyId AND c.isDeleted = false ORDER BY c.description ASC")
