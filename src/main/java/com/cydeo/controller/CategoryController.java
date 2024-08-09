@@ -44,15 +44,22 @@ public class CategoryController {
     }
     @PostMapping("/create")
     public String create(@ModelAttribute("newCategory") @Valid CategoryDto categoryDto, BindingResult result, Model model) {
-
-        if(result.hasErrors()) {
-            return "/category/category-create";
+//        if (categoryService.findByDescription(categoryDto.getDescription())!=null)
+//            result.rejectValue("description", "error.description", "This description already exists.");
+//        if(result.hasErrors()) {
+//
+//            return "/category/category-create";
+//        }
+        if (categoryService.findByDescription(categoryDto.getDescription())!=null) {
+            result.rejectValue("description", "error.newCategory", "This description already exists.");
+            return "category/category-create";
         }
         if (categoryService.findByDescription(categoryDto.getDescription())!=null) {
             result.rejectValue("description", "error.newCategory", "This description already exists.");
             return "category/category-create";
         }
         categoryService.save(categoryDto);
+        model.addAttribute("categories", categoryService.listAllCategory());
         return "redirect:/categories/list";
     }
     @GetMapping("/update/{id}")
