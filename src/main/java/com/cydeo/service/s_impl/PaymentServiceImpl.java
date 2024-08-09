@@ -2,19 +2,16 @@ package com.cydeo.service.s_impl;
 
 import com.cydeo.client.StripeClient;
 import com.cydeo.dto.PaymentDto;
-import com.cydeo.dto.stripe_api.PaymentRequest;
 import com.cydeo.dto.stripe_api.PaymentResponse;
 import com.cydeo.entity.Payment;
 import com.cydeo.enums.Currency;
 import com.cydeo.enums.Months;
-import com.cydeo.exception.PaymentNotFoundException;
 import com.cydeo.repository.PaymentRepository;
 import com.cydeo.service.PaymentService;
 import com.cydeo.util.MapperUtil;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -84,7 +81,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public PaymentDto processPayment(PaymentDto paymentDto) {
         int amount = paymentDto.getAmount().multiply(new BigDecimal(100)).intValue();
-        String currency = "usd";
+        String currency = Currency.USD.getValue();
         String source = paymentDto.getCompanyStripeId();
         String description = paymentDto.getDescription();
 
