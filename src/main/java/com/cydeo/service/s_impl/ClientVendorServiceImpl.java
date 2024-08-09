@@ -1,7 +1,6 @@
 package com.cydeo.service.s_impl;
 
 import com.cydeo.dto.ClientVendorDto;
-import com.cydeo.dto.UserDto;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.User;
 import com.cydeo.exception.UserNotFoundException;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -96,6 +94,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     }
 
 
+
     @Override
     public ClientVendorDto update(ClientVendorDto clientVendorDto) {
         if (clientVendorDto==null || clientVendorDto.getId()==null){
@@ -104,20 +103,28 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         }
 
 
-        ClientVendor clientVendor = clientVendorRepository.getReferenceById(clientVendorDto.getId());
-        if (clientVendor==null){
-            throw new EntityNotFoundException("Client/Vendor cannot be found with ID "+clientVendor.getId());
+//        ClientVendor clientVendor = clientVendorRepository.getReferenceById(clientVendorDto.getId());
+//        if (clientVendor==null){
+//            throw new EntityNotFoundException("Client/Vendor cannot be found with ID "+clientVendor.getId());
+//
+//        }
 
-        }
+        ClientVendor convertedClientVendor = mapperUtil.convert(clientVendorDto,new ClientVendor());
+        ClientVendor clientVendor = clientVendorRepository.findById(clientVendorDto.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Client/Vendor cannot be found with ID " + clientVendorDto.getId()));
 
-        ClientVendor convertedClientVendor=mapperUtil.convert(clientVendorDto,new ClientVendor());
-        convertedClientVendor.setId(clientVendor.getId());
-        convertedClientVendor.setAddress(clientVendor.getAddress());
-        clientVendorRepository.save(convertedClientVendor);
+        clientVendor.setId(clientVendorDto.getId());
+        clientVendor.setAddress(convertedClientVendor.getAddress());
+        clientVendor.setClientVendorName(convertedClientVendor.getClientVendorName());
+        clientVendor.setWebsite(convertedClientVendor.getWebsite());
+        clientVendor.setAddress(convertedClientVendor.getAddress());
 
+        clientVendorRepository.save(clientVendor);
 
-        return clientVendorDto;
+        return mapperUtil.convert(clientVendor,new ClientVendorDto());
     }
+
+
     @Override
     public void delete(Long id) {
         ClientVendor clientVendor=clientVendorRepository.findById(id).orElseThrow(

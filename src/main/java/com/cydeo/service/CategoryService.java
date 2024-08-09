@@ -9,7 +9,7 @@ import java.util.List;
  * author:AbduShukur
  * date:7/23/2024
  */
-public interface CategoryService {
+public interface CategoryService { //fixed
     List<CategoryDto> listAllCategory();
     List<CategoryDto> listAllByCompany();
     CategoryDto findById(Long id);

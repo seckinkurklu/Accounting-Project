@@ -52,8 +52,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> listAllUsers() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName() ;
+        User loggedUser = userRepository.findByUsername(username).get();
 
-        List<User> userList = userRepository.findAll();
+        List<User> userList = userRepository.findAllByCompany_Id(loggedUser.getCompany().getId());
 
         return userList.stream().map(user -> mapperUtil.convert(user, new UserDto())).toList();
     }
