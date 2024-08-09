@@ -1,1 +1,4 @@
-2024-08-09 12:36:39 ERROR ErrorMvcAutoConfiguration$StaticView:204 - Cannot render error page for request [/clientVendors/list] as the response has already been committed. As a result, the response may have the wrong status code.
+2024-08-09 15:28:04 INFO  AccountingApplication:61 - Started AccountingApplication in 5.461 seconds (JVM running for 6.367)
+2024-08-09 15:28:58 INFO  [/]:173 - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-08-09 15:28:58 INFO  DispatcherServlet:525 - Initializing Servlet 'dispatcherServlet'
+2024-08-09 15:28:58 INFO  DispatcherServlet:547 - Completed initialization in 2 ms
