@@ -2,6 +2,7 @@ package com.cydeo.service;
 
 import com.cydeo.dto.PaymentDto;
 
+
 import java.util.List;
 
 public interface PaymentService {
@@ -17,4 +18,8 @@ public interface PaymentService {
     void deleteById(Long id);
 
     List<PaymentDto> listPaymentsForYear(int year);
+
+    PaymentDto processPayment(PaymentDto paymentDto);
+
+
 }
