@@ -31,8 +31,8 @@ public class GlobalExceptionHandler {
             RoleNotFoundException.class,
             UserNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<String> handleUserNotFoundException(Exception ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    public ResponseEntity<String> handleAllException(Exception ex) {
+        return new ResponseEntity<>("ERROR OCCURRED: " + ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
 //    @ExceptionHandler({CategoryNotFoundException.class,
