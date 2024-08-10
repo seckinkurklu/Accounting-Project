@@ -2,6 +2,7 @@ package com.cydeo.service.s_impl;
 
 import com.cydeo.dto.UserDto;
 import com.cydeo.entity.User;
+import com.cydeo.enums.CompanyStatus;
 import com.cydeo.exception.UserNotFoundException;
 import com.cydeo.mapper.UserMapper;
 import com.cydeo.repository.UserRepository;

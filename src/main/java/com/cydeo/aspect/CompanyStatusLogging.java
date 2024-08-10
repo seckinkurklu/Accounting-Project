@@ -1,8 +1,11 @@
 package com.cydeo.aspect;
 
+import com.cydeo.dto.CompanyDto;
 import com.cydeo.dto.UserDto;
+import com.cydeo.entity.Company;
 import com.cydeo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
@@ -30,11 +33,13 @@ public class CompanyStatusLogging {
 
     @AfterReturning( "activatedMethod()")
     public void logAfterActivation() {
+
         logCompanyStatusChange("activate");
     }
 
     @AfterReturning("deactivatedMethod()")
     public void logAfterDeactivation() {
+
         logCompanyStatusChange("deactivate");
     }
 
@@ -42,13 +47,12 @@ public class CompanyStatusLogging {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         UserDto user = userService.findByUsername(username);
-
-
-        logger.info(String.format("Method: %s, User: %s %s (%s)",
+//        logger.info(String.format("Method: %s,CompanyName:, User: %s %s (%s)",
+        logger.info("Method:{},CompanyName:{},User:{} {} {}",
                 methodName, user.getCompany().getTitle(),
                 user.getFirstname(),
                 user.getLastname(),
-                user.getUsername()));
+                user.getUsername());
     }
 
 }
