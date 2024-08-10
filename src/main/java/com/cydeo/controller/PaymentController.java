@@ -1,8 +1,12 @@
 package com.cydeo.controller;
 
 import com.cydeo.client.StripeClient;
+import com.cydeo.dto.CompanyDto;
+import com.cydeo.dto.InvoiceDto;
 import com.cydeo.dto.PaymentDto;
 import com.cydeo.enums.Currency;
+import com.cydeo.service.CompanyService;
+import com.cydeo.service.InvoiceService;
 import com.cydeo.service.PaymentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,13 +20,17 @@ import java.time.Year;
 public class PaymentController {
 
 
-    private final String apiKey ="pk_test_51Pj1miJfAsxFag9w7Rixsk1npiG0XGuCNYNWBgeecinaS9NNpROROSUvDUEnRsltP6rEsUrfCTsSfUGblv9AyRsH00RTeD2gR7";
+    private final String apiKey = "pk_test_51Pj1miJfAsxFag9w7Rixsk1npiG0XGuCNYNWBgeecinaS9NNpROROSUvDUEnRsltP6rEsUrfCTsSfUGblv9AyRsH00RTeD2gR7";
     private final PaymentService paymentService;
     private final StripeClient stripeClient;
+    private final CompanyService companyService;
+    private final InvoiceService invoiceService;
 
-    public PaymentController(PaymentService paymentService, StripeClient stripeClient) {
+    public PaymentController(PaymentService paymentService, StripeClient stripeClient, CompanyService companyService, InvoiceService invoiceService) {
         this.paymentService = paymentService;
         this.stripeClient = stripeClient;
+        this.companyService = companyService;
+        this.invoiceService = invoiceService;
     }
 
     @GetMapping("/list")
@@ -57,37 +65,38 @@ public class PaymentController {
     }
 
 
-@PostMapping("/charge/{id}")
-public String charge(@PathVariable("id") Long monthId,
-                     @RequestParam("amount") BigDecimal amount,
-                     @RequestParam("stripeToken") String stripeToken,
-                     Model model) {
-    //created PaymentDTO for updates
-    PaymentDto paymentDto = new PaymentDto();
-    paymentDto.setMonth(paymentDto.getMonth()); // Varsayılan olarak PaymentDto'da böyle bir alan olmalı
-    paymentDto.setAmount(amount);
-    paymentDto.setCompanyStripeId(stripeToken);
-    paymentDto.setDescription("Subscription Fee for month ID: " + monthId);
+    @PostMapping("/charge/{id}")
+    public String charge(@PathVariable("id") Long monthId,
+                         @RequestParam("amount") BigDecimal amount,
+                         @RequestParam("stripeToken") String stripeToken,
+                         Model model) {
+
+        PaymentDto paymentDto = paymentService.findById(monthId);
+        paymentDto.setAmount(amount);
+        paymentDto.setCompanyStripeId(stripeToken);
+        paymentDto.setDescription("Subscription Fee for month ID: " + monthId);
 
 // makePayment
-    paymentDto = paymentService.processPayment(paymentDto);
+        paymentDto = paymentService.processPayment(paymentDto);
 
-    // show result on UI.
-    model.addAttribute("monthId", monthId);
-    model.addAttribute("payment", paymentDto.getAmount());
-    model.addAttribute("stripePublicKey", apiKey);
-    model.addAttribute("currency", Currency.USD.getValue());
-    model.addAttribute("chargeId", paymentDto.getCompanyStripeId());
-    model.addAttribute("description", paymentDto.getDescription());
+        // show result on UI.
+        model.addAttribute("monthId", monthId);
+        model.addAttribute("payment", paymentDto.getAmount());
+        model.addAttribute("stripePublicKey", apiKey);
+        model.addAttribute("currency", Currency.USD.getValue());
+        model.addAttribute("chargeId", paymentDto.getCompanyStripeId());
+        model.addAttribute("description", paymentDto.getDescription());
 
 
-    return "payment/payment-result";
-}
+        return "payment/payment-result";
+    }
 
     @GetMapping("/toInvoice/{id}")
     public String newInvoice(@PathVariable Long id, Model model) {
-        model.addAttribute("company", paymentService.findById(id).getCompany());
+        model.addAttribute("company", invoiceService.getInvoiceById(id).getCompany());
         model.addAttribute("payment", paymentService.findById(id));
         return "/payment/payment-invoice-print";
     }
+
+
 }
