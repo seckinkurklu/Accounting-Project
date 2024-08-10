@@ -10,9 +10,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplUnit_Test {
 
-    @Mock
-    private UserRepository userRepository;
-
-    @Mock
-    private MapperUtil mapperUtil;
+//    @Mock
+//    private UserRepository userRepository;
+//
+//    @Mock
+//    private MapperUtil mapperUtil;
 }

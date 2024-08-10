@@ -46,18 +46,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findByUsername(String username) {
-//        return userRepository.findByUsername(username)
-//                .map(user -> mapperUtil.convert(user, new UserDto()))
-//                .orElseThrow(() -> new UserNotFoundException("User can't found with " +username));
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("User can't be found with username: " + username));
-
-
-        if (user.getCompany().getCompanyStatus() == CompanyStatus.PASSIVE) {
-            throw new UserNotFoundException("The company associated with this user is inactive. Login is not allowed.");
-        }
-
-        return mapperUtil.convert(user, new UserDto());
+        return userRepository.findByUsername(username)
+                .map(user -> mapperUtil.convert(user, new UserDto()))
+                .orElseThrow(() -> new UserNotFoundException("User can't found with " +username));
     }
 
     @Override
