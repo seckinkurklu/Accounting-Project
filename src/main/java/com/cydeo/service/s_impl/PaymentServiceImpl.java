@@ -97,6 +97,8 @@ public class PaymentServiceImpl implements PaymentService {
             paymentDto.setDescription("Transaction failed. Please try again!");
         }
 
+        paymentRepository.save(mapperUtil.convert(paymentDto,new Payment()));
+
         return paymentDto;
     }
 
