@@ -35,31 +35,5 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-//    @ExceptionHandler({CategoryNotFoundException.class,
-//            ClientVendorNotFoundException.class,
-//            CompanyNotFoundException.class,
-//            InsufficientStockException.class,
-//            InvoiceNotFoundException.class,
-//            InvoiceProductNotFoundException.class,
-//            PaymentNotFoundException.class,
-//            RoleNotFoundException.class,
-//            UserNotFoundException.class})
-//    public ResponseEntity<String> handleUserNotFoundException(Exception ex) {
-//        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-//    }
-////    public ModelAndView handleNotFoundExceptions(Exception ex) {
-////        ModelAndView mav = new ModelAndView("error");
-////        List<String> exceptionMessages = new ArrayList<>();
-////        exceptionMessages.add(ex.getMessage());
-////        mav.addObject("exceptionMessages", exceptionMessages);
-////        return mav;
-////    }
-//
-//    @ExceptionHandler(Exception.class)
-//    public ModelAndView handleGenericException() {
-//        ModelAndView mav = new ModelAndView("error");
-//        mav.addObject("exceptionMessages", null);
-//        return mav;
-//    }
 }
 
