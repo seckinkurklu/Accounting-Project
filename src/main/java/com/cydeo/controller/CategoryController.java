@@ -71,8 +71,8 @@ public class CategoryController {
 
     @PostMapping("/update/{id}")
     public String updateCategoryForm2( @ModelAttribute("category") @Valid CategoryDto categoryDto,BindingResult result) throws CategoryNotFoundException{
-//        if (categoryService.findByDescription(categoryDto.getDescription())!=null)
-//            result.rejectValue("description", "error.description", "This description already exists.");
+        if (categoryService.findByDescription(categoryDto.getDescription())!=null)
+            result.rejectValue("description", "error.description", "This description already exists.");
         if (result.hasErrors()) {
             return "category/category-update";
         }
